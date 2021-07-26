@@ -1,0 +1,75 @@
+//assets import
+@import "./assets";
+
+.modal-wrapper{
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.confirm-modal-wrapper{
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  font-size: 2rem;
+  p:first-child{
+    font-weight: bold;
+  }
+
+  button{
+    display: inline-block;
+    width: 150px;
+    height: 50px;
+    border: 0;
+    background: $moss-green;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    font-size: 1.8rem;
+    border-radius: 5px;
+
+    &:last-child{
+      background: $vermilion;
+      margin-left: 30px;
+    }
+  }
+}
+
+.exit-modal-container{
+  font-size: 2rem;
+  padding: 50px;
+  border-radius: 20px;
+  background:black;
+  color: white;
+  width: 1000px;
+  height: 500px;
+
+  .btn__typeB{
+    margin-top: 100px;
+  }
+
+  .active-seat-user{
+    padding: 10px 0;
+    cursor: pointer;
+    display: grid;
+    grid-template: 1fr / 200px 1fr ;
+
+    span{
+      pointer-events: none;//クリックした際にidを入手するために必要なので消さないこと
+    }
+    &:not(:last-child){
+      border-bottom: $gray 1px solid;
+    }
+  
+    &:hover{
+      background: $gray;
+    }
+  }
+}

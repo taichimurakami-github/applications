@@ -1,0 +1,163 @@
+//assets import
+@import "./assets";
+
+
+//common styles or Top.js styles
+
+.App{
+  padding: 50px 10px 200px;
+}
+
+.seat-table-container{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 50px;
+
+  .column{
+    width: 200px;
+    cursor: pointer;
+    &:not(:last-child){
+      margin-right: 50px;
+    }
+
+    li{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100px;
+      // font-weight: bold;
+      font-size: 4rem;
+      &:not(:last-child){margin-bottom: 30px;}
+      background: $emerald-green;
+      &:not(.active):hover{
+        background: darken($emerald-green, 30%);
+      }
+
+      &.active{
+        background: $vermilion;
+        color: white;
+        cursor: not-allowed;
+        font-weight: bold;
+        font-size: 3rem;
+      }
+    }
+
+
+  }
+}
+
+.btn{
+  cursor: pointer;
+  border: 0;
+  border-radius: 10px;
+  display: block;
+  margin: auto;
+  font-weight: bold;
+}
+
+.btn__typeA{
+  box-shadow: 5px 5px 5px 3px $light-gray;
+  width: 400px;
+  height: 75px;
+  background: $gray;
+  color: white;
+  
+  font-size: 1.5em;
+  &:hover{
+    background: $light-gray;
+  }
+}
+
+.btn__typeB{
+  width: 200px;
+  height: 50px;
+  font-size: 2rem;
+
+  &:hover{
+    background: $light-gray;
+  }
+}
+
+.activate-exit-btn{
+
+}
+
+
+//for SelectData.js
+.grade-selector{
+  display: flex;
+  flex-wrap: wrap;
+  margin: 50px auto;
+  width: 1000px;
+
+  .active{
+    animation: blink 1s ease-in infinite alternate-reverse;
+    @keyframes blink {
+      from{
+        border: 8px solid $vermilion;
+      }
+      to{
+        border: 8px solid $gray;
+      }
+    }
+  }
+
+
+  .btn{
+    width: 150px;
+    height: 50px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+
+    
+  }
+
+  .btn:nth-child(-n+6){
+    margin-bottom: 20px;
+  }
+
+  //high school
+  .btn:nth-child(n+1):nth-child(-n+3){
+    background: $moss-green;
+  }
+  //middle school
+  .btn:nth-child(n+4):nth-child(-n+6){
+    background: $navy;
+  }
+  //elementary school
+  .btn:nth-child(n+7):nth-child(-n+12){
+    background: $orange;
+    margin-bottom: 20px;
+  }
+
+  #others{
+    background: $gray;
+  }
+
+  .btn:hover{
+    border: $vermilion 8px solid;
+  }
+
+}
+
+.students-list{
+  box-shadow: 0 0 5px 3px $gray;
+  width: 1000px;
+  margin: auto;
+}
+
+.student-data{
+  &:not(:last-child){border-bottom: 1px solid $gray}
+  display: grid;
+  grid-template-columns: repeat(3, minmax(50px, 100%));
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 15px 10px;
+  span{
+    display: inline-block;
+    font-weight: bold;
+    &:not(:last-child){border-right: 1px solid black;}
+    pointer-events: none;//クリックした際にidを入手するために必要なので消さないこと
+  }
+}
