@@ -2,6 +2,13 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## React Appのbuild方法
+
+(step 1) node.jsをインストール
+(step 2) git clone git@github.com:taichimurakami-github/applications.git を実行
+(step 3) npm install コマンドを実行
+(step 4) npm start コマンドを実行
+
 ## Available Scripts
 
 In the project directory, you can run:

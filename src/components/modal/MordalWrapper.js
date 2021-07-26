@@ -1,7 +1,11 @@
+//modal module import
 import { useEffect } from "react";
+import { ErrorModal } from "./ErrorModal";
 import { ExitModal } from "./ExitModal";
-import "../styles/modal.scss";
 import { ConfirmModal } from "./ConfirmModal";
+
+//import styles
+import "../styles/modal.scss";
 
 const ModalWrapper = (props) => {
 
@@ -41,6 +45,12 @@ const ModalWrapper = (props) => {
             onCloseModal={closeModal}
             onSaveForEnter={props.onSaveForEnter}
            />
+
+        case "ERROR":
+          return <ErrorModal
+            onCloseModal={closeModal}
+            content={props.modalState.content}
+          />
 
         // case "ERROR":
         default:

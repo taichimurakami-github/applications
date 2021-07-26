@@ -7,11 +7,19 @@ export const Top = (props) => {
   const handleEnter = (e) => {
     // console.log("now selected: ", e.target);
 
+    if(props.studentsList === null) return;
+
     //activeの席をクリックしたときは何もしない
     if (props.seatsState[e.target.id].active) return;
     // e.target.classList.add("active");
 
     props.onHandleAppState({ selectedElement: e.target, selectedSeat: e.target.id, now: "STUDENT" });
+  }
+
+  const handleConfig = () => {
+    props.onHandleAppState({
+      now: "CONFIG"
+    })
   }
 
   const displayExitModal = () => {
@@ -22,32 +30,28 @@ export const Top = (props) => {
         studentsList: props.studentsList,
         seatsState: props.seatsState,
       }
-    })
-  //   const s = e.target.id;
-  //   const next = {};
-  //   next[s] = {
-  //     active: false,
-  //     studentID: ""
-  //   };
-  //   props.onHandleSeat(next);
-  //   closeExit({target: closeBtn.current});
-  // };
-
-  // const activeExit = () => setExitMode(true);
-  // const closeExit = (e) => {
-  //   !e.target.classList.contains("no-close") && setExitMode(false);
-  }
-
-  const closeExitModal = () => {
-
+    });
   }
 
   return (
     <>
-      <h1>使用する座席を選んでください</h1>
-      <p>下に表示されている緑色の席の中から、使用する席を選んでクリックしてください。</p>
-      <p>自習室を退出する際は、下の「退出する」ボタンを押してください。</p>
-      <div className="seat-table-container">
+      {
+        (props.studentsList === null) ?
+        <>
+          <h1>現在、入出登録ができません。</h1>
+          <p>生徒情報が読み込まれていません。</p>
+          <p>設定画面を開き、生徒情報ファイルを読み込んでください。</p>
+        </>
+
+        :
+
+        <>
+          <h1>使用する座席を選んでください</h1>
+          <p>下に表示されている緑色の席の中から、使用する席を選んでクリックしてください。</p>
+          <p>自習室を退出する際は、下の「退出する」ボタンを押してください。</p>
+        </>
+      }
+      <div  className={props.studentsList === null ? "seat-table-container unactive" : "seat-table-container"}>
         <ul className={"column"}>
           <li id="seat13" className={props.seatsState.seat13.active ? "active" : undefined} onClick={handleEnter}>{props.seatsState.seat13.active ? "使用不可" : 13}</li>
           <li id="seat14" className={props.seatsState.seat14.active ? "active" : undefined} onClick={handleEnter}>{props.seatsState.seat14.active ? "使用不可" : 14}</li>
@@ -77,7 +81,8 @@ export const Top = (props) => {
 
 
       </div>
-      <button className="btn activate-exit-btn btn__typeA" onClick={displayExitModal}>退出する</button>
+      <button className="btn activate-exit-btn btn__typeA" onClick={displayExitModal} disabled={(props.studentsList === null)}>退出する</button>
+      <button className="btn btn__typeC" onClick={handleConfig}>設定画面を開く</button>
     </>
   )
 }

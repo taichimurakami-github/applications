@@ -1,9 +1,14 @@
-import "./components/styles/components.scss";
+//module import
 import { useEffect, useState } from 'react';
 import { Top } from './components/Top';
 import { SelectData } from './components/SelectData';
 import { ModalWrapper } from "./components/modal/MordalWrapper";
+import { Config } from "./components/Config";
 import XLSX from 'xlsx';
+
+//style import
+import "./components/styles/components.scss";
+import "./components/styles/app.common.scss";
 
 function App() {
 
@@ -98,27 +103,26 @@ function App() {
   const readXLSX = async () => {
     console.log("xlsx");
     const debugInput = document.createElement("input");
+    const checkFileTypeList = [".xlsx", ".csv"];
+
     debugInput.type = "file";
     debugInput.click();
     debugInput.addEventListener("change", e => {
       const file = e.target.files[0];
-      const result = file.arrayBuffer().then((buffer) => {
+      
+      //ファイルの拡張子をチェック
+      for(let val of checkFileTypeList ) {
+        console.log(val, file.name.indexOf(val));
+        if(file.name.indexOf(val) === -1) return;
+      }
+      file.arrayBuffer().then((buffer) => {
         const workbook = XLSX.read(buffer, { type: 'buffer', bookVBA: true })
         const firstSheetName = workbook.SheetNames[1]
         const worksheet = workbook.Sheets[firstSheetName]
         const data = XLSX.utils.sheet_to_json(worksheet)
 
         setStudentsList(data);
-      })
-
-
-      // ファイルの中身が読み取られた後に行う処理を定義する。
-      // reader.addEventListener("load", () => {
-      //   const JSON_DATA = loadJSON(reader.result);
-      //   console.log("use offline json data:");
-      //   console.log(JSON_DATA);
-      //   props.debug(JSON_DATA);
-      // });
+      });
     });
 
   };
@@ -284,6 +288,14 @@ function App() {
           appState={appState}
           studentsList={studentsList}
         />;
+
+      case "CONFIG":
+        return <Config
+          onHandleStudentFile={setStudentsList}
+          onHandleAppState={handleAppState}
+          onReadXLSX={readXLSX}
+          onHandleModalState={handleModalState}
+        />;
     }
   };
 
@@ -306,11 +318,25 @@ function App() {
   //   console.log("appState checker---------");
   //   console.log(modalState);
   // }, [modalState]);
-  useEffect(()=>{
-    console.log("attendanceState checker........")
-    console.log(attendanceState);
-  }, [attendanceState]);
+  // useEffect(()=>{
+  //   console.log("attendanceState checker........")
+  //   console.log(attendanceState);
+  // }, [attendanceState]);
 
+  //生徒情報ファイルが読み込まれていない時は、エラーモーダルを最初に表示
+  //このとき、
+    useEffect(() => {
+      if(studentsList === null){
+        setModalState({
+          active: true,
+          name: "ERROR",
+          content: {
+            mode: "NOT_READ_STUDENTSLIST_FILE",
+            onHandleAppState: handleAppState
+          }
+        });
+      }
+    },[studentsList]);
 
 
   return (
@@ -322,7 +348,6 @@ function App() {
         onSaveForEnter={handleSaveAttendanceForEnter}
         onSaveForExit={handleSaveAttendanceForExit}
        />
-      <button onClick={readXLSX}>LOAD XLSX</button>
     </div>
   );
 }

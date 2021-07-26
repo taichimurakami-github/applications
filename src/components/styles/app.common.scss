@@ -1,2 +1,58 @@
 //assets import
 @import "./assets";
+
+//common styles or Top.js styles
+
+ul{padding:0;}
+
+li{list-style: none;}
+
+.App{
+  padding: 30px 10px 200px;
+
+  *{line-height: 2;}
+}
+
+.btn{
+  cursor: pointer;
+  border: 0;
+  border-radius: 10px;
+  display: block;
+  margin: auto;
+  font-weight: bold;
+}
+
+.btn__typeA{
+  box-shadow: 5px 5px 5px 3px $light-gray;
+  width: 400px;
+  height: 75px;
+  background: $gray;
+  color: white;
+  
+  font-size: 1.5em;
+  &:hover{
+    background: $light-gray;
+  }
+}
+
+.btn__typeC{
+  background: $navy;
+  color: white;
+  padding: 10px 30px;
+  border-radius: 100px;
+  margin: 100px auto 0;
+
+  &:hover{
+    background: $light-gray;
+  }
+}
+
+.btn__typeB{
+  width: 200px;
+  height: 50px;
+  font-size: 2rem;
+
+  &:hover{
+    background: $light-gray;
+  }
+}
