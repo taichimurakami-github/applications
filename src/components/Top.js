@@ -1,8 +1,6 @@
-import { useRef } from "react";
+import { appConfig } from "../app.config";
 
 export const Top = (props) => {
-
-  const closeBtn = useRef();
 
   const handleEnter = (e) => {
     // console.log("now selected: ", e.target);
@@ -19,13 +17,13 @@ export const Top = (props) => {
   const handleConfig = () => {
     props.onHandleAppState({
       now: "CONFIG"
-    })
+    });
   }
 
   const displayExitModal = () => {
     props.onHandleModalState({
       active: true,
-      name: "EXIT",
+      name: appConfig.modalCodeList["1003"],
       content: {
         studentsList: props.studentsList,
         seatsState: props.seatsState,
@@ -38,9 +36,10 @@ export const Top = (props) => {
       {
         (props.studentsList === null) ?
         <>
-          <h1>現在、入出登録ができません。</h1>
+          <h1>現在、入室登録ができません。</h1>
           <p>生徒情報が読み込まれていません。</p>
-          <p>設定画面を開き、生徒情報ファイルを読み込んでください。</p>
+          <p>設定画面を開き、生徒情報ファイルを読み込むと、再び入室登録が利用できます。</p>
+          <p>自習室を退出する際は、下の「退出する」ボタンを押してください。</p>
         </>
 
         :
@@ -81,7 +80,7 @@ export const Top = (props) => {
 
 
       </div>
-      <button className="btn activate-exit-btn btn__typeA" onClick={displayExitModal} disabled={(props.studentsList === null)}>退出する</button>
+      <button className="btn activate-exit-btn btn__exit" onClick={displayExitModal}>退出する</button>
       <button className="btn btn__typeC" onClick={handleConfig}>設定画面を開く</button>
     </>
   )

@@ -1,8 +1,18 @@
+import { appConfig } from "../../app.config";
+
 const ExitModal = (props) => {
 
   const handleExit = (e) => {
-    console.log(e.target.id);
-    props.onSaveForExit(e.target.id);
+    // console.log(e.target.id);
+    // props.onSaveForExit(e.target.id);
+    props.onHandleModalState({
+      active: true,
+      name: appConfig.modalCodeList["1001"],
+      content: {
+        confirmCode: appConfig.confirmCodeList["1002"],
+        targetID: e.target.id,
+      }
+    });
   }
 
   const generateStudentsList = () => {

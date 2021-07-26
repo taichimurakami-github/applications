@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
 import {StudentsDataList} from "./StudentsDataLists";
-import { ModalWrapper } from "./modal/MordalWrapper";
 
 export const SelectData = (props) => {
   const selectorContainer = useRef();
@@ -10,8 +9,9 @@ export const SelectData = (props) => {
       seat: props.appState.selectedSeat,
       school: "",
       grade: "",
+      nav: false,
     }
-  )
+  );
 
   //モーダル管理変数
   const [modalState, setModalState] = useState({
@@ -46,14 +46,15 @@ export const SelectData = (props) => {
   //現在の SelectData stateに基づいて、適当な生徒をStudentsListから取り出して配列として返す
   const generateStudentsList = () => {
     const matchData = [];
-    props.studentsList.forEach((val, index) => {
+    props.studentsList.forEach((val) => {
       return (val.school === state.school && val.grade === state.grade) && matchData.push(val);
-    })
+    });
     return matchData;
   }
   
   //名簿表示用コンポーネントの制御
   const handleComponent = () => {
+
     //scool, grade両方が登録されているときのみ、登録生徒情報を表示
     return (state.school !== "" && state.grade !== "") ? 
     
@@ -95,26 +96,29 @@ export const SelectData = (props) => {
   }
 
   return (
-    <div>
-      <h2>あなたの学年と名前を選んでください</h2>
+    <div className="component-select-student-data-wrapper">
+      <h1>あなたの学年と名前を選んでください</h1>
       <p>まずは学年を選びましょう。その後、表示された名簿リストから、あなたの名前を選んでください。</p>
       <button onClick={props.onResetAppState} className="btn retry-btn btn__typeA">前のページに戻る</button>
       <div ref={selectorContainer} className="grade-selector">
-        <button onClick={handleStudentList} className="btn" id="high-3">高校３年生</button>
-        <button onClick={handleStudentList} className="btn" id="high-2">高校２年生</button>
-        <button onClick={handleStudentList} className="btn" id="high-1">高校１年生</button>
-        <button onClick={handleStudentList} className="btn" id="middle-3">中学３年生</button>
-        <button onClick={handleStudentList} className="btn" id="middle-2">中学２年生</button>
         <button onClick={handleStudentList} className="btn" id="middle-1">中学１年生</button>
-        <button onClick={handleStudentList} className="btn" id="elementary-6">小学６年生</button>
-        <button onClick={handleStudentList} className="btn" id="elementary-5">小学５年生</button>
-        <button onClick={handleStudentList} className="btn" id="elementary-4">小学４年生</button>
-        <button onClick={handleStudentList} className="btn" id="elementary-3">小学３年生</button>
-        <button onClick={handleStudentList} className="btn" id="elementary-2">小学２年生</button>
+        <button onClick={handleStudentList} className="btn" id="middle-2">中学２年生</button>
+        <button onClick={handleStudentList} className="btn" id="middle-3">中学３年生</button>
+        <button onClick={handleStudentList} className="btn" id="high-1">高校１年生</button>
+        <button onClick={handleStudentList} className="btn" id="high-2">高校２年生</button>
+        <button onClick={handleStudentList} className="btn" id="high-3">高校３年生</button>
         <button onClick={handleStudentList} className="btn" id="elementary-1">小学１年生</button>
+        <button onClick={handleStudentList} className="btn" id="elementary-2">小学２年生</button>
+        <button onClick={handleStudentList} className="btn" id="elementary-3">小学３年生</button>
+        <button onClick={handleStudentList} className="btn" id="elementary-4">小学４年生</button>
+        <button onClick={handleStudentList} className="btn" id="elementary-5">小学５年生</button>
+        <button onClick={handleStudentList} className="btn" id="elementary-6">小学６年生</button>
         <button onClick={handleOthers} className="btn" id="others">その他関係者</button>
       </div>
       {handleComponent()}
+      <div className={state.nav ? "scroll-nav active" : "scroll-nav unactive"}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#464646" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
+      </div>
     </div>
-  )
+  );
 }

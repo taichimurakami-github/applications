@@ -1,5 +1,6 @@
 //module import
 import { useEffect, useState } from 'react';
+import { appConfig } from './app.config';
 import { Top } from './components/Top';
 import { SelectData } from './components/SelectData';
 import { ModalWrapper } from "./components/modal/MordalWrapper";
@@ -102,29 +103,53 @@ function App() {
 
   const readXLSX = async () => {
     console.log("xlsx");
-    const debugInput = document.createElement("input");
-    const checkFileTypeList = [".xlsx", ".csv"];
+    return new Promise((resolve) => {
+      const debugInput = document.createElement("input");
+      const acceptFileTypeList = [".xlsx", ".csv"];
 
-    debugInput.type = "file";
-    debugInput.click();
-    debugInput.addEventListener("change", e => {
-      const file = e.target.files[0];
-      
-      //ファイルの拡張子をチェック
-      for(let val of checkFileTypeList ) {
-        console.log(val, file.name.indexOf(val));
-        if(file.name.indexOf(val) === -1) return;
-      }
-      file.arrayBuffer().then((buffer) => {
-        const workbook = XLSX.read(buffer, { type: 'buffer', bookVBA: true })
-        const firstSheetName = workbook.SheetNames[1]
-        const worksheet = workbook.Sheets[firstSheetName]
-        const data = XLSX.utils.sheet_to_json(worksheet)
+      debugInput.type = "file";
+      debugInput.click();
+      debugInput.addEventListener("change", e => {
+        const file = e.target.files[0];
+        
+        //ファイルの拡張子をチェック
+        const fileTypeCheckResult =  acceptFileTypeList.filter((val) => {
+          return file.name.indexOf(val) !== -1;
+        });
 
-        setStudentsList(data);
+        if(fileTypeCheckResult.length === 0){
+          setModalState({
+            active: true,
+            name: appConfig.modalCodeList["1002"],
+            content: {
+              errorCode: appConfig.errorCodeList["2001"],
+              onHandleAppState: handleAppState,
+            },
+          });
+        }
+
+        file.arrayBuffer().then((buffer) => {
+          const workbook = XLSX.read(buffer, { type: 'buffer', bookVBA: true })
+          const firstSheetName = workbook.SheetNames[1]
+          const worksheet = workbook.Sheets[firstSheetName]
+          const data = XLSX.utils.sheet_to_json(worksheet)
+
+          setStudentsList(data);
+
+          setModalState({
+            active: true,
+            name: appConfig.modalCodeList["1001"],
+            content: {
+              confirmCode: appConfig.confirmCodeList["2003"],
+              onHandleAppState: handleAppState,
+            },
+          });
+        });
+
+        //return Promise.resolve
+        return resolve();
       });
-    });
-
+    })
   };
 
   //Modal制御関数
@@ -207,9 +232,10 @@ function App() {
     //確認モーダルの表示
     setModalState({
       active: true,
-      name: "CONFIRM",
+      name: appConfig.modalCodeList["1001"],
       content: {
-        mode: "SAVE_ATTENDANCE_ENTER_DONE",
+        //入出記録完了
+        confirmCode: appConfig.confirmCodeList["2001"],
       }
     });
 
@@ -237,16 +263,11 @@ function App() {
       
       // obj2[i]
       const id = seatsState[i].studentID;
-      console.log(id);
       let arr = attendanceState[id].map((val, index) => {
         return (index == attendanceState[id].length - 1) ? {...val, ...attendance_data_exit} : val
       })
-
-      // console.log(arr);
-
       const obj2 = {};
       obj2[id] = arr
-      
 
       setAttendanceState({...attendanceState, ...obj2 });
     }
@@ -256,9 +277,10 @@ function App() {
     //確認モーダルの表示
     setModalState({
       active: true,
-      name: "CONFIRM",
+      name: appConfig.modalCodeList["1001"],
       content: {
-        mode: "SAVE_ATTENDANCE_EXIT_DONE"
+        //退出記録完了
+        confirmCode: appConfig.confirmCodeList["2002"],
       }
     });
 
@@ -296,6 +318,10 @@ function App() {
           onReadXLSX={readXLSX}
           onHandleModalState={handleModalState}
         />;
+
+
+      default:
+        throw new Error("Unexpected appState.now case in App.js");
     }
   };
 
@@ -324,29 +350,29 @@ function App() {
   // }, [attendanceState]);
 
   //生徒情報ファイルが読み込まれていない時は、エラーモーダルを最初に表示
-  //このとき、
     useEffect(() => {
       if(studentsList === null){
         setModalState({
           active: true,
-          name: "ERROR",
+          name: appConfig.modalCodeList["1002"],
           content: {
-            mode: "NOT_READ_STUDENTSLIST_FILE",
+            errorCode: appConfig.errorCodeList["1001"],
             onHandleAppState: handleAppState
           }
         });
       }
     },[studentsList]);
 
-
   return (
     <div className="App">
       {handleComponent()}
-      <ModalWrapper 
+      <ModalWrapper
         modalState={modalState}
         onHandleModalState={handleModalState}
         onSaveForEnter={handleSaveAttendanceForEnter}
         onSaveForExit={handleSaveAttendanceForExit}
+        studentsList={studentsList}
+        seatsState={seatsState}
        />
     </div>
   );

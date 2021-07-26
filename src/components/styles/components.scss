@@ -4,7 +4,7 @@
 .seat-table-container{
   display: flex;
   justify-content: center;
-  margin-bottom: 75px;
+  margin-bottom: 100px;
   margin-top: 50px;
 
   .column{
@@ -46,6 +46,7 @@
 
 //for SelectData.js
 .grade-selector{
+  $border-thickness: 5px;
   display: flex;
   flex-wrap: wrap;
   margin: 50px auto;
@@ -55,10 +56,10 @@
     animation: blink 1s ease-in infinite alternate-reverse;
     @keyframes blink {
       from{
-        border: 8px solid $vermilion;
+        border: $border-thickness solid $vermilion;
       }
       to{
-        border: 8px solid $gray;
+        border: $border-thickness solid $gray;
       }
     }
   }
@@ -70,8 +71,6 @@
     font-size: 2rem;
     font-weight: bold;
     color: white;
-
-    
   }
 
   .btn:nth-child(-n+6){
@@ -97,28 +96,103 @@
   }
 
   .btn:hover{
-    border: $vermilion 8px solid;
+    border: $vermilion $border-thickness solid;
   }
 
 }
 
-.students-list{
-  box-shadow: 0 0 5px 3px $gray;
-  width: 1000px;
-  margin: auto;
+
+
+.component-config-wrapper{
+  .btn{
+    margin: 30px auto;
+  }
+
+  .read-student-list{
+    padding: 10px 50px;
+    background: $moss-green;
+    color: white;
+  }
+
+  .btn-container{
+    margin-bottom: 100px;
+  }
 }
 
-.student-data{
-  &:not(:last-child){border-bottom: 1px solid $gray}
-  display: grid;
-  grid-template-columns: repeat(3, minmax(50px, 100%));
-  justify-content: space-between;
-  cursor: pointer;
-  padding: 15px 10px;
-  span{
-    display: inline-block;
-    font-weight: bold;
-    &:not(:last-child){border-right: 1px solid black;}
-    pointer-events: none;//クリックした際にidを入手するために必要なので消さないこと
+.component-select-student-data-wrapper{
+
+  .scroll-nav{
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 100px;
+    // background: black;
+
+    &.active{
+      animation: moveDown 1s ease ;
+    }
+
+    &.unactive{
+
+    }
+
+    @keyframes moveDown {
+      to{
+        transform: translateY(100px);
+      }
+    }
+  }
+
+  .btn__typeA{
+    margin-top: 20px;
+    padding: 10px 50px;
+    background: $gray;
+    color: white;
+
+    &:hover{background: $light-gray;}
+  }
+
+  .students-list-container{
+    h3{
+      background: $gray;
+      color: white;
+      margin-bottom: 30px;
+
+      &.elementary{background: $orange;}
+      &.middle{background: $moss-green;}
+      &.high{background: $navy}
+    }
+  }
+
+  .students-list{
+    box-shadow: 0 0 5px 3px $gray;
+    width: 1000px;
+    margin: auto;
+  }
+  
+  .student-data{
+    &:not(:last-child){border-bottom: 1px solid $gray}
+    display: grid;
+    grid-template-columns: repeat(3, minmax(50px, 100%));
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 15px 10px;
+
+    &.elementary:hover{background: $orange;}
+    &.middle:hover{background: $moss-green;}
+    &.high:hover{background: $navy}
+
+    &:hover{
+      color: white;
+    }
+
+    span{
+      display: inline-block;
+      font-weight: bold;
+      &:not(:last-child){border-right: 1px solid black;}
+      pointer-events: none;//クリックした際にidを入手するために必要なので消さないこと
+    }
   }
 }
