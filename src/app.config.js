@@ -3,7 +3,6 @@ const appConfig = {
     development: "DEVELOPMENT",
     production: "PRODUCTION",
   },
-
   // appComponentCodeList: {
   //   "1001": "TOP",
   //   "1002": "CONFIG",
