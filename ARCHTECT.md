@@ -75,4 +75,3 @@ Node.jsの機能を利用してローカルファイル読み書き機能を行�
 
 #### FLOW CHART
 main-proc -> (IPC) -> render-proc::async:<USER::ACTIVATE_ELECTRON_EVENT> -> (IPC) -> main-proc::<ACTIVATED_ELECTRON_EVENT>.execute() -> (IPC) -> render-proc::getReturnValue
-

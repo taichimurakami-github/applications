@@ -111,13 +111,13 @@ function App() {
       debugInput.click();
       debugInput.addEventListener("change", e => {
         const file = e.target.files[0];
-        
+
         //ファイルの拡張子をチェック
-        const fileTypeCheckResult =  acceptFileTypeList.filter((val) => {
+        const fileTypeCheckResult = acceptFileTypeList.filter((val) => {
           return file.name.indexOf(val) !== -1;
         });
 
-        if(fileTypeCheckResult.length === 0){
+        if (fileTypeCheckResult.length === 0) {
           setModalState({
             active: true,
             name: appConfig.modalCodeList["1002"],
@@ -156,7 +156,7 @@ function App() {
   const handleModalState = (t) => {
 
     //t.active = falseだった場合：modalStateをリセットする
-    if(!t.active){
+    if (!t.active) {
       setModalState({
         active: false,
         name: null,
@@ -165,7 +165,7 @@ function App() {
       return;
     }
 
-    if(t.active && t.name && t.content){
+    if (t.active && t.name && t.content) {
       setModalState({
         active: true,
         name: t.name,
@@ -177,7 +177,7 @@ function App() {
     throw new Error("handleModal argument type error in App.js: you need to include active, name, content properties those are truthy.");
   };
 
-  const resetAppState = () => setAppState({ selectedElement: null, selectedSeat: "", now: "TOP"});
+  const resetAppState = () => setAppState({ selectedElement: null, selectedSeat: "", now: "TOP" });
 
   /**
    * 
@@ -189,36 +189,36 @@ function App() {
     //席を赤くする
     appState.selectedElement.classList.add("active");
     const obj = {}
-    obj[appState.selectedSeat] = (i === "__OTHERS__") ? 
-    {
-      active: true,
-      studentID: "__OTHERS__"
-    }
-     :
-    {
-      active: true,
-      studentID: i
-    }
+    obj[appState.selectedSeat] = (i === "__OTHERS__") ?
+      {
+        active: true,
+        studentID: "__OTHERS__"
+      }
+      :
+      {
+        active: true,
+        studentID: i
+      }
 
     //seatsStateを更新
     setSeatsState({ ...seatsState, ...obj });
 
-    if(i !== "__OTHERS__"){
+    if (i !== "__OTHERS__") {
       //attendanceStateを更新
       let arr;
       const now = new Date();
       const attendance_data_enter = {
         id: i,
         seatID: appState.selectedSeat,
-        enter:`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`,
+        enter: `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`,
       }
 
-      if(i in attendanceState){
+      if (i in attendanceState) {
         //既に同日内に自習室に記録が残っている場合、要素を追加する形で記録
-        arr = attendanceState[i].map((val) => {return val})
+        arr = attendanceState[i].map((val) => { return val })
         console.log(arr);
         arr.push(attendance_data_enter);
-      }else{
+      } else {
         //同日内で初めて自習室に来た場合、新しくkeyと配列を作成
         arr = [attendance_data_enter];
       }
@@ -226,7 +226,7 @@ function App() {
       const obj2 = {}
       obj2[i] = arr;
 
-      setAttendanceState({...attendanceState, ...obj2});
+      setAttendanceState({ ...attendanceState, ...obj2 });
     }
 
     //確認モーダルの表示
@@ -254,22 +254,22 @@ function App() {
       studentID: ""
     }
 
-    if(seatsState[i].studentID !== "__OTHERS__"){
+    if (seatsState[i].studentID !== "__OTHERS__") {
       //attendanceStateを更新
       const now = new Date();
       const attendance_data_exit = {
         exit: `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
       }
-      
+
       // obj2[i]
       const id = seatsState[i].studentID;
       let arr = attendanceState[id].map((val, index) => {
-        return (index == attendanceState[id].length - 1) ? {...val, ...attendance_data_exit} : val
+        return (index == attendanceState[id].length - 1) ? { ...val, ...attendance_data_exit } : val
       })
       const obj2 = {};
       obj2[id] = arr
 
-      setAttendanceState({...attendanceState, ...obj2 });
+      setAttendanceState({ ...attendanceState, ...obj2 });
     }
 
     setSeatsState({ ...seatsState, ...obj });
@@ -288,7 +288,7 @@ function App() {
 
   //appState, seatStateを変更する
   const handleAppState = (d) => setAppState({ ...appState, ...d });
-  const handleSeatsState = (d) => setSeatsState({ ...seatsState, ...d});
+  const handleSeatsState = (d) => setSeatsState({ ...seatsState, ...d });
 
   //render()内のComponentを動的に変更する
   const handleComponent = () => {
@@ -350,18 +350,23 @@ function App() {
   // }, [attendanceState]);
 
   //生徒情報ファイルが読み込まれていない時は、エラーモーダルを最初に表示
-    useEffect(() => {
-      if(studentsList === null){
-        setModalState({
-          active: true,
-          name: appConfig.modalCodeList["1002"],
-          content: {
-            errorCode: appConfig.errorCodeList["1001"],
-            onHandleAppState: handleAppState
-          }
-        });
-      }
-    },[studentsList]);
+  useEffect(() => {
+    if (studentsList === null) {
+      setModalState({
+        active: true,
+        name: appConfig.modalCodeList["1002"],
+        content: {
+          errorCode: appConfig.errorCodeList["1001"],
+          onHandleAppState: handleAppState
+        }
+      });
+    }
+  }, [studentsList]);
+
+  const testFileRead = () => {
+    window.electron.ipcRenderer
+      .sendSync("sync_execFileHandler_read", "read file reader");
+  }
 
   return (
     <div className="App">
@@ -373,7 +378,9 @@ function App() {
         onSaveForExit={handleSaveAttendanceForExit}
         studentsList={studentsList}
         seatsState={seatsState}
-       />
+      />
+      <button onClick={testFileRead}>sync test button (read)</button>
+      <button onClick={testFileRead}>sync test button (write)</button>
     </div>
   );
 }

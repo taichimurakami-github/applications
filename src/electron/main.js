@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const { electron, app, BrowserWindow } = require('electron')
+const { ipcMain, ipcRenderer, app, BrowserWindow } = require('electron')
 const path = require('path')
 const isDev = require("electron-is-dev");
 
@@ -9,6 +9,8 @@ function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
+      // nodeIntegration: true,
+      contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
     }
   })
@@ -46,3 +48,18 @@ app.on('window-all-closed', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+
+// exec read file event
+ipcMain.on("sync_execFileHandler_read", (event, arg) => {
+  console.log("read exec");
+  return;
+});
+
+
+// exec write file event
+
+ipcMain.on("sync_execFileHandler_write", (event, arg) => {
+  console.log("write exec");
+  return;
+});

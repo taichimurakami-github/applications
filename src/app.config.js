@@ -1,3 +1,15 @@
+/**
+ * attendance-management App configuration
+ * 
+ * object形式でアプリケーション実行に必要な定数データを保管
+ * アプリ設定などの情報もまとめて保管する
+ * 
+ * !!!ATTENTION!!!
+ * DO NOT CHANGE KEY & VALUE HERE EXCEPT DEVELOPERS.
+ * APPLICATION CANNOT RUN PROPERLY
+ * 
+ */
+
 const appConfig = {
   appMode: {
     development: "DEVELOPMENT",
@@ -35,4 +47,4 @@ const appConfig = {
   },
 }
 
-export {appConfig}
+export { appConfig }
