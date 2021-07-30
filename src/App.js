@@ -13,6 +13,7 @@ import "./components/styles/app.common.scss";
 
 function App() {
 
+
   //アプリの動作状態を管理する変数
   const [appState, setAppState] = useState({
     selectedElement: null,
@@ -20,13 +21,13 @@ function App() {
     now: "TOP",
   });
 
-  //エクセルから取得した生徒情報を格納しておく変数
+  //エクセルから取得した生徒情報(生徒名簿リストデータ)を格納しておく変数
   const [studentsList, setStudentsList] = useState(null);
 
-  //データを保存しておく変数
+  //入退室記録のデータを保存しておく変数
   const [attendanceState, setAttendanceState] = useState([]);
 
-  //座席状況を管理する変数
+  //現在の座席状況を管理する変数
   const [seatsState, setSeatsState] = useState({
     seat1: {
       active: false,
@@ -101,8 +102,17 @@ function App() {
     content: null
   });
 
-  const readXLSX = async () => {
-    console.log("xlsx");
+  /**
+   * function readXLSXFileByUser()
+   * 
+   * xlsx読み込み用関数
+   * inputを用いてユーザーが手動で読み込む
+   * config専用の関数
+   * 
+   * @returns {object:Promise}
+   */
+  const readXLSXFileByUser = async () => {
+    console.log("xlsxファイルの読み込みを行ってください。");
     return new Promise((resolve) => {
       const debugInput = document.createElement("input");
       const acceptFileTypeList = [".xlsx", ".csv"];
@@ -152,7 +162,15 @@ function App() {
     })
   };
 
-  //Modal制御関数
+  /**
+   * function handleModalState()
+   * 
+   * モーダルの表示を管理する関数
+   * 引数tはactive, nameキーと、モーダルごとに異なるcontentキーを持つオブジェクトとする
+   * 
+   * @param {object} t 
+   * @returns {void}
+   */
   const handleModalState = (t) => {
 
     //t.active = falseだった場合：modalStateをリセットする
@@ -180,11 +198,14 @@ function App() {
   const resetAppState = () => setAppState({ selectedElement: null, selectedSeat: "", now: "TOP" });
 
   /**
+   * function handleSaveAttendanceForEnter()
+   * 
+   * 入室記録を保存する関数
    * 
    * @param {string} i : STUDENT ID (studentsList student.id)
    */
   const handleSaveAttendanceForEnter = (i) => {
-    console.log("出席処理を開始...");
+    console.log("出席処理を開始します...");
 
     //席を赤くする
     appState.selectedElement.classList.add("active");
@@ -239,15 +260,20 @@ function App() {
       }
     });
 
+    window.electron.ipcRenderer
+
     resetAppState();
   };
 
   /**
+   * function handleSaveAttendanceForExit()
+   * 
+   * 退室記録を保存する関数
    * 
    * @param {string} e : SELECTED SEAT ID
    */
   const handleSaveAttendanceForExit = (i) => {
-    console.log("退席処理を開始...");
+    console.log("退席処理を開始します...");
     const obj = {}
     obj[i] = {
       active: false,
@@ -267,7 +293,7 @@ function App() {
         return (index == attendanceState[id].length - 1) ? { ...val, ...attendance_data_exit } : val
       })
       const obj2 = {};
-      obj2[id] = arr
+      obj2[id] = arr;
 
       setAttendanceState({ ...attendanceState, ...obj2 });
     }
@@ -315,7 +341,7 @@ function App() {
         return <Config
           onHandleStudentFile={setStudentsList}
           onHandleAppState={handleAppState}
-          onReadXLSX={readXLSX}
+          onReadXLSX={readXLSXFileByUser}
           onHandleModalState={handleModalState}
         />;
 
@@ -324,6 +350,64 @@ function App() {
         throw new Error("Unexpected appState.now case in App.js");
     }
   };
+
+
+
+  //生徒情報ファイルが読み込まれていない時は、エラーモーダルを最初に表示
+  useEffect(() => {
+    if (studentsList === null) {
+      setModalState({
+        active: true,
+        name: appConfig.modalCodeList["1002"],
+        content: {
+          errorCode: appConfig.errorCodeList["1001"],
+          onHandleAppState: handleAppState
+        }
+      });
+    }
+  }, [studentsList]);
+
+  const testFileRead = () => {
+    window.electron.ipcRenderer
+      .sendSync("sync_execFileHandler_read", "read file");
+  }
+
+  const testFileWrite = async () => {
+    const now = new Date();
+    const fileName = `${now.getFullYear()}${now.getMonth() + 1}${now.getDate()}.json`;
+    const result = await window.electron.ipcRenderer
+      .invoke("write_json", {
+        data: JSON.stringify(attendanceState),
+        fileName: fileName
+      });
+
+
+    console.log("write completed, result :", result);
+  }
+
+  useEffect(() => {
+    testFileWrite();
+  }, [attendanceState]);
+
+  return (
+    <div className="App">
+      {handleComponent()}
+      <ModalWrapper
+        modalState={modalState}
+        onHandleModalState={handleModalState}
+        onSaveForEnter={handleSaveAttendanceForEnter}
+        onSaveForExit={handleSaveAttendanceForExit}
+        studentsList={studentsList}
+        seatsState={seatsState}
+      />
+      <button onClick={testFileRead}>sync test button (read)</button>
+      <button onClick={testFileWrite}>sync test button (write)</button>
+    </div>
+  );
+}
+
+export default App;
+
 
   //デバッグ用関数群
   // useEffect(() => {
@@ -348,41 +432,3 @@ function App() {
   //   console.log("attendanceState checker........")
   //   console.log(attendanceState);
   // }, [attendanceState]);
-
-  //生徒情報ファイルが読み込まれていない時は、エラーモーダルを最初に表示
-  useEffect(() => {
-    if (studentsList === null) {
-      setModalState({
-        active: true,
-        name: appConfig.modalCodeList["1002"],
-        content: {
-          errorCode: appConfig.errorCodeList["1001"],
-          onHandleAppState: handleAppState
-        }
-      });
-    }
-  }, [studentsList]);
-
-  const testFileRead = () => {
-    window.electron.ipcRenderer
-      .sendSync("sync_execFileHandler_read", "read file reader");
-  }
-
-  return (
-    <div className="App">
-      {handleComponent()}
-      <ModalWrapper
-        modalState={modalState}
-        onHandleModalState={handleModalState}
-        onSaveForEnter={handleSaveAttendanceForEnter}
-        onSaveForExit={handleSaveAttendanceForExit}
-        studentsList={studentsList}
-        seatsState={seatsState}
-      />
-      <button onClick={testFileRead}>sync test button (read)</button>
-      <button onClick={testFileRead}>sync test button (write)</button>
-    </div>
-  );
-}
-
-export default App;

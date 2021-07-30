@@ -2,6 +2,7 @@
 const { ipcMain, ipcRenderer, app, BrowserWindow } = require('electron')
 const path = require('path')
 const isDev = require("electron-is-dev");
+const fs = require("fs");
 
 function createWindow() {
   // Create the browser window.
@@ -56,10 +57,33 @@ ipcMain.on("sync_execFileHandler_read", (event, arg) => {
   return;
 });
 
+ipcMain.handle("fileHandler_read", () => {
+  console.log("read exec");
+  return;
+});
+
 
 // exec write file event
 
 ipcMain.on("sync_execFileHandler_write", (event, arg) => {
   console.log("write exec");
   return;
+});
+
+/**
+ * @param {object} arg
+ * {
+ *  file_name: <string>,
+ *  data: <string> (JSON_STRING)
+ * }
+ */
+ipcMain.handle("write_json", (event, arg) => {
+  const parent_dir = path.resolve(__dirname, "../data")
+  console.log(path.resolve(parent_dir, arg.fileName));
+  const save_dir = path.resolve(parent_dir, arg.fileName);
+
+  return new Promise((resolve) => {
+    fs.writeFileSync(save_dir, arg.data);
+    resolve("ipcMain.handle__write_json completed");
+  })
 });
