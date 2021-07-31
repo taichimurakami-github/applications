@@ -25,7 +25,7 @@ function App() {
   const [studentsList, setStudentsList] = useState(null);
 
   //入退室記録のデータを保存しておく変数
-  const [attendanceState, setAttendanceState] = useState([]);
+  const [attendanceState, setAttendanceState] = useState({});
 
   //現在の座席状況を管理する変数
   const [seatsState, setSeatsState] = useState({
@@ -260,8 +260,6 @@ function App() {
       }
     });
 
-    window.electron.ipcRenderer
-
     resetAppState();
   };
 
@@ -365,29 +363,55 @@ function App() {
         }
       });
     }
+
+    else if (studentsList !== null) {
+      (
+        modalState.active &&
+        modalState.name === appConfig.modalCodeList["1002"] &&
+        modalState.content.errorCode === appConfig.errorCodeList['1001']
+      )
+        &&
+        setModalState({
+          active: false,
+          name: null,
+          content: null
+        });
+    }
   }, [studentsList]);
 
-  const testFileRead = () => {
-    window.electron.ipcRenderer
-      .sendSync("sync_execFileHandler_read", "read file");
-  }
 
-  const testFileWrite = async () => {
-    const now = new Date();
-    const fileName = `${now.getFullYear()}${now.getMonth() + 1}${now.getDate()}.json`;
-    const result = await window.electron.ipcRenderer
-      .invoke("write_json", {
-        data: JSON.stringify(attendanceState),
-        fileName: fileName
-      });
-
-
-    console.log("write completed, result :", result);
-  }
-
-  useEffect(() => {
-    testFileWrite();
+  //attendanceファイルを自動で書き出し
+  useEffect(async () => {
+    (Object.keys(attendanceState).length > 0) &&
+      await window.electron.ipcRenderer
+        .invoke("write_attendance_json", JSON.stringify(attendanceState));
   }, [attendanceState]);
+
+  //seatsStateファイルを自動で書き出し
+  useEffect(() => {
+    console.log("changed seatsState");
+    console.log(seatsState);
+    window.electron.ipcRenderer
+      .invoke("handle_seatsState", { mode: "write", data: JSON.stringify(seatsState) });
+  }, [seatsState]);
+
+  //起動時に1回だけ行われる処理
+  useEffect(async () => {
+    setStudentsList(
+      await window.electron.ipcRenderer
+        .invoke("read_studentsList_xlsx")
+    );
+
+    //今日の分のattendanceState記録が残っていれば読み込み
+    setAttendanceState(
+      await window.electron.ipcRenderer
+        .invoke("read_attendance_json")
+    );
+
+    const seatsState_bcup = await window.electron.ipcRenderer.invoke("handle_seatsState", { mode: "read" })
+    seatsState_bcup && setSeatsState(seatsState_bcup);
+  }, []);
+
 
   return (
     <div className="App">
@@ -400,8 +424,6 @@ function App() {
         studentsList={studentsList}
         seatsState={seatsState}
       />
-      <button onClick={testFileRead}>sync test button (read)</button>
-      <button onClick={testFileWrite}>sync test button (write)</button>
     </div>
   );
 }
