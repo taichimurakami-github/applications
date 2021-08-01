@@ -3,13 +3,15 @@ import { appConfig } from "../../app.config";
 const ErrorModal = (props) => {
 
   const activateConfig = () => {
-    props.content.onHandleAppState({now: "CONFIG"});
+    props.content.onHandleAppState({ now: "CONFIG" });
     props.onCloseModal(true);
   }
 
+  const onCloseModal = () => props.onCloseModal(true);
+
   const handleComponent = () => {
 
-    switch(props.content.errorCode){
+    switch (props.content.errorCode) {
 
       //エラー：生徒情報が表示されていない
       case appConfig.errorCodeList["1001"]:
@@ -26,7 +28,16 @@ const ErrorModal = (props) => {
         return (
           <>
             <h2>ファイル読み込み中にエラーが発生しました。</h2>
-            <p>ファイルの拡張子が間違っています。読み込めるファイル形式はcsv, xlsxのみです。</p>
+            <p>指定されたファイル形式が間違っています。読み込めるファイル形式はxlsxのみです。</p>
+            <button className="btn btn__typeC" onClick={onCloseModal}>閉じる</button>
+          </>
+        );
+
+      case appConfig.errorCodeList["2002"]:
+        return (
+          <>
+            <h2>生徒情報ファイルの読み込みに失敗しました。</h2>
+            <p>指定されたファイル形式が間違っています。読み込めるファイル形式はxlsxのみです。</p>
           </>
         );
 
@@ -44,4 +55,4 @@ const ErrorModal = (props) => {
   );
 }
 
-export {ErrorModal};
+export { ErrorModal };

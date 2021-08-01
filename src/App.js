@@ -13,7 +13,6 @@ import "./components/styles/app.common.scss";
 
 function App() {
 
-
   //アプリの動作状態を管理する変数
   const [appState, setAppState] = useState({
     selectedElement: null,
@@ -102,65 +101,6 @@ function App() {
     content: null
   });
 
-  /**
-   * function readXLSXFileByUser()
-   * 
-   * xlsx読み込み用関数
-   * inputを用いてユーザーが手動で読み込む
-   * config専用の関数
-   * 
-   * @returns {object:Promise}
-   */
-  const readXLSXFileByUser = async () => {
-    console.log("xlsxファイルの読み込みを行ってください。");
-    return new Promise((resolve) => {
-      const debugInput = document.createElement("input");
-      const acceptFileTypeList = [".xlsx", ".csv"];
-
-      debugInput.type = "file";
-      debugInput.click();
-      debugInput.addEventListener("change", e => {
-        const file = e.target.files[0];
-
-        //ファイルの拡張子をチェック
-        const fileTypeCheckResult = acceptFileTypeList.filter((val) => {
-          return file.name.indexOf(val) !== -1;
-        });
-
-        if (fileTypeCheckResult.length === 0) {
-          setModalState({
-            active: true,
-            name: appConfig.modalCodeList["1002"],
-            content: {
-              errorCode: appConfig.errorCodeList["2001"],
-              onHandleAppState: handleAppState,
-            },
-          });
-        }
-
-        file.arrayBuffer().then((buffer) => {
-          const workbook = XLSX.read(buffer, { type: 'buffer', bookVBA: true })
-          const firstSheetName = workbook.SheetNames[1]
-          const worksheet = workbook.Sheets[firstSheetName]
-          const data = XLSX.utils.sheet_to_json(worksheet)
-
-          setStudentsList(data);
-
-          setModalState({
-            active: true,
-            name: appConfig.modalCodeList["1001"],
-            content: {
-              confirmCode: appConfig.confirmCodeList["2003"],
-              onHandleAppState: handleAppState,
-            },
-          });
-        });
-
-        //return Promise.resolve
-        return resolve();
-      });
-    })
-  };
 
   /**
    * function handleModalState()
@@ -339,7 +279,7 @@ function App() {
         return <Config
           onHandleStudentFile={setStudentsList}
           onHandleAppState={handleAppState}
-          onReadXLSX={readXLSXFileByUser}
+          onReadStudentsList={setStudentsList}
           onHandleModalState={handleModalState}
         />;
 
@@ -353,7 +293,7 @@ function App() {
 
   //生徒情報ファイルが読み込まれていない時は、エラーモーダルを最初に表示
   useEffect(() => {
-    if (studentsList === null) {
+    if (!studentsList) {
       setModalState({
         active: true,
         name: appConfig.modalCodeList["1002"],
@@ -364,7 +304,7 @@ function App() {
       });
     }
 
-    else if (studentsList !== null) {
+    else {
       (
         modalState.active &&
         modalState.name === appConfig.modalCodeList["1002"] &&
@@ -379,39 +319,57 @@ function App() {
     }
   }, [studentsList]);
 
-
   //attendanceファイルを自動で書き出し
   useEffect(async () => {
     (Object.keys(attendanceState).length > 0) &&
       await window.electron.ipcRenderer
-        .invoke("write_attendance_json", JSON.stringify(attendanceState));
+        .invoke("handle_attendanceState", { mode: "write", data: JSON.stringify(attendanceState) });
   }, [attendanceState]);
 
   //seatsStateファイルを自動で書き出し
-  useEffect(() => {
-    console.log("changed seatsState");
-    console.log(seatsState);
-    window.electron.ipcRenderer
+  useEffect(async () => {
+    await window.electron.ipcRenderer
       .invoke("handle_seatsState", { mode: "write", data: JSON.stringify(seatsState) });
   }, [seatsState]);
 
   //起動時に1回だけ行われる処理
   useEffect(async () => {
-    setStudentsList(
-      await window.electron.ipcRenderer
-        .invoke("read_studentsList_xlsx")
-    );
+    //生徒情報ファイルが存在していれば自動読み込み
+    const studentsList_autoloadedData = await window.electron.ipcRenderer.invoke("handle_studentsList", { mode: "read" });
+    studentsList_autoloadedData && setStudentsList(studentsList_autoloadedData);
 
     //今日の分のattendanceState記録が残っていれば読み込み
-    setAttendanceState(
-      await window.electron.ipcRenderer
-        .invoke("read_attendance_json")
-    );
+    const attendanceState_bcup = await window.electron.ipcRenderer.invoke("handle_attendanceState", { mode: "read" });
+    attendanceState_bcup && setAttendanceState(attendanceState_bcup);
 
-    const seatsState_bcup = await window.electron.ipcRenderer.invoke("handle_seatsState", { mode: "read" })
+    //今日の分のseatsState記録が残っていれば読み込み
+    const seatsState_bcup = await window.electron.ipcRenderer.invoke("handle_seatsState", { mode: "read" });
     seatsState_bcup && setSeatsState(seatsState_bcup);
   }, []);
 
+  //デバッグ用コンソール表示関数
+  // useEffect(() => {
+  //   console.log("seatsState checker---------");
+  //   console.log(seatsState);
+  // }, [seatsState]);
+  // useEffect(() => {
+  //   if (studentsList) {
+  //     console.log("student list data has loaded");
+  //     console.log(studentsList);
+  //   }
+  // }, [studentsList]);
+  // useEffect(() => {
+  //   console.log("appState checker---------");
+  //   console.log(appState);
+  // }, [appState]);
+  // useEffect(() => {
+  //   console.log("appState checker---------");
+  //   console.log(modalState);
+  // }, [modalState]);
+  // useEffect(() => {
+  //   console.log("attendanceState checker........")
+  //   console.log(attendanceState);
+  // }, [attendanceState]);
 
   return (
     <div className="App">

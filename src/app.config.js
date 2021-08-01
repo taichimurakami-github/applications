@@ -34,6 +34,7 @@ const appConfig = {
     "2001": "SAVE_ATTENDANCE_ENTER_DONE",
     "2002": "SAVE_ATTENDANCE_EXIT_DONE",
     "2003": "STUDENTS_FILE_LOADED_SUCCESSFULLY",
+    "2004": "STUDENTS_FILE_CONFIG_PATH_CHANGED_SUCCESSFULLY",
   },
   errorCodeList: {
     //top page error list
@@ -41,6 +42,7 @@ const appConfig = {
 
     //config page error list
     "2001": "WRONG_FILE_TYPE_IS_LOADED",
+    "2002": "FAILED_TO_CHANGE_CONFIG_PATH",
 
     //student data select page list
     "3001": "",

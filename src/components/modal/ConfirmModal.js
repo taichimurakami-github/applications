@@ -9,7 +9,7 @@ const ConfirmModal = (props) => {
 
   const handleComponent = () => {
 
-    switch(props.content.confirmCode){
+    switch (props.content.confirmCode) {
       case appConfig.confirmCodeList["1001"]:
         return (
           <div className="enter-confirm-selector-container">
@@ -29,7 +29,7 @@ const ConfirmModal = (props) => {
 
           :
 
-          {id: "__OTHERS__", name: "(関係者その他)"}
+          { id: "__OTHERS__", name: "(関係者その他)" }
 
 
         // console.log(targetInfo);
@@ -70,6 +70,14 @@ const ConfirmModal = (props) => {
           </>
         );
 
+      case appConfig.confirmCodeList["2004"]:
+        return (
+          <>
+            <p>生徒情報ファイルの保存場所を設定しました。</p>
+            <button className="btn btn__close" onClick={closeModal}>閉じる</button>
+          </>
+        );
+
 
       default:
         throw new Error("Unexpected confirmCode in ConfirmModal.js");
@@ -84,4 +92,4 @@ const ConfirmModal = (props) => {
 
 };
 
-export {ConfirmModal};
+export { ConfirmModal };
