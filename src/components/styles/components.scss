@@ -130,14 +130,10 @@
     background: rgba(70,70,70,0.5);
     opacity: 0;
     svg{
-      animation: moveDown 1s ease-out infinite;
+      animation: moveDown 0.75s ease-out infinite;
     }
     &.active{
-      animation: fadein-out 3s ease-out forwards;
-    }
-
-    &.unactive{
-      
+      animation: fadein-out 1.65s ease-out forwards;
     }
 
     @keyframes moveDown {
@@ -154,7 +150,10 @@
       0%{
         opacity: 0;
       }
-      50%{
+      25%{
+        opacity: 1;
+      }
+      75%{
         opacity: 1;
       }
       100%{
@@ -192,9 +191,10 @@
   
   .student-data{
     &:not(:last-child){border-bottom: 1px solid $gray}
-    display: grid;
-    grid-template-columns: repeat(3, minmax(50px, 100%));
-    justify-content: space-between;
+    //生徒の名前以外を表示するならスタイルを定義する事
+    // display: grid;
+    // grid-template-columns: repeat(2, minmax(50px, 100%));
+    // justify-content: space-between;
     cursor: pointer;
     padding: 15px 10px;
 

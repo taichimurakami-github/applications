@@ -1,17 +1,18 @@
 //module import
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { appConfig } from './app.config';
 import { Top } from './components/Top';
 import { SelectData } from './components/SelectData';
 import { ModalWrapper } from "./components/modal/MordalWrapper";
 import { Config } from "./components/Config";
-import XLSX from 'xlsx';
 
 //style import
 import "./components/styles/components.scss";
 import "./components/styles/app.common.scss";
 
 function App() {
+
+  const isFirstRender = useRef(false);
 
   //アプリの動作状態を管理する変数
   const [appState, setAppState] = useState({
@@ -289,6 +290,29 @@ function App() {
     }
   };
 
+  /**
+   * useEffect functions group
+   */
+
+  //起動時に1回だけ行われる処理
+  useEffect(async () => {
+
+    isFirstRender.current = true;
+
+    //生徒情報ファイルが存在していれば自動読み込み
+    const studentsList_autoloadedData = await window.electron.ipcRenderer.invoke("handle_studentsList", { mode: "read" });
+    studentsList_autoloadedData && setStudentsList(studentsList_autoloadedData);
+
+    //今日の分のattendanceState記録が残っていれば読み込み
+    const attendanceState_bcup = await window.electron.ipcRenderer.invoke("handle_attendanceState", { mode: "read" });
+    attendanceState_bcup && setAttendanceState(attendanceState_bcup);
+
+    //今日の分のseatsState記録が残っていれば読み込み
+    const seatsState_bcup = await window.electron.ipcRenderer.invoke("handle_seatsState", { mode: "read" });
+    console.log("read_seatsstate_bcup_result", seatsState_bcup);
+    seatsState_bcup && setSeatsState(seatsState_bcup);
+  }, []);
+
 
 
   //生徒情報ファイルが読み込まれていない時は、エラーモーダルを最初に表示
@@ -319,33 +343,30 @@ function App() {
     }
   }, [studentsList]);
 
-  //attendanceファイルを自動で書き出し
+  //バックアップ兼記録ファイル 自動書き出し
   useEffect(async () => {
-    (Object.keys(attendanceState).length > 0) &&
-      await window.electron.ipcRenderer
+    // console.log("isFirstRender", isFirstRender.current);
+
+    if (isFirstRender.current) {
+      //1回目のレンダリング
+      isFirstRender.current = false;
+    } else {
+      //attendanceState書き出し
+      window.electron.ipcRenderer
         .invoke("handle_attendanceState", { mode: "write", data: JSON.stringify(attendanceState) });
-  }, [attendanceState]);
 
-  //seatsStateファイルを自動で書き出し
-  useEffect(async () => {
-    await window.electron.ipcRenderer
-      .invoke("handle_seatsState", { mode: "write", data: JSON.stringify(seatsState) });
-  }, [seatsState]);
+      //seatsState書き出し
+      window.electron.ipcRenderer
+        .invoke("handle_seatsState", { mode: "write", data: JSON.stringify(seatsState) });
+    }
 
-  //起動時に1回だけ行われる処理
-  useEffect(async () => {
-    //生徒情報ファイルが存在していれば自動読み込み
-    const studentsList_autoloadedData = await window.electron.ipcRenderer.invoke("handle_studentsList", { mode: "read" });
-    studentsList_autoloadedData && setStudentsList(studentsList_autoloadedData);
+    // (Object.keys(attendanceState).length > 0) &&
+    //   window.electron.ipcRenderer
+    //     .invoke("handle_attendanceState", { mode: "write", data: JSON.stringify(attendanceState) });
 
-    //今日の分のattendanceState記録が残っていれば読み込み
-    const attendanceState_bcup = await window.electron.ipcRenderer.invoke("handle_attendanceState", { mode: "read" });
-    attendanceState_bcup && setAttendanceState(attendanceState_bcup);
+  }, [attendanceState, seatsState]);
 
-    //今日の分のseatsState記録が残っていれば読み込み
-    const seatsState_bcup = await window.electron.ipcRenderer.invoke("handle_seatsState", { mode: "read" });
-    seatsState_bcup && setSeatsState(seatsState_bcup);
-  }, []);
+
 
   //デバッグ用コンソール表示関数
   // useEffect(() => {

@@ -35,6 +35,7 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
+//...という事らしいので、このイベント実行時にアプリケーションの起動準備を行います
 app.whenReady().then(() => {
   console.log(configDirPath);
   //appLocalDataフォルダが存在しない場合、新たにフォルダを作成
@@ -144,7 +145,7 @@ ipcMain.handle("handle_attendanceState", (event, arg) => {
   const fullFilePath = path.resolve(fileDirPath, fileName);
 
   if (!fs.existsSync(fileDirPath)) {
-    console.log("making attendance dir");
+    console.log("making attendance dir...");
     fs.mkdirSync(fileDirPath);
   }
 
@@ -163,8 +164,7 @@ ipcMain.handle("handle_attendanceState", (event, arg) => {
           console.log(err);
           resolve(false);
         }
-
-      })
+      });
 
     case "write":
       return fs.writeFileSync(fullFilePath, arg.data);
@@ -178,7 +178,7 @@ ipcMain.handle("handle_seatsState", (event, arg) => {
   const fullFilePath = path.resolve(fileDirPath, fileName);
 
   if (!fs.existsSync(fileDirPath)) {
-    console.log("making seats dir");
+    console.log("making seats dir...");
     fs.mkdirSync(fileDirPath);
   }
 
@@ -194,9 +194,9 @@ ipcMain.handle("handle_seatsState", (event, arg) => {
         //それ以外のファイルは削除する(座席状態のバックアップデータ重複を避けるため)
         val === fileName ?
           (existsCheck = true) :
-          fs.unlinkSync(fileDirPath + val);
+          fs.unlinkSync(path.resolve(fileDirPath, val));
       }
-
+      console.log("read seatsState result...");
       //既にseatsStateのバックアップデータがある場合 -> 読み込み
       //既にseatsStateのバックアップデータがない場合 -> falseを返す
       return existsCheck ?
@@ -204,6 +204,7 @@ ipcMain.handle("handle_seatsState", (event, arg) => {
         false;
 
     case "write":
+      console.log("write seatsState...");
       fs.writeFileSync(fullFilePath, arg.data);
       return;
 

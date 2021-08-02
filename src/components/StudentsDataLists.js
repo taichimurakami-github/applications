@@ -3,7 +3,7 @@ import { ModalWrapper } from "./modal/MordalWrapper";
 
 const StudentsDataList = (props) => {
   const school_ja = [];
-  switch(props.school){
+  switch (props.school) {
     case "high":
       school_ja.push("高校");
       break;
@@ -16,7 +16,7 @@ const StudentsDataList = (props) => {
       school_ja.push("小学校");
       break;
 
-    default: 
+    default:
       throw new Error("mismatch exeption has occured in StudentsDataList component");
   }
 
@@ -40,21 +40,21 @@ const StudentsDataList = (props) => {
 
   return (
     <div className={"students-list-container"}>
-      <h3 className={props.school}>{school_ja[0]}{props.grade}年生の生徒リスト</h3>
+      <h3 className={props.school}>{school_ja[0]} {props.grade} 年生の生徒リスト</h3>
       <ul className="students-list">
-      {props.studentsList.map((val) => {
+        {props.studentsList.map((val) => {
           return (
             <li id={val.id} className={"student-data " + props.school} onClick={activateConfirmModal}>
               <span>{val.name}</span>
-              <span>{val.school}, grade: {val.grade}</span>
-              <span>所属：{val.belongs}</span>
+              {/* <span>{school_ja} {val.grade} 年生</span> */}
+              {/* <span>所属：{val.belongs}</span> */}
             </li>
           )
-      })}
+        })}
       </ul>
     </div>
   )
 }
 
 
-export {StudentsDataList};
+export { StudentsDataList };
