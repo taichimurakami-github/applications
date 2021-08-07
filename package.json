@@ -1,10 +1,10 @@
 {
   "name": "attendance-management",
   "productName": "attendance-management",
-  "version": "0.9.0",
+  "version": "0.9.3",
   "author": "Taichi Murakami",
   "private": true,
-  "main": "public/electron/main.js",
+  "main": "build/electron/main.js",
   "homepage": "./",
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
@@ -69,7 +69,7 @@
     "npm-run-all": "^4.1.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^4.0.3",
     "wait-on": "^6.0.0"
   }
 }

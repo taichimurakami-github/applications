@@ -12,7 +12,8 @@ import "./components/styles/app.common.scss";
 
 function App() {
 
-  const isFirstRender = useRef(false);
+  const isFirstReadSeatsStateBCUP = useRef(false);
+  const isFirstReadAttendanceStateBCUP = useRef(false);
 
   //アプリの動作状態を管理する変数
   const [appState, setAppState] = useState({
@@ -297,20 +298,25 @@ function App() {
   //起動時に1回だけ行われる処理
   useEffect(async () => {
 
-    isFirstRender.current = true;
-
     //生徒情報ファイルが存在していれば自動読み込み
     const studentsList_autoloadedData = await window.electron.ipcRenderer.invoke("handle_studentsList", { mode: "read" });
     studentsList_autoloadedData && setStudentsList(studentsList_autoloadedData);
 
-    //今日の分のattendanceState記録が残っていれば読み込み
-    const attendanceState_bcup = await window.electron.ipcRenderer.invoke("handle_attendanceState", { mode: "read" });
-    attendanceState_bcup && setAttendanceState(attendanceState_bcup);
-
     //今日の分のseatsState記録が残っていれば読み込み
     const seatsState_bcup = await window.electron.ipcRenderer.invoke("handle_seatsState", { mode: "read" });
     console.log("read_seatsstate_bcup_result", seatsState_bcup);
-    seatsState_bcup && setSeatsState(seatsState_bcup);
+    if (seatsState_bcup) {
+      setSeatsState(seatsState_bcup);
+      isFirstReadSeatsStateBCUP.current = true;
+    }
+
+    //今日の分のattendanceState記録が残っていれば読み込み
+    const attendanceState_bcup = await window.electron.ipcRenderer.invoke("handle_attendanceState", { mode: "read" });
+    console.log("attendanceState_bcup_result", attendanceState_bcup);
+    if (attendanceState_bcup) {
+      setAttendanceState(attendanceState_bcup);
+      isFirstReadAttendanceStateBCUP.current = true;
+    }
   }, []);
 
 
@@ -345,24 +351,16 @@ function App() {
 
   //バックアップ兼記録ファイル 自動書き出し
   useEffect(async () => {
-    // console.log("isFirstRender", isFirstRender.current);
 
-    if (isFirstRender.current) {
-      //1回目のレンダリング
-      isFirstRender.current = false;
-    } else {
-      //attendanceState書き出し
-      window.electron.ipcRenderer
+    //attendanceState書き出し
+    isFirstReadAttendanceStateBCUP.current &&
+      await window.electron.ipcRenderer
         .invoke("handle_attendanceState", { mode: "write", data: JSON.stringify(attendanceState) });
 
-      //seatsState書き出し
-      window.electron.ipcRenderer
+    //seatsState書き出し
+    isFirstReadSeatsStateBCUP.current &&
+      await window.electron.ipcRenderer
         .invoke("handle_seatsState", { mode: "write", data: JSON.stringify(seatsState) });
-    }
-
-    // (Object.keys(attendanceState).length > 0) &&
-    //   window.electron.ipcRenderer
-    //     .invoke("handle_attendanceState", { mode: "write", data: JSON.stringify(attendanceState) });
 
   }, [attendanceState, seatsState]);
 

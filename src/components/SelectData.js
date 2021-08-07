@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import {StudentsDataList} from "./StudentsDataLists";
+import { StudentsDataList } from "./StudentsDataLists";
 
 export const SelectData = (props) => {
   const selectorContainer = useRef();
@@ -23,7 +23,7 @@ export const SelectData = (props) => {
 
   //Modal制御関数
   const handleModalState = (t) => {
-    if(!t.active){
+    if (!t.active) {
       setModalState({
         active: false,
         name: null,
@@ -32,7 +32,7 @@ export const SelectData = (props) => {
       return;
     }
 
-    if(t.active && t.name && t.content){
+    if (t.active && t.name && t.content) {
       setModalState({
         active: true,
         name: t.name,
@@ -57,26 +57,26 @@ export const SelectData = (props) => {
     navigation.current.classList.remove("active");
     navigation.current.classList.add("active");
   }
-  
+
   //名簿表示用コンポーネントの制御
   const handleComponent = () => {
 
     //scool, grade両方が登録されているときのみ、登録生徒情報を表示
-    return (state.school !== "" && state.grade !== "") ? 
-    
-    <StudentsDataList
-      onSaveAttendance={props.onSaveAttendance} 
-      onHandleModalState={props.onHandleModalState}
-      onHandleNav={handleNavigation}
-      school={state.school} 
-      grade={state.grade} 
-      seatID={props.appState.selectedSeat} 
-      studentsList={generateStudentsList()}  
-    />
+    return (state.school !== "" && state.grade !== "") ?
 
-    :
+      <StudentsDataList
+        onSaveAttendance={props.onSaveAttendance}
+        onHandleModalState={props.onHandleModalState}
+        onHandleNav={handleNavigation}
+        school={state.school}
+        grade={state.grade}
+        seatID={props.appState.selectedSeat}
+        studentsList={generateStudentsList()}
+      />
 
-    undefined;
+      :
+
+      undefined;
   };
 
   //関係者用の処理
@@ -99,7 +99,7 @@ export const SelectData = (props) => {
     //クリック対象にactiveを追加
     e.target.classList.add("active");
 
-    setState({ ...state, school: school, grade: grade});
+    setState({ ...state, school: school, grade: grade });
   }
 
   return (
@@ -124,7 +124,7 @@ export const SelectData = (props) => {
       </div>
       {handleComponent()}
       <div ref={navigation} className="scroll-nav">
-        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 13l5 5 5-5M7 6l5 5 5-5" /></svg>
       </div>
     </div>
   );

@@ -1,10 +1,11 @@
 // Modules to control application life and create native browser window
-const { ipcMain, ipcRenderer, app, BrowserWindow } = require('electron')
+const { ipcMain, app, BrowserWindow } = require('electron')
 const path = require('path')
 const isDev = require("electron-is-dev");
 const fs = require("fs");
 const XLSX = require("xlsx");
 const fileType = require("file-type");
+const { resolve } = require('path');
 const configDirPath = path.resolve(app.getPath("userData"), "./appLocalData");
 let appLocalConfig;
 
@@ -91,11 +92,22 @@ ipcMain.handle("handle_studentsList", async (event, arg) => {
         const workbook = XLSX.readFile(fullFilePath);
 
         //sheet名を指定
-        const Sheet = workbook.Sheets[workbook.SheetNames[1]]
+        /**
+         * studentsListで読み込み不良が出た場合、まずはworkbookの中身を参照する事
+         * 
+         * case 1: Sheetのidが0ではない
+         */
+
+        //生徒情報が格納されているSheetのID(何番目か)
+        const SheetID = 0;
+
+        //workbookの中からSheet情報を取得し、json化
+        const Sheet = workbook.Sheets[workbook.SheetNames[SheetID]];
         const data_json = XLSX.utils.sheet_to_json(Sheet);
 
         return data_json;
       } catch (e) {
+        console.log("failed to read studentsList (main.js line 85~)");
         console.log(e);
         return undefined;
       }
@@ -138,7 +150,7 @@ ipcMain.handle("handle_studentsList", async (event, arg) => {
 // });
 
 
-ipcMain.handle("handle_attendanceState", (event, arg) => {
+ipcMain.handle("handle_attendanceState", async (event, arg) => {
   const now = new Date();
   const fileName = `${now.getFullYear()}${now.getMonth() + 1}${now.getDate()}.json`;
   const fileDirPath = appLocalConfig.path.attendance;
@@ -151,7 +163,7 @@ ipcMain.handle("handle_attendanceState", (event, arg) => {
 
   switch (arg.mode) {
     case "read":
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         //attendanceStateの初期値
         let readBuffer;
 
@@ -159,10 +171,12 @@ ipcMain.handle("handle_attendanceState", (event, arg) => {
           //ファイル読み込みに成功したら読み込んだ内容を返す
           readBuffer = fs.readFileSync(fullFilePath, "utf-8");
           resolve(JSON.parse(readBuffer));
+          // return JSON.parse(readBuffer);
         } catch (err) {
           //失敗したら存在しなかったものとみなし、falseを返す
           console.log(err);
-          resolve(false);
+          reject(false);
+          // return false;
         }
       });
 
@@ -171,7 +185,7 @@ ipcMain.handle("handle_attendanceState", (event, arg) => {
   }
 });
 
-ipcMain.handle("handle_seatsState", (event, arg) => {
+ipcMain.handle("handle_seatsState", async (event, arg) => {
   const now = new Date();
   const fileName = `${now.getFullYear()}${now.getMonth() + 1}${now.getDate()}.json`;
   const fileDirPath = appLocalConfig.path.seats;
@@ -185,7 +199,7 @@ ipcMain.handle("handle_seatsState", (event, arg) => {
 
   switch (arg.mode) {
     case "read":
-
+      console.log("seatsState first loading...");
       //本日付のバックアップファイルがあるか確認
       const dirFiles = fs.readdirSync(fileDirPath);
       let existsCheck = false;
@@ -199,9 +213,11 @@ ipcMain.handle("handle_seatsState", (event, arg) => {
       console.log("read seatsState result...");
       //既にseatsStateのバックアップデータがある場合 -> 読み込み
       //既にseatsStateのバックアップデータがない場合 -> falseを返す
-      return existsCheck ?
-        JSON.parse(fs.readFileSync(fullFilePath, "utf-8")) :
-        false;
+      return new Promise((resolve, reject) => {
+        existsCheck ?
+          resolve(JSON.parse(fs.readFileSync(fullFilePath, "utf-8"))) :
+          reject(undefined);
+      });
 
     case "write":
       console.log("write seatsState...");
