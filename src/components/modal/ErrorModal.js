@@ -41,6 +41,16 @@ const ErrorModal = (props) => {
           </>
         );
 
+      case appConfig.errorCodeList["3001"]:
+        return (
+          <>
+            <h2>{props.content.studentData.name} さんは既に着席しています</h2>
+            <p>正しい名前を選択しているかもう一度ご確認ください。</p>
+            <p>もしご本人の場合、一旦退席操作を行った上、改めて登録操作をしてください。</p>
+            <button className="btn btn__typeC" onClick={onCloseModal}>閉じる</button>
+          </>
+        )
+
       default:
         throw new Error("Unexpected errorCode in ErrorModal.js");
     }

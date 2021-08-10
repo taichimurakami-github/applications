@@ -72,6 +72,7 @@ export const SelectData = (props) => {
         grade={state.grade}
         seatID={props.appState.selectedSeat}
         studentsList={generateStudentsList()}
+        seatsState={props.seatsState}
       />
 
       :
@@ -106,7 +107,7 @@ export const SelectData = (props) => {
     <div className="component-select-student-data-wrapper">
       <h1>あなたの学年と名前を選んでください</h1>
       <p>まずは学年を選びましょう。その後、表示された名簿リストから、あなたの名前を選んでください。</p>
-      <button onClick={props.onResetAppState} className="btn retry-btn btn__typeA">前のページに戻る</button>
+      <button onClick={props.onResetAppState} className="btn retry-btn btn__typeC">前のページに戻る</button>
       <div ref={selectorContainer} className="grade-selector">
         <button onClick={handleStudentList} className="btn" id="middle-1">中学１年生</button>
         <button onClick={handleStudentList} className="btn" id="middle-2">中学２年生</button>

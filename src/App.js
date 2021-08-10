@@ -275,6 +275,7 @@ function App() {
           onHandleModalState={handleModalState}
           appState={appState}
           studentsList={studentsList}
+          seatsState={seatsState}
         />;
 
       case "CONFIG":

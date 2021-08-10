@@ -45,7 +45,7 @@ const appConfig = {
     "2002": "FAILED_TO_CHANGE_CONFIG_PATH",
 
     //student data select page list
-    "3001": "",
+    "3001": "SELECTED_ALREADY_SEATED_STUDENT",
   },
 }
 
