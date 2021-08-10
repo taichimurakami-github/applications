@@ -5,18 +5,44 @@ Create-react-appで作成したアプリのひな型に、electronでwindowsデ�
 作成日：2021/7/30
 作成機関：約1～2週間
 
-## アプリケーション利用準備
+## アプリケーション利用準備と、アプリケーションのビルド
 本アプリケーションの動作にはNode.jsとnpmが必要です。  
 まず、node.jsをインストールしてください。
 
-### `git clone https://github.com/taichimurakami-github/applications.git`
+### STEP1:`git clone https://github.com/taichimurakami-github/applications.git`
 まず、git cloneにて必要ファイルをコピーしましょう。
 
-### `npm start`
+### STEP2: `npm start`
 コマンドを実行すると、development build状態でアプリを走らせることができます。
 **(ATTENTION!!) Node.jsのfs機能を使用するため、デバッグ、実行共に通常のChrome等の上では行えません。**  
 
-その他、コマンドの詳細はpackage.jsonを確認してください。
+### STEP3: `npm i`
+必要なモジュールをインストールします。この手順を飛ばすとSTEP4のビルドでエラーが出ます。
+
+### STEP4: `npm run build`
+アプリケーションをビルドします。  
+distフォルダが作成され、その中に**attendance-management Setup (version number).exe**というファイルが作成されれば成功です。  
+
+
+<エラーが出た時は>  
+以下の点を確認してください。  
++ package.json
+json内の"main"の項目が以下の設定になっているか確認してください。  
+もし"public/electron/main.js"の場合、以下で上書きしてください。　　
+`"main": "build/electron/main.js"`
+
+## アプリケーションのインストールと実行
+
+### STEP1: Setup.exeを起動
+先ほどのSTEP4で作成したsetup.exeをクリックし、インストールしてください。  
+
+### STEP2: アプリを起動
+windowsの場合、インストール完了後にデスクトップにアプリのショートカットアイコンが追加されます。それをクリックすると、アプリが起動できます。  
+
+なお、アプリ本体のexeファイルは以下のパス内に保存されています。  
+`~\AppData\Local\Programs\attendance-management\attendance-management.exe`
+
+その他、実行可能なnpmコマンドがいくつかあります。詳細はpackage.jsonを確認してください。
 
 ## アプリケーションの仕様
 ### 構成
