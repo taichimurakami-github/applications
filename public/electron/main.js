@@ -141,16 +141,7 @@ ipcMain.handle("handle_studentsList", async (event, arg) => {
  *  data: <string> (JSON_STRING)
  * }
  */
-// ipcMain.handle("write_attendance_json", (event, data) => {
-//   const now = new Date();
-//   const fileName = `${now.getFullYear()}${now.getMonth() + 1}${now.getDate()}.json`;
-//   const parent_dir = path.resolve(__dirname, "../data/attendance");
-//   const fullFilePath = path.resolve(parent_dir, fileName);
-//   fs.writeFileSync(fullFilePath, data);
-// });
-
-
-ipcMain.handle("handle_attendanceState", async (event, arg) => {
+ipcMain.handle("handle_attendanceState", (event, arg) => {
   const now = new Date();
   const fileName = `${now.getFullYear()}${now.getMonth() + 1}${now.getDate()}.json`;
   const fileDirPath = appLocalConfig.path.attendance;
@@ -163,20 +154,19 @@ ipcMain.handle("handle_attendanceState", async (event, arg) => {
 
   switch (arg.mode) {
     case "read":
+      console.log("ready for reading attendanceState...");
       return new Promise((resolve, reject) => {
-        //attendanceStateの初期値
-        let readBuffer;
 
         try {
-          //ファイル読み込みに成功したら読み込んだ内容を返す
-          readBuffer = fs.readFileSync(fullFilePath, "utf-8");
-          resolve(JSON.parse(readBuffer));
-          // return JSON.parse(readBuffer);
+          let readResult;
+          fs.existsSync(fullFilePath) ?
+            readResult = JSON.parse(fs.readFileSync(fullFilePath, "utf-8")) :
+            readResult = undefined;
+
+          resolve(readResult);
         } catch (err) {
-          //失敗したら存在しなかったものとみなし、falseを返す
-          console.log(err);
-          reject(false);
-          // return false;
+          console.log("failed to read attendanceState");
+          reject(undefined);
         }
       });
 
@@ -185,7 +175,7 @@ ipcMain.handle("handle_attendanceState", async (event, arg) => {
   }
 });
 
-ipcMain.handle("handle_seatsState", async (event, arg) => {
+ipcMain.handle("handle_seatsState", (event, arg) => {
   const now = new Date();
   const fileName = `${now.getFullYear()}${now.getMonth() + 1}${now.getDate()}.json`;
   const fileDirPath = appLocalConfig.path.seats;
@@ -199,7 +189,7 @@ ipcMain.handle("handle_seatsState", async (event, arg) => {
 
   switch (arg.mode) {
     case "read":
-      console.log("seatsState first loading...");
+      console.log("ready for reading seatsState...");
       //本日付のバックアップファイルがあるか確認
       const dirFiles = fs.readdirSync(fileDirPath);
       let existsCheck = false;
@@ -210,13 +200,13 @@ ipcMain.handle("handle_seatsState", async (event, arg) => {
           (existsCheck = true) :
           fs.unlinkSync(path.resolve(fileDirPath, val));
       }
-      console.log("read seatsState result...");
+      console.log("reading seatsState...");
       //既にseatsStateのバックアップデータがある場合 -> 読み込み
       //既にseatsStateのバックアップデータがない場合 -> falseを返す
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         existsCheck ?
           resolve(JSON.parse(fs.readFileSync(fullFilePath, "utf-8"))) :
-          reject(undefined);
+          resolve(undefined);
       });
 
     case "write":
@@ -225,7 +215,4 @@ ipcMain.handle("handle_seatsState", async (event, arg) => {
       return;
 
   }
-  // const fileName = "seatsState.json";
-  // const fullFilePath = path.resolve(__dirname, "../data/temp/" + fileName);
-  // fs.writeFileSync(fullFilePath, data);
 });

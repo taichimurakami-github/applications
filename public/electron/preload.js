@@ -1,4 +1,5 @@
 const { ipcRenderer, contextBridge } = require("electron");
+
 // const fs = require("fs");
 contextBridge.exposeInMainWorld("electron", {// <-- ここでつけた名前でひもづく。ここでは"window.electron"
 

@@ -10,98 +10,104 @@ import { Config } from "./components/Config";
 import "./components/styles/components.scss";
 import "./components/styles/app.common.scss";
 
-function App() {
+const appState_initialValue = {
+  selectedElement: null,
+  selectedSeat: "",
+  now: "TOP",
+}
+const studentsList_initialValue = null;
+const attendanceState_initialValue = {};
+const seatsState_initialValue = {
+  seat1: {
+    active: false,
+    studentID: ""
+  },
+  seat2: {
+    active: false,
+    studentID: ""
+  },
+  seat3: {
+    active: false,
+    studentID: ""
+  },
+  seat4: {
+    active: false,
+    studentID: ""
+  },
+  seat5: {
+    active: false,
+    studentID: ""
+  },
+  seat6: {
+    active: false,
+    studentID: ""
+  },
+  seat7: {
+    active: false,
+    studentID: ""
+  },
+  seat8: {
+    active: false,
+    studentID: ""
+  },
+  seat9: {
+    active: false,
+    studentID: ""
+  },
+  seat10: {
+    active: false,
+    studentID: ""
+  },
+  seat11: {
+    active: false,
+    studentID: ""
+  },
+  seat12: {
+    active: false,
+    studentID: ""
+  },
+  seat13: {
+    active: false,
+    studentID: ""
+  },
+  seat14: {
+    active: false,
+    studentID: ""
+  },
+  seat15: {
+    active: false,
+    studentID: ""
+  },
+  seat16: {
+    active: false,
+    studentID: ""
+  },
+}
+const modalState_initialValue = {
+  active: false,
+  modalName: null,
+  content: null
+};
 
+function App() {
+  const isFirstReadStudentsList = useRef(false);
   const isFirstReadSeatsStateBCUP = useRef(false);
   const isFirstReadAttendanceStateBCUP = useRef(false);
 
   //アプリの動作状態を管理する変数
-  const [appState, setAppState] = useState({
-    selectedElement: null,
-    selectedSeat: "",
-    now: "TOP",
-  });
+  const [appState, setAppState] = useState(appState_initialValue);
 
   //エクセルから取得した生徒情報(生徒名簿リストデータ)を格納しておく変数
-  const [studentsList, setStudentsList] = useState(null);
+  const [studentsList, setStudentsList] = useState(studentsList_initialValue);
 
   //入退室記録のデータを保存しておく変数
-  const [attendanceState, setAttendanceState] = useState({});
+  const [attendanceState, setAttendanceState] = useState(attendanceState_initialValue);
 
   //現在の座席状況を管理する変数
-  const [seatsState, setSeatsState] = useState({
-    seat1: {
-      active: false,
-      studentID: ""
-    },
-    seat2: {
-      active: false,
-      studentID: ""
-    },
-    seat3: {
-      active: false,
-      studentID: ""
-    },
-    seat4: {
-      active: false,
-      studentID: ""
-    },
-    seat5: {
-      active: false,
-      studentID: ""
-    },
-    seat6: {
-      active: false,
-      studentID: ""
-    },
-    seat7: {
-      active: false,
-      studentID: ""
-    },
-    seat8: {
-      active: false,
-      studentID: ""
-    },
-    seat9: {
-      active: false,
-      studentID: ""
-    },
-    seat10: {
-      active: false,
-      studentID: ""
-    },
-    seat11: {
-      active: false,
-      studentID: ""
-    },
-    seat12: {
-      active: false,
-      studentID: ""
-    },
-    seat13: {
-      active: false,
-      studentID: ""
-    },
-    seat14: {
-      active: false,
-      studentID: ""
-    },
-    seat15: {
-      active: false,
-      studentID: ""
-    },
-    seat16: {
-      active: false,
-      studentID: ""
-    },
-  });
+  const [seatsState, setSeatsState] = useState(seatsState_initialValue);
 
   //モーダル管理変数
-  const [modalState, setModalState] = useState({
-    active: false,
-    modalName: null,
-    content: null
-  });
+  const [modalState, setModalState] = useState(modalState_initialValue);
 
 
   /**
@@ -117,14 +123,11 @@ function App() {
 
     //t.active = falseだった場合：modalStateをリセットする
     if (!t.active) {
-      setModalState({
-        active: false,
-        name: null,
-        content: null
-      });
+      setModalState(modalState_initialValue);
       return;
     }
 
+    //その他：引数に従ってモーダルを起動
     if (t.active && t.name && t.content) {
       setModalState({
         active: true,
@@ -134,10 +137,11 @@ function App() {
       return;
     }
 
+    //正しく引数が指定されていない場合はエラー
     throw new Error("handleModal argument type error in App.js: you need to include active, name, content properties those are truthy.");
   };
 
-  const resetAppState = () => setAppState({ selectedElement: null, selectedSeat: "", now: "TOP" });
+  const resetAppState = () => setAppState(appState_initialValue);
 
   /**
    * function handleSaveAttendanceForEnter()
@@ -296,8 +300,11 @@ function App() {
    * useEffect functions group
    */
 
-  //起動時に1回だけ行われる処理
+  //起動時、もしくはリロード時に1回だけ行われる処理
   useEffect(async () => {
+    console.log("useEffect");
+    isFirstReadSeatsStateBCUP.current = false;
+    isFirstReadAttendanceStateBCUP.current = false;
 
     //生徒情報ファイルが存在していれば自動読み込み
     const studentsList_autoloadedData = await window.electron.ipcRenderer.invoke("handle_studentsList", { mode: "read" });
@@ -365,8 +372,6 @@ function App() {
 
   }, [attendanceState, seatsState]);
 
-
-
   //デバッグ用コンソール表示関数
   // useEffect(() => {
   //   console.log("seatsState checker---------");
@@ -407,28 +412,3 @@ function App() {
 }
 
 export default App;
-
-
-  //デバッグ用関数群
-  // useEffect(() => {
-  //   console.log("seatsState checker---------");
-  //   console.log(seatsState);
-  // }, [seatsState]);
-  // useEffect(() =>{
-  //   if(studentsList!== null){
-  //     console.log("student list data has loaded");
-  //     console.log(studentsList);
-  //   }
-  // }, [studentsList]);
-  // useEffect(() => {
-  //   console.log("appState checker---------");
-  //   console.log(appState);
-  // }, [appState]);
-  // useEffect(() => {
-  //   console.log("appState checker---------");
-  //   console.log(modalState);
-  // }, [modalState]);
-  // useEffect(()=>{
-  //   console.log("attendanceState checker........")
-  //   console.log(attendanceState);
-  // }, [attendanceState]);

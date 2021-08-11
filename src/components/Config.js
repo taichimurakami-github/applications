@@ -46,7 +46,7 @@ const Config = (props) => {
     <div className="component-config-wrapper">
       <h1>アプリ設定メニュー</h1>
       <div className="btn-container">
-        <button className="btn read-student-list" onClick={onReadStudentsFile}>生徒情報ファイルの保存場所を設定</button>
+        <button className="btn read-student-list" onClick={onReadStudentsFile}>生徒情報ファイルを設定する</button>
       </div>
       <button className="btn btn__typeC" onClick={handleBackToTop}>トップページに戻る</button>
     </div>
