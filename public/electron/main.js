@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const { ipcMain, app, BrowserWindow } = require('electron')
+const { ipcMain, app, BrowserWindow, session } = require('electron')
 const path = require('path')
 const isDev = require("electron-is-dev");
 const fs = require("fs");
@@ -76,10 +76,7 @@ app.whenReady().then(() => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') {
-    Electron.session.defaultSession.clearCache(() => { });
-    app.quit();
-  }
+  if (process.platform !== 'darwin') app.quit();
 })
 
 // In this file you can include the rest of your app's specific main process
@@ -159,17 +156,13 @@ ipcMain.handle("handle_attendanceState", (event, arg) => {
     case "read":
       console.log("ready for reading attendanceState...");
       return new Promise((resolve, reject) => {
+        if (fs.existsSync(fullFilePath)) {
+          const r = JSON.parse(fs.readFileSync(fullFilePath, "utf-8"));
+          return resolve(r);
+        }
 
-        try {
-          let readResult;
-          fs.existsSync(fullFilePath) ?
-            readResult = JSON.parse(fs.readFileSync(fullFilePath, "utf-8")) :
-            readResult = undefined;
-
-          resolve(readResult);
-        } catch (err) {
-          console.log("failed to read attendanceState");
-          reject(undefined);
+        else {
+          return resolve(undefined);
         }
       });
 

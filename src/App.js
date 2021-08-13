@@ -303,8 +303,6 @@ function App() {
   //起動時、もしくはリロード時に1回だけ行われる処理
   useEffect(async () => {
     console.log("useEffect");
-    isFirstReadSeatsStateBCUP.current = false;
-    isFirstReadAttendanceStateBCUP.current = false;
 
     //生徒情報ファイルが存在していれば自動読み込み
     const studentsList_autoloadedData = await window.electron.ipcRenderer.invoke("handle_studentsList", { mode: "read" });
@@ -313,18 +311,15 @@ function App() {
     //今日の分のseatsState記録が残っていれば読み込み
     const seatsState_bcup = await window.electron.ipcRenderer.invoke("handle_seatsState", { mode: "read" });
     console.log("read_seatsstate_bcup_result", seatsState_bcup);
-    if (seatsState_bcup) {
-      setSeatsState(seatsState_bcup);
-      isFirstReadSeatsStateBCUP.current = true;
-    }
+    if (seatsState_bcup) setSeatsState(seatsState_bcup);
 
     //今日の分のattendanceState記録が残っていれば読み込み
     const attendanceState_bcup = await window.electron.ipcRenderer.invoke("handle_attendanceState", { mode: "read" });
     console.log("attendanceState_bcup_result", attendanceState_bcup);
-    if (attendanceState_bcup) {
-      setAttendanceState(attendanceState_bcup);
-      isFirstReadAttendanceStateBCUP.current = true;
-    }
+    if (attendanceState_bcup) setAttendanceState(attendanceState_bcup);
+
+    isFirstReadSeatsStateBCUP.current = true;
+    isFirstReadAttendanceStateBCUP.current = true;
   }, []);
 
 
