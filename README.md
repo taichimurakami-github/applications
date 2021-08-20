@@ -15,24 +15,28 @@ Create-react-appで作成したアプリのひな型に、electronでwindowsデ�
 ### STEP1:`git clone https://github.com/taichimurakami-github/applications.git`
 まず、git cloneにて必要ファイルをコピーしましょう。
 
-### STEP2: `npm start`
-コマンドを実行すると、development build状態でアプリを走らせることができます。
-**(ATTENTION!!) Node.jsのfs機能を使用するため、デバッグ、実行共に通常のChrome等の上では行えません。**  
+### STEP2: `npm i`
+必要なモジュールをインストールします。この手順を飛ばすとSTEP3のビルドでエラーが出ます。
 
-### STEP3: `npm i`
-必要なモジュールをインストールします。この手順を飛ばすとSTEP4のビルドでエラーが出ます。
-
-### STEP4: `npm run build`
+### STEP3: `npm run build`
 アプリケーションをビルドします。  
 distフォルダが作成され、その中に**attendance-management Setup (version number).exe**というファイルが作成されれば成功です。  
-
+なお、もしビルドに失敗している場合、以下の点を参照してください。  
 
 <エラーが出た時は>  
 以下の点を確認してください。  
+
 + package.json
 json内の"main"の項目が以下の設定になっているか確認してください。  
+`"main": "build/electron/main.js"`  
 もし"public/electron/main.js"の場合、以下で上書きしてください。　　
-`"main": "build/electron/main.js"`
+
++ 実行コマンドの変更  
+OS依存のシェルコマンド(&等)を利用したスクリプトがある関係上、何らかのエラーが発生することがあります。  
+`npm-run-all`等を試してみてください。  
+
++ dependenciesとdevDependenciesのパッケージがどちらも正しくインストールされているか  
+devDependenciesのパッケージを使ってビルドを行います。
 
 ## アプリケーションのインストールと実行
 
