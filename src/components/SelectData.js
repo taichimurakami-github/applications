@@ -1,6 +1,9 @@
 import { useState, useRef } from "react";
 import { StudentsDataList } from "./StudentsDataLists";
 
+//style imports
+import "./styles/modules/StudentData.scss";
+
 export const SelectData = (props) => {
   const selectorContainer = useRef();
   const navigation = useRef();
@@ -15,34 +18,34 @@ export const SelectData = (props) => {
   );
 
   //モーダル管理変数
-  const [modalState, setModalState] = useState({
-    active: false,
-    modalName: null,
-    content: null
-  });
+  // const [modalState, setModalState] = useState({
+  //   active: false,
+  //   modalName: null,
+  //   content: null
+  // });
 
   //Modal制御関数
-  const handleModalState = (t) => {
-    if (!t.active) {
-      setModalState({
-        active: false,
-        name: null,
-        content: null
-      });
-      return;
-    }
+  // const handleModalState = (t) => {
+  //   if (!t.active) {
+  //     setModalState({
+  //       active: false,
+  //       name: null,
+  //       content: null
+  //     });
+  //     return;
+  //   }
 
-    if (t.active && t.name && t.content) {
-      setModalState({
-        active: true,
-        name: t.name,
-        content: t.content
-      });
-      return;
-    }
+  //   if (t.active && t.name && t.content) {
+  //     setModalState({
+  //       active: true,
+  //       name: t.name,
+  //       content: t.content
+  //     });
+  //     return;
+  //   }
 
-    throw new Error("handleModal argument type error in App.js: you need to include active, name, content properties those are truthy.");
-  };
+  //   throw new Error("handleModal argument type error in App.js: you need to include active, name, content properties those are truthy.");
+  // };
 
   //現在の SelectData stateに基づいて、適当な生徒をStudentsListから取り出して配列として返す
   const generateStudentsList = () => {

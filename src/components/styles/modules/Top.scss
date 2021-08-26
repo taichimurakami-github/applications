@@ -1,0 +1,45 @@
+//assets import
+@import "../assets";
+
+.seat-table-container{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 100px;
+  margin-top: 50px;
+
+  .column{
+    width: 200px;
+    cursor: pointer;
+    &:not(:last-child){
+      margin-right: 50px;
+    }
+
+    li{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100px;
+      // font-weight: bold;
+      font-size: 4rem;
+      &:not(:last-child){margin-bottom: 30px;}
+      background: $emerald-green;
+      &:not(.active):hover{
+        background: darken($emerald-green, 30%);
+      }
+
+      &.active{
+        background: $vermilion;
+        color: white;
+        cursor: not-allowed;
+        font-weight: bold;
+        font-size: 3rem;
+      }
+    }
+  }
+
+  &.unactive li{
+    background: $gray;
+
+    &:not(.active):hover{background: $gray};
+  }
+}

@@ -1,5 +1,4 @@
 import { appConfig } from "../app.config";
-import { ModalWrapper } from "./modal/MordalWrapper";
 
 const StudentsDataList = (props) => {
   const school_ja = [];

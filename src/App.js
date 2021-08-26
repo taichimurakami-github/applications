@@ -8,12 +8,14 @@ import { Config } from "./components/Config";
 
 //style import
 import "./components/styles/components.scss";
+import "./components/styles/modules/Top.scss";
 import "./components/styles/app.common.scss";
 
 const appState_initialValue = {
   selectedElement: null,
   selectedSeat: "",
   now: "TOP",
+  log: null
 }
 const studentsList_initialValue = null;
 const attendanceState_initialValue = {};
@@ -225,21 +227,25 @@ function App() {
     }
 
     if (seatsState[i].studentID !== "__OTHERS__") {
+      //"関係者その他"でなければ
       //attendanceStateを更新
       const now = new Date();
       const attendance_data_exit = {
         exit: `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
       }
 
-      // obj2[i]
+      //id: 対象生徒のid(objのindexになる)
       const id = seatsState[i].studentID;
+
+      //
       let arr = attendanceState[id].map((val, index) => {
+        console.log(typeof(index), typeof(attendanceState[id].length - 1));
         return (index == attendanceState[id].length - 1) ? { ...val, ...attendance_data_exit } : val
       })
-      const obj2 = {};
-      obj2[id] = arr;
+      const attendanceState_rewriteContent = {};
+      attendanceState_rewriteContent[id] = arr;
 
-      setAttendanceState({ ...attendanceState, ...obj2 });
+      setAttendanceState({ ...attendanceState, ...attendanceState_rewriteContent });
     }
 
     setSeatsState({ ...seatsState, ...obj });
@@ -301,30 +307,33 @@ function App() {
    */
 
   //起動時、もしくはリロード時に1回だけ行われる処理
-  useEffect(async () => {
+  useEffect( () => {
     console.log("useEffect");
-    isFirstReadSeatsStateBCUP.current = false;
-    isFirstReadAttendanceStateBCUP.current = false;
 
-    //生徒情報ファイルが存在していれば自動読み込み
-    const studentsList_autoloadedData = await window.electron.ipcRenderer.invoke("handle_studentsList", { mode: "read" });
-    studentsList_autoloadedData && setStudentsList(studentsList_autoloadedData);
+    const reloadProc = async () => {
+      isFirstReadSeatsStateBCUP.current = false;
+      isFirstReadAttendanceStateBCUP.current = false;
+  
+      //生徒情報ファイルが存在していれば自動読み込み
+      const studentsList_autoloadedData = await window.electron.ipcRenderer.invoke("handle_studentsList", { mode: "read" });
+      studentsList_autoloadedData && setStudentsList(studentsList_autoloadedData);
+  
+      //今日の分のseatsState記録が残っていれば読み込み
+      const seatsState_bcup = await window.electron.ipcRenderer.invoke("handle_seatsState", { mode: "read" });
+      console.log("read_seatsstate_bcup_result", seatsState_bcup);
+      seatsState_bcup && setSeatsState(seatsState_bcup);
+  
+      //今日の分のattendanceState記録が残っていれば読み込み
+      const attendanceState_bcup = await window.electron.ipcRenderer.invoke("handle_attendanceState", { mode: "read" });
+      console.log("attendanceState_bcup_result", attendanceState_bcup);
+      attendanceState_bcup && setAttendanceState(attendanceState_bcup);
 
-    //今日の分のseatsState記録が残っていれば読み込み
-    const seatsState_bcup = await window.electron.ipcRenderer.invoke("handle_seatsState", { mode: "read" });
-    console.log("read_seatsstate_bcup_result", seatsState_bcup);
-    if (seatsState_bcup) {
-      setSeatsState(seatsState_bcup);
+      //初回読み込みを完了、フラグを変更
       isFirstReadSeatsStateBCUP.current = true;
-    }
-
-    //今日の分のattendanceState記録が残っていれば読み込み
-    const attendanceState_bcup = await window.electron.ipcRenderer.invoke("handle_attendanceState", { mode: "read" });
-    console.log("attendanceState_bcup_result", attendanceState_bcup);
-    if (attendanceState_bcup) {
-      setAttendanceState(attendanceState_bcup);
       isFirstReadAttendanceStateBCUP.current = true;
     }
+
+    reloadProc();
   }, []);
 
 
@@ -358,7 +367,11 @@ function App() {
   }, [studentsList]);
 
   //バックアップ兼記録ファイル 自動書き出し
-  useEffect(async () => {
+  useEffect(() => {
+
+    const autoFileWriter = async () => {
+    // console.log("auto writer by useEffect");
+    // console.log(isFirstReadAttendanceStateBCUP.current, isFirstReadSeatsStateBCUP.current);
 
     //attendanceState書き出し
     isFirstReadAttendanceStateBCUP.current &&
@@ -369,6 +382,8 @@ function App() {
     isFirstReadSeatsStateBCUP.current &&
       await window.electron.ipcRenderer
         .invoke("handle_seatsState", { mode: "write", data: JSON.stringify(seatsState) });
+    }
+    autoFileWriter();
 
   }, [attendanceState, seatsState]);
 

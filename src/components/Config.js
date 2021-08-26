@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { appConfig } from "../app.config";
 
 const Config = (props) => {
@@ -9,7 +8,7 @@ const Config = (props) => {
 
   const onReadStudentsFile = () => {
     const debugInput = document.createElement("input");
-    const acceptFileTypeList = [".xlsx", ".csv"];
+    // const acceptFileTypeList = [".xlsx", ".csv"];
 
     debugInput.type = "file";
     debugInput.click();
