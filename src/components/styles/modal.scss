@@ -30,23 +30,26 @@
   .enter-confirm-selector-container,
   .exit-confirm-selector-container{
     p{margin-bottom: 30px;}
-    .btn{
-      display: inline-block;
-      font-weight: bold;
-      color: white;
-      font-size: 1.8rem;
-      border-radius: 5px;
-    }
 
+    .btn__yes,
     .btn__no{
-      margin: 0 0 0 30px;
-    }
-    .btn__yes{
-      margin: 0;
+      margin-top: 0;
     }
   }
 }
 
+::-webkit-scrollbar {
+  width: 0px;
+}
+::-webkit-scrollbar-track {
+  background: lightgray;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $vermilion;
+  border: $vermilion 3px solid;
+  border-radius: 10px;
+}
 .exit-modal-container{
   font-size: 2rem;
   padding: 50px;
@@ -54,6 +57,10 @@
   background:white;
   width: 1000px;
   height: 500px;
+  overflow: auto;
+
+
+  
 
   .btn__typeB{
     margin-top: 100px;

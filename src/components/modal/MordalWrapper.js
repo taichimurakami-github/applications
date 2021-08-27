@@ -2,15 +2,19 @@
 import { ErrorModal } from "./ErrorModal";
 import { ExitModal } from "./ExitModal";
 import { ConfirmModal } from "./ConfirmModal";
+import { appConfig } from "../../app.config";
+import { useState } from "react";
 
 //import styles
 import "../styles/modal.scss";
-import { appConfig } from "../../app.config";
+
 
 const ModalWrapper = (props) => {
 
+  const [BackgroundClose, setBackgroundClose] = useState(true);
+
   const closeModal = (e) => {
-    //returnしないと、trueのときにe.target === undefinedとなってエラーになる
+    //returnしないと、e.target === trueのときにe.target === undefinedとなってエラーになる
     if(e === true){
       return props.onHandleModalState({active: false});
     }
@@ -29,8 +33,10 @@ const ModalWrapper = (props) => {
           return <ConfirmModal
             content={props.modalState.content}
             onCloseModal={closeModal}
+            onHandleBcClose={setBackgroundClose}
             onSaveForEnter={props.onSaveForEnter}
             onSaveForExit={props.onSaveForExit}
+            onEraceAppData={props.onEraceAppData}
             seatsState={props.seatsState}
             studentsList={props.studentsList}
            />
@@ -38,6 +44,7 @@ const ModalWrapper = (props) => {
         case appConfig.modalCodeList["1002"]:
           return <ErrorModal
             onCloseModal={closeModal}
+            onHandleBcClose={setBackgroundClose}
             content={props.modalState.content}
           />
 
@@ -46,6 +53,7 @@ const ModalWrapper = (props) => {
             seatsState={props.modalState.content.seatsState}
             studentsList={props.modalState.content.studentsList}
             onCloseModal={closeModal}
+            onHandleBcClose={setBackgroundClose}
             onHandleModalState={props.onHandleModalState}
             onSaveForExit={props.onSaveForExit}
            />
@@ -62,7 +70,7 @@ const ModalWrapper = (props) => {
       {
         props.modalState.active ?      
 
-        <div onClick={closeModal} className="modal-wrapper onclick-close">
+        <div onClick={closeModal} className={`modal-wrapper ${BackgroundClose && "onclick-close"}`}>
           {handleModal()}
         </div>
 

@@ -1,5 +1,5 @@
 //assets import
-@import "./assets";
+@import "../assets";
 
 .component-config-wrapper{
   .btn{
@@ -9,6 +9,12 @@
   .read-student-list{
     padding: 10px 50px;
     background: $moss-green;
+    color: white;
+  }
+
+  .erace-today-data-all{
+    padding: 10px 50px;
+    background: $vermilion;
     color: white;
   }
 

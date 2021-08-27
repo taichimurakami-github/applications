@@ -4,6 +4,7 @@ const ConfirmModal = (props) => {
 
   const onSaveAttendanceForEnter = () => props.onSaveForEnter(props.content.targetID);
   const onSaveAttendanceForExit = () => props.onSaveForExit(props.content.targetID);
+  const onEraceAppData = () => props.onEraceAppData();
   const closeModal = () => props.onCloseModal(true);
 
 
@@ -20,8 +21,9 @@ const ConfirmModal = (props) => {
 
 
       case appConfig.confirmCodeList["1002"]:
-        // console.log(props.content);
-        // console.log(props.seatsState[props.content.targetID]);
+        //退席処理を実行する準備を行う
+        //まず、処理を実行する生徒IDをseatsStateより取り出す
+        //関係者の場合は特殊パターンとして別途オブジェクトを作成する
         const targetInfo = (props.seatsState[props.content.targetID].studentID !== "__OTHERS__") ?
           props.studentsList.filter((val) => {
             return val.id == props.seatsState[props.content.targetID].studentID;
@@ -33,6 +35,7 @@ const ConfirmModal = (props) => {
 
 
         // console.log(targetInfo);
+        //確認モーダルの中身
         return (
           <div className="exit-confirm-selector-container">
             <p>本当に {targetInfo.name} さんでよろしいですか？</p>
@@ -40,6 +43,19 @@ const ConfirmModal = (props) => {
             <button className="btn btn__no" onClick={closeModal}>いいえ</button>
           </div>
         );
+
+      case appConfig.confirmCodeList["1003"]:
+        //アプリのデータを完全に削除する
+        return (
+          <>
+            <p>今日1日分のアプリ内部データを完全に削除します。</p>
+            <p>※この機能はアプリの動作が不安定な場合のみ使用してください※</p>
+            <p>一度削除したデータはもとに戻せません。本当によろしいですか？</p>
+            
+            <button className="btn btn__yes" onClick={onEraceAppData}>はい</button>
+            <button className="btn btn__no" onClick={closeModal}>いいえ</button>
+          </>
+        )
 
 
       //自習室の入室を記録
@@ -78,6 +94,19 @@ const ConfirmModal = (props) => {
           </>
         );
 
+      //アプリのローカルデータを削除完了
+      case appConfig.confirmCodeList["2005"]:
+        //background closerを無効化
+        props.onHandleBcClose(false);
+
+        //リロード
+        setTimeout(()=>window.location.reload(), 3000);
+        return(
+          <>
+            <p>アプリの本日分の内部データを削除しました。</p>
+            <p>3秒後にアプリを再読み込みします...</p>
+          </>
+        )
 
       default:
         throw new Error("Unexpected confirmCode in ConfirmModal.js");

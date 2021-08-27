@@ -1,10 +1,23 @@
 import { appConfig } from "../app.config";
 
+//style import
+import "./styles/modules/Config.scss";
+
 const Config = (props) => {
 
   const handleBackToTop = () => {
     props.onHandleAppState({ now: "TOP" });
   };
+
+  const onEraceAppData = () => {
+    props.onHandleModalState({
+      active: true,
+      name: appConfig.modalCodeList["1001"],
+      content: {
+        confirmCode: appConfig.confirmCodeList["1003"],
+      }
+    })
+  }
 
   const onReadStudentsFile = () => {
     const debugInput = document.createElement("input");
@@ -43,9 +56,13 @@ const Config = (props) => {
 
   return (
     <div className="component-config-wrapper">
-      <h1>アプリ設定メニュー</h1>
+      <h1>アプリ設定</h1>
       <div className="btn-container">
         <button className="btn read-student-list" onClick={onReadStudentsFile}>生徒情報ファイルを設定する</button>
+        {
+          appConfig.stable.eraceAppDataTodayAll &&
+          <button className="btn erace-today-data-all" onClick={onEraceAppData}>アプリ内部データを削除する</button>
+        }
       </div>
       <button className="btn btn__typeC" onClick={handleBackToTop}>トップページに戻る</button>
     </div>

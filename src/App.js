@@ -7,7 +7,6 @@ import { ModalWrapper } from "./components/modal/MordalWrapper";
 import { Config } from "./components/Config";
 
 //style import
-import "./components/styles/components.scss";
 import "./components/styles/modules/Top.scss";
 import "./components/styles/app.common.scss";
 
@@ -15,7 +14,7 @@ const appState_initialValue = {
   selectedElement: null,
   selectedSeat: "",
   now: "TOP",
-  log: null
+  appLog: null
 }
 const studentsList_initialValue = null;
 const attendanceState_initialValue = {};
@@ -91,8 +90,7 @@ const modalState_initialValue = {
   content: null
 };
 
-function App() {
-  const isFirstReadStudentsList = useRef(false);
+const App = () => {
   const isFirstReadSeatsStateBCUP = useRef(false);
   const isFirstReadAttendanceStateBCUP = useRef(false);
 
@@ -110,6 +108,26 @@ function App() {
 
   //モーダル管理変数
   const [modalState, setModalState] = useState(modalState_initialValue);
+  
+  /**
+   * function handleEraceAppData()
+   * 
+   * 本日の分の、アプリのローカルデータを完全に削除する
+   * ※削除されるのはアプリ起動日1日分のみ
+   * 
+   */
+  const handleEraceAppData = async () => {
+    console.log("erace");
+    await window.electron.ipcRenderer.invoke("handle_eraceAppLocalData");
+    setModalState({
+      active: true,
+      name: appConfig.modalCodeList["1001"],
+      content: {
+        //アプリデータ削除完了
+        confirmCode: appConfig.confirmCodeList["2005"]
+      }
+    });
+  }
 
 
   /**
@@ -143,7 +161,36 @@ function App() {
     throw new Error("handleModal argument type error in App.js: you need to include active, name, content properties those are truthy.");
   };
 
-  const resetAppState = () => setAppState(appState_initialValue);
+  /**
+   * function resetAppState()
+   * 
+   * appStateをリセットする関数
+   * 引数に何も渡さない場合はappStateの初期値を使って、
+   * logが含まれている場合はlogを反映して
+   * appStateを上書きする
+   * (logの書き換え関数を別途用意しないのは、stateの更新時のマージによるバグを防ぐため)
+   * 
+   * @param {object} arg 
+   */
+  const resetAppState = (arg = null) => {
+
+
+
+    if(arg && arg.mode === "APPLOG"){
+      //appLogが渡された場合
+      setAppState(
+        {
+          ...appState_initialValue,
+          appLog: arg.content
+        }
+      );
+    }else{
+      //appLogが渡されなかった場合
+      setAppState(appState_initialValue);
+    }
+
+  }
+
 
   /**
    * function handleSaveAttendanceForEnter()
@@ -154,11 +201,14 @@ function App() {
    */
   const handleSaveAttendanceForEnter = (i) => {
     console.log("出席処理を開始します...");
+    //時刻を定義
+    const now = new Date();
+    const nowDateTime = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
 
     //席を赤くする
     appState.selectedElement.classList.add("active");
-    const obj = {}
-    obj[appState.selectedSeat] = (i === "__OTHERS__") ?
+    const insertObjectForSeatsState = {}
+    insertObjectForSeatsState[appState.selectedSeat] = (i === "__OTHERS__") ?
       {
         active: true,
         studentID: "__OTHERS__"
@@ -170,32 +220,30 @@ function App() {
       }
 
     //seatsStateを更新
-    setSeatsState({ ...seatsState, ...obj });
+    setSeatsState({ ...seatsState, ...insertObjectForSeatsState });
 
     if (i !== "__OTHERS__") {
       //attendanceStateを更新
-      let arr;
-      const now = new Date();
-      const attendance_data_enter = {
+      const insertObjectForAttendanceState = {};
+      const attendance_enterData = {
         id: i,
         seatID: appState.selectedSeat,
-        enter: `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`,
-      }
+        enter: nowDateTime,
+      };
 
-      if (i in attendanceState) {
+
+      //attendanceState内に該当生徒のkeyが存在するか確認
+      (i in attendanceState) ?
         //既に同日内に自習室に記録が残っている場合、要素を追加する形で記録
-        arr = attendanceState[i].map((val) => { return val })
-        console.log(arr);
-        arr.push(attendance_data_enter);
-      } else {
-        //同日内で初めて自習室に来た場合、新しくkeyと配列を作成
-        arr = [attendance_data_enter];
-      }
+        insertObjectForAttendanceState[i] = attendanceState[i].map( val => val )
+         :
+        //同日内で初めて自習室に来た場合、新しくkeyと配列を作成         
+        insertObjectForAttendanceState[i] = [];
 
-      const obj2 = {}
-      obj2[i] = arr;
 
-      setAttendanceState({ ...attendanceState, ...obj2 });
+      insertObjectForAttendanceState[i].push(attendance_enterData);
+      //atttendanceStateを更新
+      setAttendanceState({ ...attendanceState, ...insertObjectForAttendanceState });
     }
 
     //確認モーダルの表示
@@ -208,7 +256,16 @@ function App() {
       }
     });
 
-    resetAppState();
+    resetAppState(
+      {
+        mode: "APPLOG",
+        content: {
+          studentID: i,
+          seatID: appState.selectedSeat,
+          oparation: "enter",
+        }
+      }
+    );
   };
 
   /**
@@ -220,8 +277,8 @@ function App() {
    */
   const handleSaveAttendanceForExit = (i) => {
     console.log("退席処理を開始します...");
-    const obj = {}
-    obj[i] = {
+    const insertObjectForSeatsState = {}
+    insertObjectForSeatsState[i] = {
       active: false,
       studentID: ""
     }
@@ -230,25 +287,26 @@ function App() {
       //"関係者その他"でなければ
       //attendanceStateを更新
       const now = new Date();
-      const attendance_data_exit = {
+      const attendance_exitData = {
         exit: `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
       }
 
       //id: 対象生徒のid(objのindexになる)
       const id = seatsState[i].studentID;
 
-      //
-      let arr = attendanceState[id].map((val, index) => {
-        console.log(typeof(index), typeof(attendanceState[id].length - 1));
-        return (index == attendanceState[id].length - 1) ? { ...val, ...attendance_data_exit } : val
-      })
-      const attendanceState_rewriteContent = {};
-      attendanceState_rewriteContent[id] = arr;
+      //対象生徒のkeyで参照したattendanceStateのvalueの中で、
+      //配列の最後の要素のみ更新し、元のattendanceStateにマージする
+      const insertObjectForAttendanceState = {};
+      insertObjectForAttendanceState[id] = attendanceState[id].map((val, index) => {
+        //exitのデータを、配列の最後の要素に書き込み
+        //それ以外のデータは変更しないでそのまま返す
+        return (index == attendanceState[id].length - 1) ? { ...val, ...attendance_exitData } : val;
+      });
 
-      setAttendanceState({ ...attendanceState, ...attendanceState_rewriteContent });
+      setAttendanceState({ ...attendanceState, ...insertObjectForAttendanceState });
     }
 
-    setSeatsState({ ...seatsState, ...obj });
+    setSeatsState({ ...seatsState, ...insertObjectForSeatsState });
 
     //確認モーダルの表示
     setModalState({
@@ -260,6 +318,128 @@ function App() {
       }
     });
 
+    //appStateのリセット兼ログ保存
+    resetAppState(
+      {
+        mode: "APPLOG",
+        content: {
+          studentID: seatsState[i].studentID,
+          seatID: i,
+          oparation: "exit",
+        }
+      }
+    );
+
+  }
+
+  /**
+   * function handleCancelOparation()
+   * 
+   * 一つ前の操作を取り消す関数
+   * 今の所、一旦取り消したらもとに戻すことはできないし、
+   * 一つ前以上の操作を取り消すことはできない
+   * 
+   * @returns void
+   */
+  const handleCancelOperation = () => {
+    console.log("launching cancel oparation...");
+
+    //appState.appLogがnullだった場合、return
+    if(!appState.appLog) return;
+
+    // //デバッグ用コンソール
+    // console.log(attendanceState[appState.appLog.studentID]);
+    // console.log(appState.appLog);
+
+    // const targetStudentData = studentsList.filter(val => val.id == appState.appLog.studentID);
+    const insertObjectForAttendanceState = {...attendanceState};
+    const insertObjectForSeatsState = {};
+
+    switch(appState.appLog.oparation){
+    /**
+     * TO DO (cancel enter operation)
+     * ・seatsStateに登録した座席をリセット
+     * ・attendanceStateから入室記録を削除
+     * ・appLogをリセット
+     */
+      case "enter":
+
+        //関係者その他専用処理
+        if(appState.appLog.studentID === "__OTHERS__"){
+          console.log("others enter");
+
+          insertObjectForSeatsState[appState.appLog.seatID] = {
+            active: false,
+            studentID: "",
+          }
+          setSeatsState({...seatsState, ...insertObjectForSeatsState});
+          break;
+        }
+
+        //seatsStateの登録を削除
+        insertObjectForSeatsState[appState.appLog.seatID] = {
+          active: false,
+          studentID: "",
+        }
+        setSeatsState({...seatsState, ...insertObjectForSeatsState});
+
+        //attendanceStateのenterの記録を削除
+        //attendanceState上にはkeyとvalueが必ず存在しているので、値の存在を確認せずに直接値を参照する
+
+        (attendanceState[appState.appLog.studentID].length === 1) ?
+          //attendanceStateのvalue内の要素が1つしかない場合、keyごと削除
+          delete insertObjectForAttendanceState[appState.appLog.studentID]
+           :
+          //要素が2つ以上の場合、最後の要素 = 新しくenterで生成された要素を削除
+          insertObjectForAttendanceState[appState.appLog.studentID].pop();
+
+        setAttendanceState({...insertObjectForAttendanceState});
+        break;
+
+    /**
+     * TO DO (cancel enter operation)
+     * ・seatsStateに登録し直す
+     * ・attendanceStateから退出記録を削除
+     * ・appLogをリセット
+     */
+      case "exit":
+        if(appState.appLog.studentID === "__OTHERS__"){
+          console.log("others exit");
+          insertObjectForSeatsState[appState.appLog.seatID] = {
+            active: true,
+            studentID: "__OTHERS__",
+          }
+
+          setSeatsState({...seatsState, ...insertObjectForSeatsState});
+          break;
+        }
+
+        //seatsStateに再登録する
+        insertObjectForSeatsState[appState.appLog.seatID] = {
+          active: true,
+          studentID: appState.appLog.studentID,
+        }
+        setSeatsState({...seatsState, ...insertObjectForSeatsState});
+
+        //attendanceStateからexitの記録を削除
+        
+        //配列の最後の要素を取得し、exitプロパティを削除
+        const lastElem = insertObjectForAttendanceState[appState.appLog.studentID].slice(-1)[0]
+        delete lastElem.exit;
+
+        //配列の最後の要素を削除し、先程いじったexitなしオブジェクトを挿入
+        insertObjectForAttendanceState[appState.appLog.studentID].pop();
+        insertObjectForAttendanceState[appState.appLog.studentID].push(lastElem);
+
+        setAttendanceState({...attendanceState, ...insertObjectForAttendanceState});
+
+        break;
+
+      default:
+        throw new Error("An error has occured in cancelOparation: oparation name is probably wrong");
+    }
+
+    resetAppState();
   }
 
   //appState, seatStateを変更する
@@ -274,6 +454,7 @@ function App() {
           onHandleAppState={handleAppState}
           onHandleSeat={handleSeatsState}
           onHandleModalState={handleModalState}
+          onCancelOperation={handleCancelOperation}
           seatsState={seatsState}
           studentsList={studentsList}
         />;
@@ -298,7 +479,7 @@ function App() {
 
 
       default:
-        throw new Error("Unexpected appState.now case in App.js");
+        throw new Error("an Error has occured in App.js: unexpected appState.now case");
     }
   };
 
@@ -308,7 +489,7 @@ function App() {
 
   //起動時、もしくはリロード時に1回だけ行われる処理
   useEffect( () => {
-    console.log("useEffect");
+    console.log("バックアップファイルの読み込みを開始します");
 
     const reloadProc = async () => {
       isFirstReadSeatsStateBCUP.current = false;
@@ -317,6 +498,7 @@ function App() {
       //生徒情報ファイルが存在していれば自動読み込み
       const studentsList_autoloadedData = await window.electron.ipcRenderer.invoke("handle_studentsList", { mode: "read" });
       studentsList_autoloadedData && setStudentsList(studentsList_autoloadedData);
+      console.log(studentsList_autoloadedData);
   
       //今日の分のseatsState記録が残っていれば読み込み
       const seatsState_bcup = await window.electron.ipcRenderer.invoke("handle_seatsState", { mode: "read" });
@@ -398,18 +580,18 @@ function App() {
   //     console.log(studentsList);
   //   }
   // }, [studentsList]);
-  // useEffect(() => {
-  //   console.log("appState checker---------");
-  //   console.log(appState);
-  // }, [appState]);
+  useEffect(() => {
+    console.log("appState checker---------");
+    console.log(appState);
+  }, [appState]);
   // useEffect(() => {
   //   console.log("appState checker---------");
   //   console.log(modalState);
   // }, [modalState]);
-  // useEffect(() => {
-  //   console.log("attendanceState checker........")
-  //   console.log(attendanceState);
-  // }, [attendanceState]);
+  useEffect(() => {
+    console.log("attendanceState checker........")
+    console.log(attendanceState);
+  }, [attendanceState]);
 
   return (
     <div className="App">
@@ -419,6 +601,7 @@ function App() {
         onHandleModalState={handleModalState}
         onSaveForEnter={handleSaveAttendanceForEnter}
         onSaveForExit={handleSaveAttendanceForExit}
+        onEraceAppData={handleEraceAppData}
         studentsList={studentsList}
         seatsState={seatsState}
       />

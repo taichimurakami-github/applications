@@ -81,7 +81,10 @@ export const Top = (props) => {
 
       </div>
       <div className="btn-wrapper">
-        <button className="btn cancel-manipulation-btn">直前の操作を取り消す</button>
+        {
+          appConfig.nightly.cancelOperation &&
+          <button className="btn cancel-manipulation-btn" onClick={props.onCancelOperation}>直前の操作を取り消す</button>
+        }
         <button className="btn activate-exit-btn btn__exit" onClick={displayExitModal}>退出する</button>
         <button className="btn btn__typeC" onClick={handleConfig}>設定画面を開く</button>
       </div>

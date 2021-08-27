@@ -38,7 +38,7 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 //...という事らしいので、このイベント実行時にアプリケーションの起動準備を行います
 app.whenReady().then(() => {
-  console.log(configDirPath);
+  console.log("app local data directory:", configDirPath);
   //appLocalDataフォルダが存在しない場合、新たにフォルダを作成
   if (!fs.existsSync(configDirPath)) {
     console.log("no config dir. creating new config dir ...");
@@ -47,7 +47,7 @@ app.whenReady().then(() => {
 
   //config.jsonフォルダが存在していない場合、新たに設定ファイルを作成
   if (!fs.existsSync(path.resolve(configDirPath, "./config.json"))) {
-    console.log("no config files. creating new config files ...");
+    console.log("no config files. now creating new config files ...");
     const configPrototype = {
       path: {
         seats: path.resolve(configDirPath, "./seats/"),
@@ -216,3 +216,14 @@ ipcMain.handle("handle_seatsState", (event, arg) => {
 
   }
 });
+
+ipcMain.handle("handle_eraceAppLocalData", () => {
+  const now = new Date();
+  const fileName = `${now.getFullYear()}${now.getMonth() + 1}${now.getDate()}.json`;
+  const fullFilePathForSeatsStateBCUP = path.resolve(appLocalConfig.path.seats, fileName);
+  const fullFilePathForAttendanceStateBCUP = path.resolve(appLocalConfig.path.attendance, fileName);
+
+  fs.existsSync(fullFilePathForSeatsStateBCUP) && fs.unlinkSync(fullFilePathForSeatsStateBCUP);
+  fs.existsSync(fullFilePathForAttendanceStateBCUP) && fs.unlinkSync(fullFilePathForAttendanceStateBCUP);
+
+})
