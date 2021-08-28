@@ -14,11 +14,7 @@ export const Top = (props) => {
     props.onHandleAppState({ selectedElement: e.target, selectedSeat: e.target.id, now: "STUDENT" });
   }
 
-  const handleConfig = () => {
-    props.onHandleAppState({
-      now: "CONFIG"
-    });
-  }
+  const handleConfig = () => props.onHandleAppState({now: "CONFIG"});
 
   const displayExitModal = () => {
     props.onHandleModalState({
@@ -29,6 +25,26 @@ export const Top = (props) => {
         seatsState: props.seatsState,
       }
     });
+  }
+
+  const displayCancelOperationModal = () => {
+
+    const name = props.studentsList.filter((val) => val.id == props.appState.appLog.studentID)[0].name;
+    const operation = props.appState.appLog.operation === "enter" ? "入室" : "退室";
+
+    console.log(name);
+
+    props.onHandleModalState({
+      active: true,
+      name: appConfig.modalCodeList["1001"],
+      content: {
+        confirmCode: appConfig.confirmCodeList["1004"],
+        studentName: name,
+        currentOperation: operation,
+      }
+    });
+
+
   }
 
   return (
@@ -83,7 +99,7 @@ export const Top = (props) => {
       <div className="btn-wrapper">
         {
           appConfig.nightly.cancelOperation &&
-          <button className="btn cancel-manipulation-btn" onClick={props.onCancelOperation}>直前の操作を取り消す</button>
+          <button className={`btn cancel-manipulation-btn ${(props.appState.appLog) ? "active" : "unactive"}`} onClick={displayCancelOperationModal}><span className="cancel-arrow"></span>直前の操作を取り消す</button>
         }
         <button className="btn activate-exit-btn btn__exit" onClick={displayExitModal}>退出する</button>
         <button className="btn btn__typeC" onClick={handleConfig}>設定画面を開く</button>

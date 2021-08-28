@@ -37,6 +37,7 @@ const ModalWrapper = (props) => {
             onSaveForEnter={props.onSaveForEnter}
             onSaveForExit={props.onSaveForExit}
             onEraceAppData={props.onEraceAppData}
+            onCancelOperation={props.onCancelOperation}
             seatsState={props.seatsState}
             studentsList={props.studentsList}
            />

@@ -43,3 +43,29 @@
     &:not(.active):hover{background: $gray};
   }
 }
+
+.cancel-manipulation-btn{
+  background: $vermilion;
+  color: white;
+  padding: 10px;
+
+  &.unactive{
+    display: none;
+  }
+}
+
+.cancel-arrow{
+  // font-size: 3rem;
+}
+
+.btn-wrapper{
+  position: relative;
+  .cancel-manipulation-btn{
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-300%);
+    padding: 5px 10px;
+    border-radius: 100px;
+  }
+}

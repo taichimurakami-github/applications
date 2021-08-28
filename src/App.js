@@ -262,7 +262,7 @@ const App = () => {
         content: {
           studentID: i,
           seatID: appState.selectedSeat,
-          oparation: "enter",
+          operation: "enter",
         }
       }
     );
@@ -325,7 +325,7 @@ const App = () => {
         content: {
           studentID: seatsState[i].studentID,
           seatID: i,
-          oparation: "exit",
+          operation: "exit",
         }
       }
     );
@@ -355,7 +355,7 @@ const App = () => {
     const insertObjectForAttendanceState = {...attendanceState};
     const insertObjectForSeatsState = {};
 
-    switch(appState.appLog.oparation){
+    switch(appState.appLog.operation){
     /**
      * TO DO (cancel enter operation)
      * ・seatsStateに登録した座席をリセット
@@ -432,14 +432,24 @@ const App = () => {
         insertObjectForAttendanceState[appState.appLog.studentID].push(lastElem);
 
         setAttendanceState({...attendanceState, ...insertObjectForAttendanceState});
-
         break;
 
       default:
         throw new Error("An error has occured in cancelOparation: oparation name is probably wrong");
     }
-
+  
+    //AppStaetをリセット
     resetAppState();
+
+    //完了モーダルを表示
+    setModalState({
+      active: true,
+      name: appConfig.modalCodeList["1001"],
+      content: {
+        //操作が取り消されました。
+        confirmCode: appConfig.confirmCodeList["2006"],
+      }
+    });
   }
 
   //appState, seatStateを変更する
@@ -454,7 +464,7 @@ const App = () => {
           onHandleAppState={handleAppState}
           onHandleSeat={handleSeatsState}
           onHandleModalState={handleModalState}
-          onCancelOperation={handleCancelOperation}
+          appState={appState}
           seatsState={seatsState}
           studentsList={studentsList}
         />;
@@ -588,10 +598,10 @@ const App = () => {
   //   console.log("appState checker---------");
   //   console.log(modalState);
   // }, [modalState]);
-  useEffect(() => {
-    console.log("attendanceState checker........")
-    console.log(attendanceState);
-  }, [attendanceState]);
+  // useEffect(() => {
+  //   console.log("attendanceState checker........")
+  //   console.log(attendanceState);
+  // }, [attendanceState]);
 
   return (
     <div className="App">
@@ -602,6 +612,7 @@ const App = () => {
         onSaveForEnter={handleSaveAttendanceForEnter}
         onSaveForExit={handleSaveAttendanceForExit}
         onEraceAppData={handleEraceAppData}
+        onCancelOperation={handleCancelOperation}
         studentsList={studentsList}
         seatsState={seatsState}
       />

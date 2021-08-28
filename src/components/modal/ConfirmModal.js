@@ -5,6 +5,7 @@ const ConfirmModal = (props) => {
   const onSaveAttendanceForEnter = () => props.onSaveForEnter(props.content.targetID);
   const onSaveAttendanceForExit = () => props.onSaveForExit(props.content.targetID);
   const onEraceAppData = () => props.onEraceAppData();
+  const onCancelOperation = () => props.onCancelOperation();
   const closeModal = () => props.onCloseModal(true);
 
 
@@ -53,6 +54,21 @@ const ConfirmModal = (props) => {
             <p>一度削除したデータはもとに戻せません。本当によろしいですか？</p>
             
             <button className="btn btn__yes" onClick={onEraceAppData}>はい</button>
+            <button className="btn btn__no" onClick={closeModal}>いいえ</button>
+          </>
+        )
+
+      case appConfig.confirmCodeList["1004"]:
+          const isAppLogExists = (props.content.appLog) ? true : false;
+
+
+        //直前の操作を取り消す
+        return (
+          <>
+            <p>直前の操作を取り消しますか？</p>
+            <p className="current-operation">直前の操作：<b>{props.content.studentName}</b>さんが<b>{props.content.currentOperation}</b>しました</p>
+            <p>※一度取り消すと元に戻せません</p>   
+            <button className="btn btn__yes" onClick={onCancelOperation}>はい</button>
             <button className="btn btn__no" onClick={closeModal}>いいえ</button>
           </>
         )
@@ -106,9 +122,19 @@ const ConfirmModal = (props) => {
             <p>アプリの本日分の内部データを削除しました。</p>
             <p>3秒後にアプリを再読み込みします...</p>
           </>
-        )
+        );
+
+      //直前の操作取り消し完了
+      case appConfig.confirmCodeList["2006"]:
+        return (
+          <>
+            <p>直前の操作を取り消しました。</p>
+            <button className="btn btn__close" onClick={closeModal}>閉じる</button>
+          </>
+        );
 
       default:
+        console.log("confirm code:", props.content.confirmCode);
         throw new Error("Unexpected confirmCode in ConfirmModal.js");
     }
   }
