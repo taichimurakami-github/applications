@@ -47,7 +47,7 @@ src/app.config.jsの設定で無効化可能。
 本アプリケーションの動作にはNode.jsとnpmが必要です。  
 まず、node.jsをインストールしてください。
 
-### STEP1:`git clone https://github.com/taichimurakami-github/applications.git`
+### STEP1: `git clone https://github.com/taichimurakami-github/applications.git`
 まず、git cloneにて必要ファイルをコピーしましょう。
 
 ### STEP2: `npm i`
@@ -58,7 +58,7 @@ src/app.config.jsの設定で無効化可能。
 distフォルダが作成され、その中に**attendance-management Setup (version number).exe**というファイルが作成されれば成功です。  
 なお、もしビルドに失敗している場合、以下の点を参照してください。  
 
-<エラーが出た時は>  
+～エラーが出た時は～  
 以下の点を確認してください。  
 
 + package.json
@@ -72,6 +72,7 @@ OS依存のシェルコマンド(&等)を利用したスクリプトがある関
 
 + dependenciesとdevDependenciesのパッケージがどちらも正しくインストールされているか  
 devDependenciesのパッケージを使ってビルドを行います。
+
 
 ## アプリケーションのインストールと実行
 
@@ -105,11 +106,9 @@ package.jsonを参照のこと
 
 このフォルダ内の構造は、以下のようになっています。  
 
-config.json  
-attendance/  
-  (年度)(月)(日).json  
-seats/  
-  (年度)(月)(日).json  
++ config.json  
++ attendance/ (年度)(月)(日).json    
++ seats/ (年度)(月)(日).json   
 
 #### config.jsonについて
 アプリケーションの状態をローカルで保存するためのファイルです。基本的にいじらないでください。  
@@ -127,3 +126,10 @@ seats/
 
 #### seatsフォルダについて
 アプリケーションの内部状態のバックアップとなるデータを格納します。いじらないでください。
+
+## 不具合などの対応
+### version 0.9.5
+1. バックアップファイル読み込み時に不具合がある(？)  
+日付をまたいで、バックアップファイルが一新されるタイミングで何らかの不具合が起こることがあります。  
+再現性がないため、現在検証中です。キャッシュ関係の可能性もあるため、アプリの再インストールを行ってください。  
+なお、再インストールを行っても出席データなどは削除されません。
