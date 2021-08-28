@@ -6,7 +6,12 @@ Create-react-appで作成したアプリのひな型に、electronでwindowsデ�
 最新安定バージョン：0.9.7
 
 ## 最新更新情報
-### ver 0.9.7 (2021/8/28 0:00台のcommit)  
+### ver 0.9.7.1 (2021/8/29)  
+取り消し周りのUIを改善しました。  
+ビルドする場合、`npm start`コマンドを使用するか、  
+package.jsonの`main: public/electron/main.js`を`main: build/electron/main.js`に変更してから`npm run build`コマンドを実行してください。
+
+### ver 0.9.7 (2021/8/28)  
 メジャーバージョンアップを行いました。機能的にはあらかた実装したので、  
 もう少し調整後、様子を見つつβ版から製品版の1.0.0に引き上げようと思います。  
 ちなみに、以下の"nightly"と"stable"はそれぞれ実験的段階の機能、安定版の機能を表します。    

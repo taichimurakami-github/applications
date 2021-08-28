@@ -1,7 +1,7 @@
 {
   "name": "attendance-management",
   "productName": "attendance-management",
-  "version": "0.9.7",
+  "version": "0.9.7.1",
   "author": "Taichi Murakami",
   "private": true,
   "main": "public/electron/main.js",
