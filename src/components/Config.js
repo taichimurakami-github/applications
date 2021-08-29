@@ -9,6 +9,32 @@ const Config = (props) => {
     props.onHandleAppState({ now: "TOP" });
   };
 
+  const handleChangeAppConfig = (e) => {
+    console.log(e.target.id);
+    console.log(appConfig.fn.stable.eraceAppDataTodayAll, !appConfig.fn.stable.eraceAppDataTodayAll);
+    switch(e.target.id){
+
+      case "toggle_cancelOperation":
+        props.onHandleChangeAppLocalConfig({
+          id: "appConfig_fn_cancelOperation",
+          status: "nightly",
+          value: !props.appState.localConfig.fn.nightly.cancelOperation,
+        });
+        break;
+
+      case "toggle_eraceAppDataTodayAll":
+        props.onHandleChangeAppLocalConfig({
+          id: "appConfig_fn_eraceAppDataTodayAll",
+          status: "stable",
+          value: !props.appState.localConfig.fn.stable.eraceAppDataTodayAll,
+        });
+        break;
+
+      default:
+        throw new Error("an Error has occued in handleChangeAppConfig: invalid target id");
+    }
+  }
+
   const onEraceAppData = () => {
     props.onHandleModalState({
       active: true,
@@ -57,13 +83,38 @@ const Config = (props) => {
   return (
     <div className="component-config-wrapper">
       <h1>アプリ設定</h1>
+
+      <h2>設定項目</h2>
       <div className="btn-container">
         <button className="btn read-student-list" onClick={onReadStudentsFile}>生徒情報ファイルを設定する</button>
         {
-          appConfig.stable.eraceAppDataTodayAll &&
+          props.appState.localConfig.fn.stable.eraceAppDataTodayAll &&
           <button className="btn erace-today-data-all" onClick={onEraceAppData}>アプリ内部データを削除する</button>
         }
       </div>
+      
+      <h2>機能のon/off</h2>
+
+      <div className="toggle-btn-wrapper btn__toggle">
+        <p>直前の操作取り消し機能</p>
+        <button 
+          id="toggle_cancelOperation" 
+          className={`${"toggle-wrapper "}${props.appState.localConfig.fn.nightly.cancelOperation ? "active" : "unactive"}`} 
+          onClick={handleChangeAppConfig}>
+            <span className="toggle"></span>
+        </button>
+      </div>
+
+      <div className="toggle-btn-wrapper btn__toggle">
+        <p>アプリ内部データ(1日分)削除機能</p>
+        <button 
+          id="toggle_eraceAppDataTodayAll" 
+          className={`${"toggle-wrapper "}${props.appState.localConfig.fn.stable.eraceAppDataTodayAll ? "active" : "unactive"}`} 
+          onClick={handleChangeAppConfig}>
+            <span className="toggle"></span>
+        </button>
+      </div>
+
       <button className="btn btn__typeC" onClick={handleBackToTop}>トップページに戻る</button>
     </div>
   );

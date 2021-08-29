@@ -14,7 +14,8 @@ const appState_initialValue = {
   selectedElement: null,
   selectedSeat: "",
   now: "TOP",
-  appLog: null
+  localConfig: appConfig.localConfigTemplate,
+  appLog: null,
 }
 const studentsList_initialValue = null;
 const attendanceState_initialValue = {};
@@ -452,11 +453,53 @@ const App = () => {
     });
   }
 
+
+  /**
+   * function handleChangeAppLocalConfig()
+   * 
+   * appLocalConfigに保存するデータを変更する
+   * 複数項目の変更を考慮し、変更項目と変更内容を格納したオブジェクトを引数に渡す
+   * 
+   * @param {array} args
+   * 
+   * {
+   *   target: array
+   * }
+   */
+  const handleChangeAppLocalConfig = async(arg) => {
+    
+    const newAppLocalConfig = await window.electron.ipcRenderer.invoke("handle_loadAppLocalConfig", {mode: "write", content: arg});
+    console.log(appConfig);
+    
+    //変更を反映
+    setAppState({
+      ...appState,
+      localConfig: {...newAppLocalConfig.appConfig},
+    });
+
+    //モーダル表示
+    setModalState({
+      active: true,
+      name: appConfig.modalCodeList["1001"],
+      content: {
+        confirmCode: appConfig.confirmCodeList["2007"],
+        id: arg.id,
+        value: arg.value,
+      }
+    })
+  }
+
   //appState, seatStateを変更する
   const handleAppState = (d) => setAppState({ ...appState, ...d });
   const handleSeatsState = (d) => setSeatsState({ ...seatsState, ...d });
 
-  //render()内のComponentを動的に変更する
+  /**
+   * function handleComponent()
+   * 
+   * render()内のReact Componentを、appStateの変更に合わせて動的に返す
+   * 
+   * @returns void
+   */
   const handleComponent = () => {
     switch (appState.now) {
       case "TOP":
@@ -485,6 +528,8 @@ const App = () => {
           onHandleAppState={handleAppState}
           onReadStudentsList={setStudentsList}
           onHandleModalState={handleModalState}
+          onHandleChangeAppLocalConfig={handleChangeAppLocalConfig}
+          appState={appState}
         />;
 
 
@@ -502,8 +547,17 @@ const App = () => {
     console.log("バックアップファイルの読み込みを開始します");
 
     const reloadProc = async () => {
-      isFirstReadSeatsStateBCUP.current = false;
-      isFirstReadAttendanceStateBCUP.current = false;
+      // isFirstReadSeatsStateBCUP.current = false;
+      // isFirstReadAttendanceStateBCUP.current = false;
+
+      //アプリのローカルファイルからアプリデータを取得
+      const appLocalData = await window.electron.ipcRenderer.invoke("handle_loadAppLocalConfig", {mode: "read"});
+      appConfig.fn = appLocalData.fn;
+      setAppState({
+        ...appState,
+        localConfig: appLocalData
+      })
+      console.log("appConfig loaded:", appConfig.fn);
   
       //生徒情報ファイルが存在していれば自動読み込み
       const studentsList_autoloadedData = await window.electron.ipcRenderer.invoke("handle_studentsList", { mode: "read" });
@@ -562,8 +616,6 @@ const App = () => {
   useEffect(() => {
 
     const autoFileWriter = async () => {
-    // console.log("auto writer by useEffect");
-    // console.log(isFirstReadAttendanceStateBCUP.current, isFirstReadSeatsStateBCUP.current);
 
     //attendanceState書き出し
     isFirstReadAttendanceStateBCUP.current &&

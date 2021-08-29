@@ -69,7 +69,7 @@ distフォルダが作成され、その中に**attendance-management Setup (ver
 + package.json
 json内の"main"の項目が以下の設定になっているか確認してください。  
 `"main": "build/electron/main.js"`  
-もし"public/electron/main.js"の場合、以下で上書きしてください。　　
+もし"public/electron/main.js"の場合、上記で上書きしてください。　　
 
 + 実行コマンドの変更  
 OS依存のシェルコマンド(&等)を利用したスクリプトがある関係上、何らかのエラーが発生することがあります。  

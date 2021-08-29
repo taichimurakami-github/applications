@@ -1,7 +1,6 @@
 import { appConfig } from "../app.config";
 
 export const Top = (props) => {
-
   const handleEnter = (e) => {
     // console.log("now selected: ", e.target);
 
@@ -43,7 +42,6 @@ export const Top = (props) => {
         currentOperation: operation,
       }
     });
-
 
   }
 
@@ -98,7 +96,7 @@ export const Top = (props) => {
       </div>
       <div className="btn-wrapper">
         {
-          appConfig.nightly.cancelOperation &&
+          props.appState.localConfig.fn.nightly.cancelOperation &&
           <button className={`btn cancel-manipulation-btn ${(props.appState.appLog) ? "active" : "unactive"}`} onClick={displayCancelOperationModal}><span className="cancel-arrow"></span>直前の操作を取り消す</button>
         }
         <button className="btn activate-exit-btn btn__exit" onClick={displayExitModal}>退出する</button>

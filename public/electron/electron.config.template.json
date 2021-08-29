@@ -1,0 +1,22 @@
+{
+  "version": "0.9.8",
+  "path":{
+    "studentsList": "",
+    "attendance": "",
+    "seats":""
+  },
+  "appConfig": {
+    "fn": {
+      "stable": {
+        "eraceAppDataTodayAll": true
+      },
+      "nightly": {
+        "cancelOperation": true
+      }
+    }
+  },
+  "bcup": {
+    "path": {},
+    "appConfig": {}
+  }
+}

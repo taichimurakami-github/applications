@@ -45,22 +45,53 @@ app.whenReady().then(() => {
     fs.mkdirSync(configDirPath);
   }
 
-  //config.jsonフォルダが存在していない場合、新たに設定ファイルを作成
-  if (!fs.existsSync(path.resolve(configDirPath, "./config.json"))) {
-    console.log("no config files. now creating new config files ...");
-    const configPrototype = {
-      path: {
-        seats: path.resolve(configDirPath, "./seats/"),
-        attendance: path.resolve(configDirPath, "./attendance/"),
-        studentsList: "",
-      }
-    }
+  //config.jsonの最新版テンプレートを読み込み
+  //ただし、pathに関しては空白なので、手動で付け加える
+  const configTemplate = JSON.parse(fs.readFileSync(path.resolve(__dirname,"electron.config.template.json")));
+  configTemplate.path.seats = path.resolve(configDirPath, "./seats/");
+  configTemplate.path.attendance = path.resolve(configDirPath, "./attendance/");
+  configTemplate.bcup.path.seats = configTemplate.path.seats;
+  configTemplate.bcup.path.attendance = configTemplate.path.attendance;
 
-    fs.writeFileSync(path.resolve(configDirPath, "./config.json"), JSON.stringify(configPrototype));
+  console.log("configTemplate:");
+  console.log(configTemplate);
+
+  if (!fs.existsSync(path.resolve(configDirPath, "./config.json"))) {
+    //config.jsonファイルが存在しない場合、新たに設定ファイルを作成
+    console.log("no config files. now creating new config files ...");
+
+    // fs.writeFileSync(path.resolve(configDirPath, "./config.json"), JSON.stringify(configPrototype));
+    fs.writeFileSync(path.resolve(configDirPath, "./config.json"), JSON.stringify(configTemplate));
+
+    //appLocalConfigには、configTemplate(最新版テンプレートファイル)からロードしたJSONデータを入れる
+    appLocalConfig = {...configTemplate};
+  }
+  else{
+    //config.jsonのバージョンが古い場合、新たに設定ファイルを作成
+    const nowAppConfig = JSON.parse(fs.readFileSync(path.resolve(configDirPath, "./config.json"), "utf-8"));
+    
+    console.log("now Local Config is below:");
+    console.log(nowAppConfig);
+
+    //LocalConfigファイルが存在するがバージョンが古い場合、新バージョンのファイルを生成する
+    if(!"version" in nowAppConfig || nowAppConfig.version !== configTemplate.version){
+      console.log("your LocalConfig is older version.");
+      console.log("now making new App LocalConfig file...");
+
+      fs.writeFileSync(path.resolve(configDirPath, "./config.json"), JSON.stringify(configTemplate));
+
+      //バックアップ項目があるかどうか確認
+
+      //appLocalConfigには、configTemplate(最新版テンプレートファイル)からロードしたJSONデータを入れる
+      appLocalConfig = {...configTemplate};
+    }else{
+      //現在のLocalConfigファイルが最新の場合、appLocalConfigには先程読み込んだJSONファイルを入れる
+      appLocalConfig = {...nowAppConfig};
+    }
   }
 
-  //設定ファイルを読み込む
-  appLocalConfig = JSON.parse(fs.readFileSync(path.resolve(configDirPath, "./config.json")));
+  //LocalConfigファイルの生成完了
+  console.log("app LocalConfig file: check completed.");
 
   //appのwindowを作成
   createWindow();
@@ -119,6 +150,7 @@ ipcMain.handle("handle_studentsList", async (event, arg) => {
       return new Promise((resolve) => {
         if (typeOfFile && typeOfFile.ext === "xlsx") {
           appLocalConfig.path.studentsList = arg.data;
+          appLocalConfig.bcup.path.studentsList = arg.data;//studentsListのバックアップデータはここで上書き
           fs.writeFileSync(path.resolve(configDirPath, "./config.json"), JSON.stringify(appLocalConfig));
           return resolve(true);
         }
@@ -221,5 +253,47 @@ ipcMain.handle("handle_eraceAppLocalData", () => {
 
   fs.existsSync(fullFilePathForSeatsStateBCUP) && fs.unlinkSync(fullFilePathForSeatsStateBCUP);
   fs.existsSync(fullFilePathForAttendanceStateBCUP) && fs.unlinkSync(fullFilePathForAttendanceStateBCUP);
+
+});
+
+ipcMain.handle("handle_loadAppLocalConfig", (event, arg) => {
+
+  switch(arg.mode){
+    case "read":
+      //名称変更時などに対応するため、プロパティの中間変換を行う
+      return {
+        fn: appLocalConfig.appConfig.fn
+      }
+
+    case "write":
+      const newAppLocalConfig = {...appLocalConfig};
+      console.log(arg.content.value);
+
+      //switch文中にswitchをネストするとかいう最高に頭が悪い構造をしているので、
+      //なんかいい方法を見つけたら変更したい
+
+      switch(arg.content.id){
+        case "appConfig_fn_cancelOperation":
+          newAppLocalConfig.appConfig.fn[arg.content.status].cancelOperation = arg.content.value;
+          newAppLocalConfig.bcup.appConfig = {...newAppLocalConfig.appConfig.fn[arg.content.status].cancelOperation};
+          break;
+
+        case "appConfig_fn_eraceAppDataTodayAll":
+          newAppLocalConfig.appConfig.fn[arg.content.status].eraceAppDataTodayAll = arg.content.value;
+          newAppLocalConfig.bcup.appConfig = {...newAppLocalConfig.appConfig};
+          break;
+
+        default: 
+          throw new Error("invalid arg.content.id in ipcHandler_handle_appLocalConfig");
+      }
+      // console.log(newAppLocalConfig);
+      fs.writeFileSync(path.resolve(configDirPath, "./config.json"), JSON.stringify(newAppLocalConfig));
+      appLocalConfig = newAppLocalConfig;
+      return appLocalConfig;
+
+    default: 
+      throw new Error("an error has occured in ipcMain.handle(handle_loadAppLocalConfig: invalid switch mode)")
+  }
+
 
 })

@@ -36,19 +36,25 @@ const appConfig = {
    * 
    */
 
-  //開発中の機能を試すかどうかを選択
-  //該当機能をtrueに設定するとアプリのGUI上に表示される
-  nightly: {
-    cancelOperation: true
+  // fn: {
+  //   nightly: {
+  //     cancelOperation: false,
+  //   },
+  //   stable: {
+  //     eraceAppDataTodayAll: false,
+  //   }
+  // },
+
+  localConfigTemplate: {
+    fn: {
+      nightly: {
+        cancelOperation: false,
+      },
+      stable: {
+        eraceAppDataTodayAll: false,
+      }
+    },
   },
-
-  //実装済みの機能を有効にするかどうかを選択
-  //該当機能をtrueに設定するとアプリのGUI上に表示される
-  stable: {
-    eraceAppDataTodayAll: true,
-  },
-
-
 
   //--------------これより下、いじるべからず--------------//
 
@@ -82,6 +88,7 @@ const appConfig = {
     "2004": "STUDENTS_FILE_CONFIG_PATH_CHANGED_SUCCESSFULLY",
     "2005": "APPLOCALDATA_ERACED_SUCCESSFULLY",
     "2006": "CURRENT_OPERATION_IS_CANCELED_SUCCESSFULLY",
+    "2007": "APP_LOCAL_CONFIG_IS_CHANGED_SUCCESSFULLY",
 
   },
   errorCodeList: {

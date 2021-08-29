@@ -18,7 +18,75 @@
     color: white;
   }
 
+  // .btn-container{
+  //   margin-bottom: 100px;
+  // }
+
+  h1{
+    margin-bottom: 50px;
+  }
+
   .btn-container{
     margin-bottom: 100px;
+  }
+
+  .btn__typeC{
+    margin-top: 200px;
+  }
+}
+
+.toggle-btn-wrapper{
+  $toggleWrapperWidth: 90px;
+  $toggleWrapperHeight: 40px;
+  $toggleSize: 30px;
+
+  padding: 10px 0;
+  display: grid;
+  // grid-template-rows: auto;
+  grid-template-columns: 400px 120px;
+  justify-content: center;
+  text-align: left;
+  grid-gap: 30px;
+
+  .toggle-wrapper{
+    
+    width: $toggleWrapperWidth;
+    height: $toggleWrapperHeight;
+    cursor: pointer;
+    border: 0;
+    border-radius: 100px;
+
+    display: flex;
+    align-items: center;
+
+    &.active{
+      justify-content: flex-end;
+      background: $moss-green;
+      &:hover{background: darken($gray, 10%);}
+      // border: $vermilion 5px solid;
+      // padding-left: 0;
+      // padding-right: 0;
+    }
+
+    &.unactive{
+      justify-content: flex-start;
+      background: $navy;
+      &:hover{background: lighten($light-gray, 10%);}
+    }
+
+    &:hover{
+      // border: $vermilion 5px solid;
+      // padding-left: 0.8px;
+      // padding-right: 0.8px;
+    }
+  }
+
+  .toggle{
+    display: block;
+    width: $toggleSize;
+    height: $toggleSize;
+    border-radius: $toggleSize * 10;
+    pointer-events: none;
+    background: white;
   }
 }

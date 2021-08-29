@@ -112,6 +112,7 @@ const ConfirmModal = (props) => {
 
       //アプリのローカルデータを削除完了
       case appConfig.confirmCodeList["2005"]:
+
         //background closerを無効化
         props.onHandleBcClose(false);
 
@@ -129,6 +130,19 @@ const ConfirmModal = (props) => {
         return (
           <>
             <p>直前の操作を取り消しました。</p>
+            <button className="btn btn__close" onClick={closeModal}>閉じる</button>
+          </>
+        );
+
+      case appConfig.confirmCodeList["2007"]:
+        let itemName;
+
+        if(props.content.id === "appConfig_fn_cancelOperation") itemName = "直前の操作取り消し機能";
+        if(props.content.id === "appConfig_fn_eraceAppDataTodayAll") itemName = "アプリ内部データ(1日分)削除機能";
+
+        return (
+          <>
+            <p>{itemName} を {(props.content.value) ? "有効化" : "無効化"} しました。</p>
             <button className="btn btn__close" onClick={closeModal}>閉じる</button>
           </>
         );
