@@ -12,7 +12,7 @@ const Config = (props) => {
   const handleChangeAppConfig = (e) => {
     console.log(e.target.id);
     console.log(appConfig.fn.stable.eraceAppDataTodayAll, !appConfig.fn.stable.eraceAppDataTodayAll);
-    switch(e.target.id){
+    switch (e.target.id) {
 
       case "toggle_cancelOperation":
         props.onHandleChangeAppLocalConfig({
@@ -92,26 +92,26 @@ const Config = (props) => {
           <button className="btn erace-today-data-all" onClick={onEraceAppData}>アプリ内部データを削除する</button>
         }
       </div>
-      
+
       <h2>機能のon/off</h2>
 
       <div className="toggle-btn-wrapper btn__toggle">
-        <p>直前の操作取り消し機能</p>
-        <button 
-          id="toggle_cancelOperation" 
-          className={`${"toggle-wrapper "}${props.appState.localConfig.fn.nightly.cancelOperation ? "active" : "unactive"}`} 
+        <p>直前の操作を取り消す</p>
+        <button
+          id="toggle_cancelOperation"
+          className={`${"toggle-wrapper "}${props.appState.localConfig.fn.nightly.cancelOperation ? "active" : "unactive"}`}
           onClick={handleChangeAppConfig}>
-            <span className="toggle"></span>
+          <span className="toggle"></span>
         </button>
       </div>
 
       <div className="toggle-btn-wrapper btn__toggle">
-        <p>アプリ内部データ(1日分)削除機能</p>
-        <button 
-          id="toggle_eraceAppDataTodayAll" 
-          className={`${"toggle-wrapper "}${props.appState.localConfig.fn.stable.eraceAppDataTodayAll ? "active" : "unactive"}`} 
+        <p>アプリ内部データ(1日分)を削除する</p>
+        <button
+          id="toggle_eraceAppDataTodayAll"
+          className={`${"toggle-wrapper "}${props.appState.localConfig.fn.stable.eraceAppDataTodayAll ? "active" : "unactive"}`}
           onClick={handleChangeAppConfig}>
-            <span className="toggle"></span>
+          <span className="toggle"></span>
         </button>
       </div>
 

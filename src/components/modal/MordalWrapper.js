@@ -15,19 +15,19 @@ const ModalWrapper = (props) => {
 
   const closeModal = (e) => {
     //returnしないと、e.target === trueのときにe.target === undefinedとなってエラーになる
-    if(e === true){
-      return props.onHandleModalState({active: false});
+    if (e === true) {
+      return props.onHandleModalState({ active: false });
     }
 
-    if(e.target.classList.contains("onclick-close")){
-      return props.onHandleModalState({active: false});
+    if (e.target.classList.contains("onclick-close")) {
+      return props.onHandleModalState({ active: false });
     }
   }
 
   const handleModal = () => {
-    if(props.modalState.active){
+    if (props.modalState.active) {
       // console.log(props.modalState);
-      switch(props.modalState.name){
+      switch (props.modalState.name) {
 
         case appConfig.modalCodeList["1001"]:
           return <ConfirmModal
@@ -40,7 +40,7 @@ const ModalWrapper = (props) => {
             onCancelOperation={props.onCancelOperation}
             seatsState={props.seatsState}
             studentsList={props.studentsList}
-           />
+          />
 
         case appConfig.modalCodeList["1002"]:
           return <ErrorModal
@@ -50,14 +50,14 @@ const ModalWrapper = (props) => {
           />
 
         case appConfig.modalCodeList["1003"]:
-          return <ExitModal 
+          return <ExitModal
             seatsState={props.modalState.content.seatsState}
             studentsList={props.modalState.content.studentsList}
             onCloseModal={closeModal}
             onHandleBcClose={setBackgroundClose}
             onHandleModalState={props.onHandleModalState}
             onSaveForExit={props.onSaveForExit}
-           />
+          />
 
         default:
           console.log("handleModal on modalWrapper is ignored");
@@ -69,18 +69,18 @@ const ModalWrapper = (props) => {
   return (
     <>
       {
-        props.modalState.active ?      
+        props.modalState.active ?
 
-        <div onClick={closeModal} className={`modal-wrapper ${BackgroundClose && "onclick-close"}`}>
-          {handleModal()}
-        </div>
+          <div onClick={closeModal} className={`modal-wrapper ${BackgroundClose && "onclick-close"}`}>
+            {handleModal()}
+          </div>
 
-         : 
+          :
 
-        undefined
+          undefined
       }
     </>
   );
 }
 
-export {ModalWrapper}
+export { ModalWrapper }
