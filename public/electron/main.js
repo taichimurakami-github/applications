@@ -267,7 +267,7 @@ ipcMain.handle("handle_loadAppLocalConfig", (event, arg) => {
 
     case "write":
       const newAppLocalConfig = {...appLocalConfig};
-      console.log(arg.content.value);
+      // console.log(arg.content.value);
 
       //switch文中にswitchをネストするとかいう最高に頭が悪い構造をしているので、
       //なんかいい方法を見つけたら変更したい
