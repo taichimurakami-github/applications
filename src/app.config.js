@@ -21,6 +21,7 @@ const appConfig = {
       },
       stable: {
         eraceAppDataTodayAll: false,
+        changeSeatID: false,
       }
     },
   },
@@ -41,7 +42,7 @@ const appConfig = {
   modalCodeList: {
     "1001": "CONFIRM",
     "1002": "ERROR",
-    "1003": "EXIT",
+    "1003": "SEATS",
   },
   confirmCodeList: {
     //before execute confirm

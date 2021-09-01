@@ -1,6 +1,6 @@
 import { appConfig } from "../../app.config";
 
-const ExitModal = (props) => {
+const SeatsModal = (props) => {
 
   const handleExit = (e) => {
     // console.log(e.target.id);
@@ -72,4 +72,4 @@ const ExitModal = (props) => {
   )
 }
 
-export {ExitModal};
+export {SeatsModal};

@@ -3,7 +3,10 @@ import { appConfig } from "../app.config";
 //style import
 import "./styles/modules/Config.scss";
 
+
 const Config = (props) => {
+
+  const localConfig_fn = props.appState.localConfig.fn;
 
   const handleBackToTop = () => {
     props.onHandleAppState({ now: "TOP" });
@@ -88,7 +91,7 @@ const Config = (props) => {
       <div className="btn-container">
         <button className="btn read-student-list" onClick={onReadStudentsFile}>生徒情報ファイルを設定する</button>
         {
-          props.appState.localConfig.fn.stable.eraceAppDataTodayAll &&
+          localConfig_fn.stable.eraceAppDataTodayAll &&
           <button className="btn erace-today-data-all" onClick={onEraceAppData}>アプリ内部データを削除する</button>
         }
       </div>
@@ -99,7 +102,7 @@ const Config = (props) => {
         <p>直前の操作を取り消す</p>
         <button
           id="toggle_cancelOperation"
-          className={`${"toggle-wrapper "}${props.appState.localConfig.fn.nightly.cancelOperation ? "active" : "unactive"}`}
+          className={`${"toggle-wrapper "}${localConfig_fn.nightly.cancelOperation ? "active" : "unactive"}`}
           onClick={handleChangeAppConfig}>
           <span className="toggle"></span>
         </button>
@@ -109,7 +112,7 @@ const Config = (props) => {
         <p>アプリ内部データ(1日分)を削除する</p>
         <button
           id="toggle_eraceAppDataTodayAll"
-          className={`${"toggle-wrapper "}${props.appState.localConfig.fn.stable.eraceAppDataTodayAll ? "active" : "unactive"}`}
+          className={`${"toggle-wrapper "}${localConfig_fn.stable.eraceAppDataTodayAll ? "active" : "unactive"}`}
           onClick={handleChangeAppConfig}>
           <span className="toggle"></span>
         </button>

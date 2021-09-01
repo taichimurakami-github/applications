@@ -267,7 +267,6 @@ ipcMain.handle("handle_loadAppLocalConfig", (event, arg) => {
       }
 
     case "write":
-<<<<<<< HEAD
       const newAppLocalConfig = {...appLocalConfig};
       // console.log(arg.content.value);
       //switch文中にswitchをネストするとかいう最高に頭が悪い構造をしているので、

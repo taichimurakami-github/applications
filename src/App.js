@@ -276,6 +276,57 @@ const App = () => {
   }
 
   /**
+   * function handleSeatOperation()
+   * @param {object}
+   * {
+   *    mode: {String},
+   *    content: {Object}
+   * }
+   * @returns 
+   */
+
+  const handleSeatOperation = (arg) => {
+    console.log("activate fn handleSeatOperation()");
+
+    if(arg.mode === "CHANGE_SEATID"){
+      const nowSeatID = arg.content.nowSeatID;
+      const nextSeatID = arg.content.nextSeatID;
+      const targetID = seatsState[arg.content.nowSeatID].studentID;
+
+      //AttendanceState書き換え
+      if(targetID !== "__OTHERS__"){
+        //attendanceStateから対象生徒のarrayを取得し、書換用データ保持objを作成
+        const insertObjectForAttendanceState = {}
+        insertObjectForAttendanceState[targetID] = [...attendanceState[targetID]];
+
+        // console.log("insertObj-attendance 作成直後");
+        // console.log(insertObjectForAttendanceState);
+
+        //最後の要素のseatIDを書き換えるため、insert用オブジェクトから最後の要素を取り出し、
+        //書き換え後のデータを用意
+        const changeData = insertObjectForAttendanceState[targetID].pop();
+        changeData.seatID = nextSeatID;
+
+        insertObjectForAttendanceState[targetID].push(changeData);
+        console.log("insertObj-attendance 作成完了");
+        console.log(insertObjectForAttendanceState);
+        // setAttendanceState({ ...attendanceState, ...insertObjectForAttendanceState});
+      }
+
+      //SeatsState書き換え
+      //attendanceStateから対象の席のobjectを取得し、書換用データ保持objを作成
+      const insertObjectForSeatsState = {};
+      insertObjectForSeatsState[nowSeatID] = {...seatsState[nowSeatID]};
+
+      insertObjectForSeatsState[nowSeatID].seatID = nextSeatID;
+      // setSeatsState({...seatsState, ...insertObjectForSeatsState});
+
+      console.log("insertObj-attendance");
+      console.log(insertObjectForSeatsState);
+    }
+  }
+
+  /**
    * function handleCancelOparation()
    * 
    * 一つ前の操作を取り消す関数
@@ -591,10 +642,10 @@ const App = () => {
   //   console.log("appState checker---------");
   //   console.log(modalState);
   // }, [modalState]);
-  // useEffect(() => {
-  //   console.log("attendanceState checker........")
-  //   console.log(attendanceState);
-  // }, [attendanceState]);
+  useEffect(() => {
+    console.log("attendanceState checker........")
+    console.log(attendanceState);
+  }, [attendanceState]);
 
   return (
     <div className="App">
@@ -606,6 +657,7 @@ const App = () => {
         onSaveForExit={handleSaveAttendanceForExit}
         onEraceAppData={handleEraceAppData}
         onCancelOperation={handleCancelOperation}
+        onHandleSeatOperation={handleSeatOperation}
         studentsList={studentsList}
         seatsState={seatsState}
       />

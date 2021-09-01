@@ -1,6 +1,6 @@
 //modal module import
 import { ErrorModal } from "./ErrorModal";
-import { ExitModal } from "./ExitModal";
+import { SeatsModal } from "./SeatsModal";
 import { ConfirmModal } from "./ConfirmModal";
 import { appConfig } from "../../app.config";
 import { useState } from "react";
@@ -50,12 +50,13 @@ const ModalWrapper = (props) => {
           />
 
         case appConfig.modalCodeList["1003"]:
-          return <ExitModal
+          return <SeatsModal
             seatsState={props.modalState.content.seatsState}
             studentsList={props.modalState.content.studentsList}
             onCloseModal={closeModal}
             onHandleBcClose={setBackgroundClose}
             onHandleModalState={props.onHandleModalState}
+            onHandleSeatOperation={props.handleSeatOperation}
             onSaveForExit={props.onSaveForExit}
           />
 
