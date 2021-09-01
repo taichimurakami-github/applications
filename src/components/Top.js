@@ -4,7 +4,7 @@ export const Top = (props) => {
   const handleEnter = (e) => {
     // console.log("now selected: ", e.target);
 
-    if(props.studentsList === null) return;
+    if (props.studentsList === null) return;
 
     //activeの席をクリックしたときは何もしない
     if (props.seatsState[e.target.id].active) return;
@@ -13,7 +13,7 @@ export const Top = (props) => {
     props.onHandleAppState({ selectedElement: e.target, selectedSeat: e.target.id, now: "STUDENT" });
   }
 
-  const handleConfig = () => props.onHandleAppState({now: "CONFIG"});
+  const handleConfig = () => props.onHandleAppState({ now: "CONFIG" });
 
   const displayExitModal = () => {
     props.onHandleModalState({
@@ -31,7 +31,7 @@ export const Top = (props) => {
     const name = props.studentsList.filter((val) => val.id == props.appState.appLog.studentID)[0].name;
     const operation = props.appState.appLog.operation === "enter" ? "入室" : "退室";
 
-    console.log(name);
+    // console.log(name);
 
     props.onHandleModalState({
       active: true,
@@ -49,22 +49,22 @@ export const Top = (props) => {
     <>
       {
         (props.studentsList === null) ?
-        <>
-          <h1>現在、入室登録ができません。</h1>
-          <p>生徒情報が読み込まれていません。</p>
-          <p>設定画面を開き、生徒情報ファイルを読み込むと、再び入室登録が利用できます。</p>
-          <p>自習室を退出する際は、下の「退出する」ボタンを押してください。</p>
-        </>
+          <>
+            <h1>現在、入室登録ができません。</h1>
+            <p>生徒情報が読み込まれていません。</p>
+            <p>設定画面を開き、生徒情報ファイルを読み込むと、再び入室登録が利用できます。</p>
+            <p>自習室を退出する際は、下の「退出する」ボタンを押してください。</p>
+          </>
 
-        :
+          :
 
-        <>
-          <h1>使用する座席を選んでください</h1>
-          <p>下に表示されている緑色の席の中から、使用する席を選んでクリックしてください。</p>
-          <p>自習室を退出する際は、下の「退出する」ボタンを押してください。</p>
-        </>
+          <>
+            <h1>使用<ruby>しよう</ruby>する座席を選んでください</h1>
+            <p>使用中以外の席の中から、使用する席を選んでクリックしてください。</p>
+            <p>自習室を退出する際は、下の「退出する」ボタンを押してください。</p>
+          </>
       }
-      <div  className={props.studentsList === null ? "seat-table-container unactive" : "seat-table-container"}>
+      <div className={props.studentsList === null ? "seat-table-container unactive" : "seat-table-container"}>
         <ul className={"column"}>
           <li id="seat13" className={props.seatsState.seat13.active ? "active" : undefined} onClick={handleEnter}>{props.seatsState.seat13.active ? "使用中" : 13}</li>
           <li id="seat14" className={props.seatsState.seat14.active ? "active" : undefined} onClick={handleEnter}>{props.seatsState.seat14.active ? "使用中" : 14}</li>
@@ -91,7 +91,6 @@ export const Top = (props) => {
           <li id="seat3" className={props.seatsState.seat3.active ? "active" : undefined} onClick={handleEnter}>{props.seatsState.seat3.active ? "使用中" : 3}</li>
           <li id="seat4" className={props.seatsState.seat4.active ? "active" : undefined} onClick={handleEnter}>{props.seatsState.seat4.active ? "使用中" : 4}</li>
         </ul>
-
 
       </div>
       <div className="btn-wrapper">

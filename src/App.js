@@ -1,6 +1,13 @@
 //module import
 import { useEffect, useState, useRef } from 'react';
-import { appConfig } from './app.config';
+import {
+  appConfig, appState_initialValue,
+  studentsList_initialValue,
+  attendanceState_initialValue,
+  seatsState_initialValue,
+  modalState_initialValue
+} from './app.config';
+
 import { Top } from './components/Top';
 import { SelectData } from './components/SelectData';
 import { ModalWrapper } from "./components/modal/MordalWrapper";
@@ -10,88 +17,15 @@ import { Config } from "./components/Config";
 import "./components/styles/modules/Top.scss";
 import "./components/styles/app.common.scss";
 
-const appState_initialValue = {
-  selectedElement: null,
-  selectedSeat: "",
-  now: "TOP",
-  localConfig: appConfig.localConfigTemplate,
-  appLog: null,
-}
-const studentsList_initialValue = null;
-const attendanceState_initialValue = {};
-const seatsState_initialValue = {
-  seat1: {
-    active: false,
-    studentID: ""
-  },
-  seat2: {
-    active: false,
-    studentID: ""
-  },
-  seat3: {
-    active: false,
-    studentID: ""
-  },
-  seat4: {
-    active: false,
-    studentID: ""
-  },
-  seat5: {
-    active: false,
-    studentID: ""
-  },
-  seat6: {
-    active: false,
-    studentID: ""
-  },
-  seat7: {
-    active: false,
-    studentID: ""
-  },
-  seat8: {
-    active: false,
-    studentID: ""
-  },
-  seat9: {
-    active: false,
-    studentID: ""
-  },
-  seat10: {
-    active: false,
-    studentID: ""
-  },
-  seat11: {
-    active: false,
-    studentID: ""
-  },
-  seat12: {
-    active: false,
-    studentID: ""
-  },
-  seat13: {
-    active: false,
-    studentID: ""
-  },
-  seat14: {
-    active: false,
-    studentID: ""
-  },
-  seat15: {
-    active: false,
-    studentID: ""
-  },
-  seat16: {
-    active: false,
-    studentID: ""
-  },
-}
-const modalState_initialValue = {
-  active: false,
-  modalName: null,
-  content: null
-};
 
 const App = () => {
+
+  /**
+   * -------------------------------
+   *    React Hooks declearation
+   * -------------------------------
+   */
+
   const isFirstReadSeatsStateBCUP = useRef(false);
   const isFirstReadAttendanceStateBCUP = useRef(false);
 
@@ -109,7 +43,13 @@ const App = () => {
 
   //モーダル管理変数
   const [modalState, setModalState] = useState(modalState_initialValue);
-  
+
+  /**
+   * -------------------------------
+   *      App functions
+   * -------------------------------
+   */
+
   /**
    * function handleEraceAppData()
    * 
@@ -129,7 +69,6 @@ const App = () => {
       }
     });
   }
-
 
   /**
    * function handleModalState()
@@ -175,23 +114,24 @@ const App = () => {
    */
   const resetAppState = (arg = null) => {
 
-
-
-    if(arg && arg.mode === "APPLOG"){
+    if (arg && arg.mode === "APPLOG") {
       //appLogが渡された場合
       setAppState(
         {
           ...appState_initialValue,
+          localConfig: { ...appState.localConfig },
           appLog: arg.content
         }
       );
-    }else{
+    } else {
       //appLogが渡されなかった場合
-      setAppState(appState_initialValue);
+      setAppState({
+        ...appState_initialValue,
+        localConfig: { ...appState.localConfig },
+      });
     }
 
   }
-
 
   /**
    * function handleSaveAttendanceForEnter()
@@ -208,6 +148,8 @@ const App = () => {
 
     //席を赤くする
     appState.selectedElement.classList.add("active");
+
+    //seatsStateに挿入する値を定義
     const insertObjectForSeatsState = {}
     insertObjectForSeatsState[appState.selectedSeat] = (i === "__OTHERS__") ?
       {
@@ -236,8 +178,8 @@ const App = () => {
       //attendanceState内に該当生徒のkeyが存在するか確認
       (i in attendanceState) ?
         //既に同日内に自習室に記録が残っている場合、要素を追加する形で記録
-        insertObjectForAttendanceState[i] = attendanceState[i].map( val => val )
-         :
+        insertObjectForAttendanceState[i] = attendanceState[i].map(val => val)
+        :
         //同日内で初めて自習室に来た場合、新しくkeyと配列を作成         
         insertObjectForAttendanceState[i] = [];
 
@@ -346,34 +288,34 @@ const App = () => {
     console.log("launching cancel oparation...");
 
     //appState.appLogがnullだった場合、return
-    if(!appState.appLog) return;
+    if (!appState.appLog) return;
 
     // //デバッグ用コンソール
     // console.log(attendanceState[appState.appLog.studentID]);
     // console.log(appState.appLog);
 
     // const targetStudentData = studentsList.filter(val => val.id == appState.appLog.studentID);
-    const insertObjectForAttendanceState = {...attendanceState};
+    const insertObjectForAttendanceState = { ...attendanceState };
     const insertObjectForSeatsState = {};
 
-    switch(appState.appLog.operation){
-    /**
-     * TO DO (cancel enter operation)
-     * ・seatsStateに登録した座席をリセット
-     * ・attendanceStateから入室記録を削除
-     * ・appLogをリセット
-     */
+    switch (appState.appLog.operation) {
+      /**
+       * TO DO (cancel enter operation)
+       * ・seatsStateに登録した座席をリセット
+       * ・attendanceStateから入室記録を削除
+       * ・appLogをリセット
+       */
       case "enter":
 
         //関係者その他専用処理
-        if(appState.appLog.studentID === "__OTHERS__"){
+        if (appState.appLog.studentID === "__OTHERS__") {
           console.log("others enter");
 
           insertObjectForSeatsState[appState.appLog.seatID] = {
             active: false,
             studentID: "",
           }
-          setSeatsState({...seatsState, ...insertObjectForSeatsState});
+          setSeatsState({ ...seatsState, ...insertObjectForSeatsState });
           break;
         }
 
@@ -382,7 +324,7 @@ const App = () => {
           active: false,
           studentID: "",
         }
-        setSeatsState({...seatsState, ...insertObjectForSeatsState});
+        setSeatsState({ ...seatsState, ...insertObjectForSeatsState });
 
         //attendanceStateのenterの記録を削除
         //attendanceState上にはkeyとvalueが必ず存在しているので、値の存在を確認せずに直接値を参照する
@@ -390,28 +332,28 @@ const App = () => {
         (attendanceState[appState.appLog.studentID].length === 1) ?
           //attendanceStateのvalue内の要素が1つしかない場合、keyごと削除
           delete insertObjectForAttendanceState[appState.appLog.studentID]
-           :
+          :
           //要素が2つ以上の場合、最後の要素 = 新しくenterで生成された要素を削除
           insertObjectForAttendanceState[appState.appLog.studentID].pop();
 
-        setAttendanceState({...insertObjectForAttendanceState});
+        setAttendanceState({ ...insertObjectForAttendanceState });
         break;
 
-    /**
-     * TO DO (cancel enter operation)
-     * ・seatsStateに登録し直す
-     * ・attendanceStateから退出記録を削除
-     * ・appLogをリセット
-     */
+      /**
+       * TO DO (cancel enter operation)
+       * ・seatsStateに登録し直す
+       * ・attendanceStateから退出記録を削除
+       * ・appLogをリセット
+       */
       case "exit":
-        if(appState.appLog.studentID === "__OTHERS__"){
+        if (appState.appLog.studentID === "__OTHERS__") {
           console.log("others exit");
           insertObjectForSeatsState[appState.appLog.seatID] = {
             active: true,
             studentID: "__OTHERS__",
           }
 
-          setSeatsState({...seatsState, ...insertObjectForSeatsState});
+          setSeatsState({ ...seatsState, ...insertObjectForSeatsState });
           break;
         }
 
@@ -420,10 +362,10 @@ const App = () => {
           active: true,
           studentID: appState.appLog.studentID,
         }
-        setSeatsState({...seatsState, ...insertObjectForSeatsState});
+        setSeatsState({ ...seatsState, ...insertObjectForSeatsState });
 
         //attendanceStateからexitの記録を削除
-        
+
         //配列の最後の要素を取得し、exitプロパティを削除
         const lastElem = insertObjectForAttendanceState[appState.appLog.studentID].slice(-1)[0]
         delete lastElem.exit;
@@ -432,13 +374,13 @@ const App = () => {
         insertObjectForAttendanceState[appState.appLog.studentID].pop();
         insertObjectForAttendanceState[appState.appLog.studentID].push(lastElem);
 
-        setAttendanceState({...attendanceState, ...insertObjectForAttendanceState});
+        setAttendanceState({ ...attendanceState, ...insertObjectForAttendanceState });
         break;
 
       default:
         throw new Error("An error has occured in cancelOparation: oparation name is probably wrong");
     }
-  
+
     //AppStaetをリセット
     resetAppState();
 
@@ -453,7 +395,6 @@ const App = () => {
     });
   }
 
-
   /**
    * function handleChangeAppLocalConfig()
    * 
@@ -466,15 +407,15 @@ const App = () => {
    *   target: array
    * }
    */
-  const handleChangeAppLocalConfig = async(arg) => {
-    
-    const newAppLocalConfig = await window.electron.ipcRenderer.invoke("handle_loadAppLocalConfig", {mode: "write", content: arg});
+  const handleChangeAppLocalConfig = async (arg) => {
+
+    const newAppLocalConfig = await window.electron.ipcRenderer.invoke("handle_loadAppLocalConfig", { mode: "write", content: arg });
     console.log(appConfig);
-    
+
     //変更を反映
     setAppState({
       ...appState,
-      localConfig: {...newAppLocalConfig.appConfig},
+      localConfig: { ...newAppLocalConfig.appConfig },
     });
 
     //モーダル表示
@@ -539,11 +480,13 @@ const App = () => {
   };
 
   /**
-   * useEffect functions group
+   * -------------------------------
+   *      useEffect functions
+   * -------------------------------
    */
 
   //起動時、もしくはリロード時に1回だけ行われる処理
-  useEffect( () => {
+  useEffect(() => {
     console.log("バックアップファイルの読み込みを開始します");
 
     const reloadProc = async () => {
@@ -551,24 +494,24 @@ const App = () => {
       // isFirstReadAttendanceStateBCUP.current = false;
 
       //アプリのローカルファイルからアプリデータを取得
-      const appLocalData = await window.electron.ipcRenderer.invoke("handle_loadAppLocalConfig", {mode: "read"});
+      const appLocalData = await window.electron.ipcRenderer.invoke("handle_loadAppLocalConfig", { mode: "read" });
       appConfig.fn = appLocalData.fn;
       setAppState({
         ...appState,
         localConfig: appLocalData
       })
       console.log("appConfig loaded:", appConfig.fn);
-  
+
       //生徒情報ファイルが存在していれば自動読み込み
       const studentsList_autoloadedData = await window.electron.ipcRenderer.invoke("handle_studentsList", { mode: "read" });
       studentsList_autoloadedData && setStudentsList(studentsList_autoloadedData);
       console.log(studentsList_autoloadedData);
-  
+
       //今日の分のseatsState記録が残っていれば読み込み
       const seatsState_bcup = await window.electron.ipcRenderer.invoke("handle_seatsState", { mode: "read" });
       console.log("read_seatsstate_bcup_result", seatsState_bcup);
       seatsState_bcup && setSeatsState(seatsState_bcup);
-  
+
       //今日の分のattendanceState記録が残っていれば読み込み
       const attendanceState_bcup = await window.electron.ipcRenderer.invoke("handle_attendanceState", { mode: "read" });
       console.log("attendanceState_bcup_result", attendanceState_bcup);
@@ -581,8 +524,6 @@ const App = () => {
 
     reloadProc();
   }, []);
-
-
 
   //生徒情報ファイルが読み込まれていない時は、エラーモーダルを最初に表示
   useEffect(() => {
@@ -617,15 +558,15 @@ const App = () => {
 
     const autoFileWriter = async () => {
 
-    //attendanceState書き出し
-    isFirstReadAttendanceStateBCUP.current &&
-      await window.electron.ipcRenderer
-        .invoke("handle_attendanceState", { mode: "write", data: JSON.stringify(attendanceState) });
+      //attendanceState書き出し
+      isFirstReadAttendanceStateBCUP.current &&
+        await window.electron.ipcRenderer
+          .invoke("handle_attendanceState", { mode: "write", data: JSON.stringify(attendanceState) });
 
-    //seatsState書き出し
-    isFirstReadSeatsStateBCUP.current &&
-      await window.electron.ipcRenderer
-        .invoke("handle_seatsState", { mode: "write", data: JSON.stringify(seatsState) });
+      //seatsState書き出し
+      isFirstReadSeatsStateBCUP.current &&
+        await window.electron.ipcRenderer
+          .invoke("handle_seatsState", { mode: "write", data: JSON.stringify(seatsState) });
     }
     autoFileWriter();
 
@@ -642,10 +583,10 @@ const App = () => {
   //     console.log(studentsList);
   //   }
   // }, [studentsList]);
-  useEffect(() => {
-    console.log("appState checker---------");
-    console.log(appState);
-  }, [appState]);
+  // useEffect(() => {
+  //   console.log("appState checker---------");
+  //   console.log(appState);
+  // }, [appState]);
   // useEffect(() => {
   //   console.log("appState checker---------");
   //   console.log(modalState);

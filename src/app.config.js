@@ -8,42 +8,11 @@
  * DO NOT CHANGE KEY & VALUE HERE EXCEPT DEVELOPERS.
  * APPLICATION CANNOT RUN PROPERLY
  * 
+ * 値をいじらないでください
+ * 
  */
 
 const appConfig = {
-
-  /**
-   * ---appConfigへようこそ---
-   * 
-   * アプリの動作を細かく設定できるファイルです。
-   * 以下に説明を記します。
-   * 
-   * (1)本ファイルを変更した場合は、ビルドし直さないとアプリ自体に反映されません。
-   * (2)以下の説明に載せたプロパティ以外は絶対に変更しないこと。アプリが正常動作しなくなります。
-   * (3)該当機能のプロパティをfalseもしくはfalthy値に変更することで、その機能を無効化することができます。
-   * (4)そもそもこの機能自体がまだまだ実装途中なので、今後設定項目は増えると思います。
-   * 
-   * 
-   * ---変更可能なプロパティの説明---
-   * 
-   * ・nightly
-   * 開発中の実験的な機能です。正式に実装が完了したものは後述のfunctionsオブジェクトに格納されます。
-   * 実験的な機能ですので、実戦投入はおすすめできません。
-   * 
-   * ・functions
-   * 正式に実装された機能です。何らかの不具合があった場合、速やかにプロパティをfalseに変えることで、
-   * 該当機能を無効化することができます。
-   * 
-   */
-
-  // fn: {
-  //   nightly: {
-  //     cancelOperation: false,
-  //   },
-  //   stable: {
-  //     eraceAppDataTodayAll: false,
-  //   }
-  // },
 
   localConfigTemplate: {
     fn: {
@@ -104,4 +73,102 @@ const appConfig = {
   },
 }
 
-export { appConfig }
+
+/**
+ * App.js react app states initialValue
+ * 
+ * アプリの状態変数を定義しています。
+ * いじらないでください
+ * 
+ */
+
+const appState_initialValue = {
+  selectedElement: null,
+  selectedSeat: "",
+  now: "TOP",
+  localConfig: appConfig.localConfigTemplate,
+  appLog: null,
+}
+const studentsList_initialValue = null;
+const attendanceState_initialValue = {};
+const seatsState_initialValue = {
+  seat1: {
+    active: false,
+    studentID: ""
+  },
+  seat2: {
+    active: false,
+    studentID: ""
+  },
+  seat3: {
+    active: false,
+    studentID: ""
+  },
+  seat4: {
+    active: false,
+    studentID: ""
+  },
+  seat5: {
+    active: false,
+    studentID: ""
+  },
+  seat6: {
+    active: false,
+    studentID: ""
+  },
+  seat7: {
+    active: false,
+    studentID: ""
+  },
+  seat8: {
+    active: false,
+    studentID: ""
+  },
+  seat9: {
+    active: false,
+    studentID: ""
+  },
+  seat10: {
+    active: false,
+    studentID: ""
+  },
+  seat11: {
+    active: false,
+    studentID: ""
+  },
+  seat12: {
+    active: false,
+    studentID: ""
+  },
+  seat13: {
+    active: false,
+    studentID: ""
+  },
+  seat14: {
+    active: false,
+    studentID: ""
+  },
+  seat15: {
+    active: false,
+    studentID: ""
+  },
+  seat16: {
+    active: false,
+    studentID: ""
+  },
+}
+const modalState_initialValue = {
+  active: false,
+  modalName: null,
+  content: null
+};
+
+
+export {
+  appConfig,
+  appState_initialValue,
+  studentsList_initialValue,
+  attendanceState_initialValue,
+  seatsState_initialValue,
+  modalState_initialValue
+}

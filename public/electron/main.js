@@ -20,7 +20,7 @@ function createWindow() {
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
     }
-  })
+  });
 
   // and load the index.html of the app.
   mainWindow.loadURL(
@@ -47,7 +47,7 @@ app.whenReady().then(() => {
 
   //config.jsonの最新版テンプレートを読み込み
   //ただし、pathに関しては空白なので、手動で付け加える
-  const configTemplate = JSON.parse(fs.readFileSync(path.resolve(__dirname,"electron.config.template.json")));
+  const configTemplate = JSON.parse(fs.readFileSync(path.resolve(__dirname, "electron.config.template.json")));
   configTemplate.path.seats = path.resolve(configDirPath, "./seats/");
   configTemplate.path.attendance = path.resolve(configDirPath, "./attendance/");
   configTemplate.bcup.path.seats = configTemplate.path.seats;
@@ -64,29 +64,30 @@ app.whenReady().then(() => {
     fs.writeFileSync(path.resolve(configDirPath, "./config.json"), JSON.stringify(configTemplate));
 
     //appLocalConfigには、configTemplate(最新版テンプレートファイル)からロードしたJSONデータを入れる
-    appLocalConfig = {...configTemplate};
+    appLocalConfig = { ...configTemplate };
   }
-  else{
+  else {
     //config.jsonのバージョンが古い場合、新たに設定ファイルを作成
     const nowAppConfig = JSON.parse(fs.readFileSync(path.resolve(configDirPath, "./config.json"), "utf-8"));
-    
+
     console.log("now Local Config is below:");
     console.log(nowAppConfig);
 
     //LocalConfigファイルが存在するがバージョンが古い場合、新バージョンのファイルを生成する
-    if(!"version" in nowAppConfig || nowAppConfig.version !== configTemplate.version){
-      console.log("your LocalConfig is older version.");
+    if (!"version" in nowAppConfig || nowAppConfig.version !== configTemplate.version) {
+      console.log("your LocalConfig is available to be updated.");
       console.log("now making new App LocalConfig file...");
+      console.log("※your backup data will be used.");
 
       fs.writeFileSync(path.resolve(configDirPath, "./config.json"), JSON.stringify(configTemplate));
 
       //バックアップ項目があるかどうか確認
 
       //appLocalConfigには、configTemplate(最新版テンプレートファイル)からロードしたJSONデータを入れる
-      appLocalConfig = {...configTemplate};
-    }else{
+      appLocalConfig = { ...configTemplate };
+    } else {
       //現在のLocalConfigファイルが最新の場合、appLocalConfigには先程読み込んだJSONファイルを入れる
-      appLocalConfig = {...nowAppConfig};
+      appLocalConfig = { ...nowAppConfig };
     }
   }
 
@@ -100,15 +101,15 @@ app.whenReady().then(() => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  })
-})
+  });
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit();
-})
+});
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
@@ -258,7 +259,7 @@ ipcMain.handle("handle_eraceAppLocalData", () => {
 
 ipcMain.handle("handle_loadAppLocalConfig", (event, arg) => {
 
-  switch(arg.mode){
+  switch (arg.mode) {
     case "read":
       //名称変更時などに対応するため、プロパティの中間変換を行う
       return {
@@ -266,24 +267,24 @@ ipcMain.handle("handle_loadAppLocalConfig", (event, arg) => {
       }
 
     case "write":
+<<<<<<< HEAD
       const newAppLocalConfig = {...appLocalConfig};
       // console.log(arg.content.value);
-
       //switch文中にswitchをネストするとかいう最高に頭が悪い構造をしているので、
       //なんかいい方法を見つけたら変更したい
 
-      switch(arg.content.id){
+      switch (arg.content.id) {
         case "appConfig_fn_cancelOperation":
           newAppLocalConfig.appConfig.fn[arg.content.status].cancelOperation = arg.content.value;
-          newAppLocalConfig.bcup.appConfig = {...newAppLocalConfig.appConfig.fn[arg.content.status].cancelOperation};
+          newAppLocalConfig.bcup.appConfig = { ...newAppLocalConfig.appConfig.fn[arg.content.status].cancelOperation };
           break;
 
         case "appConfig_fn_eraceAppDataTodayAll":
           newAppLocalConfig.appConfig.fn[arg.content.status].eraceAppDataTodayAll = arg.content.value;
-          newAppLocalConfig.bcup.appConfig = {...newAppLocalConfig.appConfig};
+          newAppLocalConfig.bcup.appConfig = { ...newAppLocalConfig.appConfig };
           break;
 
-        default: 
+        default:
           throw new Error("invalid arg.content.id in ipcHandler_handle_appLocalConfig");
       }
       // console.log(newAppLocalConfig);
@@ -291,9 +292,9 @@ ipcMain.handle("handle_loadAppLocalConfig", (event, arg) => {
       appLocalConfig = newAppLocalConfig;
       return appLocalConfig;
 
-    default: 
+    default:
       throw new Error("an error has occured in ipcMain.handle(handle_loadAppLocalConfig: invalid switch mode)")
   }
 
 
-})
+});
