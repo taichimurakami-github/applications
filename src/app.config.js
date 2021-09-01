@@ -39,6 +39,10 @@ const appConfig = {
   //   "1002": "CONFIG",
   //   "1003": "STUDENT",
   // },
+
+  /**
+   * for ModalWrapper.js
+   */
   modalCodeList: {
     "1001": "CONFIRM",
     "1002": "ERROR",
@@ -59,6 +63,7 @@ const appConfig = {
     "2005": "APPLOCALDATA_ERACED_SUCCESSFULLY",
     "2006": "CURRENT_OPERATION_IS_CANCELED_SUCCESSFULLY",
     "2007": "APP_LOCAL_CONFIG_IS_CHANGED_SUCCESSFULLY",
+    "2008": "SEATID_IS_CHANGED_SUCCESSFULLY",
 
   },
   errorCodeList: {
@@ -72,6 +77,17 @@ const appConfig = {
     //student data select page list
     "3001": "SELECTED_ALREADY_SEATED_STUDENT",
   },
+
+  /**
+   * for SeatsModal.js
+   */
+  seatOperetionCodeList: {
+    "1001": "CHANGE_SEATID"
+  },
+  seatsModalModeList: {
+    "1001": "STUDENTS_LIST",
+    "1002": "SELECT_NEW_SEAT"
+  }
 }
 
 
@@ -171,5 +187,5 @@ export {
   studentsList_initialValue,
   attendanceState_initialValue,
   seatsState_initialValue,
-  modalState_initialValue
+  modalState_initialValue,
 }

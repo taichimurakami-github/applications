@@ -51,17 +51,17 @@ const ModalWrapper = (props) => {
 
         case appConfig.modalCodeList["1003"]:
           return <SeatsModal
-            seatsState={props.modalState.content.seatsState}
-            studentsList={props.modalState.content.studentsList}
             onCloseModal={closeModal}
             onHandleBcClose={setBackgroundClose}
             onHandleModalState={props.onHandleModalState}
-            onHandleSeatOperation={props.handleSeatOperation}
+            onHandleSeatOperation={props.onHandleSeatOperation}
             onSaveForExit={props.onSaveForExit}
+            seatsState={props.seatsState}
+            studentsList={props.studentsList}
           />
 
         default:
-          console.log("handleModal on modalWrapper is ignored");
+          console.log("invalid modalCode has been passed");
           return undefined;
       }
     }

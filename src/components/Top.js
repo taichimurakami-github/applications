@@ -22,10 +22,7 @@ export const Top = (props) => {
     props.onHandleModalState({
       active: true,
       name: appConfig.modalCodeList["1003"],
-      content: {
-        studentsList: props.studentsList,
-        seatsState: props.seatsState,
-      }
+      content: {}
     });
   }
 

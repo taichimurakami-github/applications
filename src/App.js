@@ -288,7 +288,7 @@ const App = () => {
   const handleSeatOperation = (arg) => {
     console.log("activate fn handleSeatOperation()");
 
-    if(arg.mode === "CHANGE_SEATID"){
+    if(arg.mode === appConfig.seatOperetionCodeList["1001"]){
       const nowSeatID = arg.content.nowSeatID;
       const nextSeatID = arg.content.nextSeatID;
       const targetID = seatsState[arg.content.nowSeatID].studentID;
@@ -308,21 +308,31 @@ const App = () => {
         changeData.seatID = nextSeatID;
 
         insertObjectForAttendanceState[targetID].push(changeData);
-        console.log("insertObj-attendance 作成完了");
-        console.log(insertObjectForAttendanceState);
-        // setAttendanceState({ ...attendanceState, ...insertObjectForAttendanceState});
+        // console.log("insertObj-attendance 作成完了");
+        // console.log(insertObjectForAttendanceState);
+        setAttendanceState({ ...attendanceState, ...insertObjectForAttendanceState});
       }
 
       //SeatsState書き換え
       //attendanceStateから対象の席のobjectを取得し、書換用データ保持objを作成
       const insertObjectForSeatsState = {};
-      insertObjectForSeatsState[nowSeatID] = {...seatsState[nowSeatID]};
+      insertObjectForSeatsState[nowSeatID] = {...seatsState_initialValue[nowSeatID]};
+      insertObjectForSeatsState[nextSeatID] = {...{active: true, studentID: targetID}}
 
-      insertObjectForSeatsState[nowSeatID].seatID = nextSeatID;
-      // setSeatsState({...seatsState, ...insertObjectForSeatsState});
+      setSeatsState({...seatsState, ...insertObjectForSeatsState});
 
-      console.log("insertObj-attendance");
-      console.log(insertObjectForSeatsState);
+      // console.log("insertObj-attendance");
+      // console.log(insertObjectForSeatsState);
+
+      setModalState({
+        active: true,
+        name: appConfig.modalCodeList["1001"],
+        content: {
+          confirmCode: appConfig.confirmCodeList["2008"],
+          studentID: targetID,
+          nextSeatID: nextSeatID
+        }
+      })
     }
   }
 
@@ -642,10 +652,10 @@ const App = () => {
   //   console.log("appState checker---------");
   //   console.log(modalState);
   // }, [modalState]);
-  useEffect(() => {
-    console.log("attendanceState checker........")
-    console.log(attendanceState);
-  }, [attendanceState]);
+  // useEffect(() => {
+  //   console.log("attendanceState checker........")
+  //   console.log(attendanceState);
+  // }, [attendanceState]);
 
   return (
     <div className="App">
