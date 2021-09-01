@@ -8,6 +8,16 @@ const ConfirmModal = (props) => {
   const onCancelOperation = () => props.onCancelOperation();
   const closeModal = () => props.onCloseModal(true);
 
+  const getStudentInfoFromStudentID = (arg) => {
+    return (arg.studentID !== "__OTHERS__") ?
+    props.studentsList.filter(val => {
+      return val.id == arg.studentID;
+    })[0]
+
+    :
+
+    { id: "__OTHERS__", name: "(関係者その他)" }
+  }
 
   const handleComponent = () => {
 
@@ -25,15 +35,9 @@ const ConfirmModal = (props) => {
         //退席処理を実行する準備を行う
         //まず、処理を実行する生徒IDをseatsStateより取り出す
         //関係者の場合は特殊パターンとして別途オブジェクトを作成する
-        const targetInfo = (props.seatsState[props.content.targetID].studentID !== "__OTHERS__") ?
-          props.studentsList.filter((val) => {
-            return val.id == props.seatsState[props.content.targetID].studentID;
-          })[0]
-
-          :
-
-          { id: "__OTHERS__", name: "(関係者その他)" }
-
+        const targetInfo = getStudentInfoFromStudentID({
+          studentID: props.seatsState[props.content.targetID].studentID,
+        });
 
         // console.log(targetInfo);
         //確認モーダルの中身
@@ -146,6 +150,21 @@ const ConfirmModal = (props) => {
             <button className="btn btn__close" onClick={closeModal}>閉じる</button>
           </>
         );
+
+      case appConfig.confirmCodeList["2008"]:
+        const studentName = getStudentInfoFromStudentID({studentID: props.content.studentID}).name
+        
+
+        return (
+          <>
+            <p>
+              {studentName} さんの座席番号を
+              <br></br>
+              {props.content.nextSeatID.substring(4)} 番に変更しました。
+            </p>
+            <button className="btn btn__close" onClick={closeModal}>閉じる</button>
+          </>
+        )
 
       default:
         console.log("confirm code:", props.content.confirmCode);

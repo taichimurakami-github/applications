@@ -1,6 +1,6 @@
 //modal module import
 import { ErrorModal } from "./ErrorModal";
-import { ExitModal } from "./ExitModal";
+import { SeatsModal } from "./SeatsModal";
 import { ConfirmModal } from "./ConfirmModal";
 import { appConfig } from "../../app.config";
 import { useState } from "react";
@@ -50,17 +50,18 @@ const ModalWrapper = (props) => {
           />
 
         case appConfig.modalCodeList["1003"]:
-          return <ExitModal
-            seatsState={props.modalState.content.seatsState}
-            studentsList={props.modalState.content.studentsList}
+          return <SeatsModal
             onCloseModal={closeModal}
             onHandleBcClose={setBackgroundClose}
             onHandleModalState={props.onHandleModalState}
+            onHandleSeatOperation={props.onHandleSeatOperation}
             onSaveForExit={props.onSaveForExit}
+            seatsState={props.seatsState}
+            studentsList={props.studentsList}
           />
 
         default:
-          console.log("handleModal on modalWrapper is ignored");
+          console.log("invalid modalCode has been passed");
           return undefined;
       }
     }

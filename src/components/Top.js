@@ -1,6 +1,9 @@
 import { appConfig } from "../app.config";
 
 export const Top = (props) => {
+
+  const localConfig_fn = props.appState.localConfig.fn;
+
   const handleEnter = (e) => {
     // console.log("now selected: ", e.target);
 
@@ -19,10 +22,7 @@ export const Top = (props) => {
     props.onHandleModalState({
       active: true,
       name: appConfig.modalCodeList["1003"],
-      content: {
-        studentsList: props.studentsList,
-        seatsState: props.seatsState,
-      }
+      content: {}
     });
   }
 
@@ -95,10 +95,10 @@ export const Top = (props) => {
       </div>
       <div className="btn-wrapper">
         {
-          props.appState.localConfig.fn.nightly.cancelOperation &&
+          localConfig_fn.nightly.cancelOperation &&
           <button className={`btn cancel-manipulation-btn ${(props.appState.appLog) ? "active" : "unactive"}`} onClick={displayCancelOperationModal}><span className="cancel-arrow"></span>直前の操作を取り消す</button>
         }
-        <button className="btn activate-exit-btn btn__exit" onClick={displayExitModal}>退出する</button>
+        <button className="btn activate-exit-btn btn__exit" onClick={displayExitModal}>座席の操作</button>
         <button className="btn btn__typeC" onClick={handleConfig}>設定画面を開く</button>
       </div>
     </>
