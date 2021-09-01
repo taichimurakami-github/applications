@@ -1,4 +1,4 @@
-//module import
+//modules import
 import { useEffect, useState, useRef } from 'react';
 import {
   appConfig, appState_initialValue,
@@ -8,12 +8,13 @@ import {
   modalState_initialValue
 } from './app.config';
 
+//React components import
 import { Top } from './components/Top';
 import { SelectData } from './components/SelectData';
 import { ModalWrapper } from "./components/modal/MordalWrapper";
 import { Config } from "./components/Config";
 
-//style import
+//styles import
 import "./components/styles/modules/Top.scss";
 import "./components/styles/app.common.scss";
 
@@ -46,7 +47,7 @@ const App = () => {
 
   /**
    * -------------------------------
-   *      App functions
+   *          App functions
    * -------------------------------
    */
 
@@ -138,7 +139,7 @@ const App = () => {
    * 
    * 入室記録を保存する関数
    * 
-   * @param {string} i : STUDENT ID (studentsList student.id)
+   * @param {string} i : TARGET STUDENT ID (studentsList student.id)
    */
   const handleSaveAttendanceForEnter = (i) => {
     console.log("出席処理を開始します...");
@@ -282,7 +283,7 @@ const App = () => {
    * 今の所、一旦取り消したらもとに戻すことはできないし、
    * 一つ前以上の操作を取り消すことはできない
    * 
-   * @returns void
+   * @returns {void}
    */
   const handleCancelOperation = () => {
     console.log("launching cancel oparation...");
@@ -439,7 +440,7 @@ const App = () => {
    * 
    * render()内のReact Componentを、appStateの変更に合わせて動的に返す
    * 
-   * @returns void
+   * @returns {void}
    */
   const handleComponent = () => {
     switch (appState.now) {
