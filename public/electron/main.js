@@ -50,8 +50,6 @@ app.whenReady().then(() => {
   const configTemplate = JSON.parse(fs.readFileSync(path.resolve(__dirname, "electron.config.template.json")));
   configTemplate.path.seats = path.resolve(configDirPath, "./seats/");
   configTemplate.path.attendance = path.resolve(configDirPath, "./attendance/");
-  configTemplate.bcup.path.seats = configTemplate.path.seats;
-  configTemplate.bcup.path.attendance = configTemplate.path.attendance;
 
   console.log("configTemplate:");
   console.log(configTemplate);
@@ -77,11 +75,12 @@ app.whenReady().then(() => {
     if (!"version" in nowAppConfig || nowAppConfig.version !== configTemplate.version) {
       console.log("your LocalConfig is available to be updated.");
       console.log("now making new App LocalConfig file...");
-      console.log("※your backup data will be used.");
 
+      //studentsListのpathデータを保持するために、configTemplate内にコピー
+      configTemplate.path.studentsList = nowAppConfig.path.studentsList;
+
+      //新規バージョンのconfigで上書き
       fs.writeFileSync(path.resolve(configDirPath, "./config.json"), JSON.stringify(configTemplate));
-
-      //バックアップ項目があるかどうか確認
 
       //appLocalConfigには、configTemplate(最新版テンプレートファイル)からロードしたJSONデータを入れる
       appLocalConfig = { ...configTemplate };
@@ -151,7 +150,6 @@ ipcMain.handle("handle_studentsList", async (event, arg) => {
       return new Promise((resolve) => {
         if (typeOfFile && typeOfFile.ext === "xlsx") {
           appLocalConfig.path.studentsList = arg.data;
-          appLocalConfig.bcup.path.studentsList = arg.data;//studentsListのバックアップデータはここで上書き
           fs.writeFileSync(path.resolve(configDirPath, "./config.json"), JSON.stringify(appLocalConfig));
           return resolve(true);
         }
@@ -275,12 +273,10 @@ ipcMain.handle("handle_loadAppLocalConfig", (event, arg) => {
       switch (arg.content.id) {
         case "appConfig_fn_cancelOperation":
           newAppLocalConfig.appConfig.fn[arg.content.status].cancelOperation = arg.content.value;
-          newAppLocalConfig.bcup.appConfig = { ...newAppLocalConfig.appConfig.fn[arg.content.status].cancelOperation };
           break;
 
         case "appConfig_fn_eraceAppDataTodayAll":
           newAppLocalConfig.appConfig.fn[arg.content.status].eraceAppDataTodayAll = arg.content.value;
-          newAppLocalConfig.bcup.appConfig = { ...newAppLocalConfig.appConfig };
           break;
 
         default:

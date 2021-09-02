@@ -1,5 +1,5 @@
 {
-  "version": "0.9.9.1",
+  "version": "0.9.9",
   "path":{
     "studentsList": "",
     "attendance": "",
@@ -15,9 +15,5 @@
       "nightly": {
       }
     }
-  },
-  "bcup": {
-    "path": {},
-    "appConfig": {}
   }
 }
