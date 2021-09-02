@@ -40,7 +40,7 @@ const SelectNewSeat = (props) => {
             戻る
         </button>
       </nav>
-      <p>使用されていない座席の中から、移動先の座席を選択してください</p>
+      <p>使用されていない座席の中から、移動先の座席を選択してください。</p>
       <SeatsTable
         seatsState={props.seatsState}
         onClickFunction={onHandleSelectSeat}
