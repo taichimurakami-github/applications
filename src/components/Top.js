@@ -52,10 +52,9 @@ export const Top = (props) => {
       {
         (props.studentsList === null) ?
           <>
-            <h1>現在、入室登録ができません。</h1>
+            <h1>現在、アプリの操作ができません。</h1>
             <p>生徒情報が読み込まれていません。</p>
-            <p>設定画面を開き、生徒情報ファイルを読み込むと、再び入室登録が利用できます。</p>
-            <p>自習室を退出する際は、下の「退出する」ボタンを押してください。</p>
+            <p>設定画面を開き、生徒情報ファイルを読み込むと、再びアプリを利用できます。</p>
           </>
 
           :
@@ -97,10 +96,12 @@ export const Top = (props) => {
       </div>
       <div className="btn-wrapper">
         {
-          localConfig_fn.nightly.cancelOperation &&
+          localConfig_fn.stable.cancelOperation &&
           <button className={`btn cancel-manipulation-btn ${(props.appState.appLog) ? "active" : "unactive"}`} onClick={displayCancelOperationModal}><span className="cancel-arrow"></span>直前の操作を取り消す</button>
         }
-        <button className="btn activate-exit-btn btn__exit" onClick={displayExitModal}>座席の操作</button>
+        {
+          props.studentsList &&
+          <button className="btn activate-exit-btn btn__exit" onClick={displayExitModal}>座席の操作</button>}
         <button className="btn btn__typeC" onClick={handleConfig}>設定画面を開く</button>
       </div>
     </>

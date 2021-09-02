@@ -17,11 +17,19 @@ const Config = (props) => {
     console.log(appConfig.fn.stable.eraceAppDataTodayAll, !appConfig.fn.stable.eraceAppDataTodayAll);
     switch (e.target.id) {
 
+      // case "toggle_changeSeatID":
+      //   props.onHandleChangeAppLocalConfig({
+      //     id: "appConfig_fn_eraceAppDataTodayAll",
+      //     status: "stable",
+      //     value: !localConfig_fn.stable.changeSeatID,
+      //   });
+      //   break;
+
       case "toggle_cancelOperation":
         props.onHandleChangeAppLocalConfig({
           id: "appConfig_fn_cancelOperation",
-          status: "nightly",
-          value: !props.appState.localConfig.fn.nightly.cancelOperation,
+          status: "stable",
+          value: !localConfig_fn.stable.cancelOperation,
         });
         break;
 
@@ -29,7 +37,7 @@ const Config = (props) => {
         props.onHandleChangeAppLocalConfig({
           id: "appConfig_fn_eraceAppDataTodayAll",
           status: "stable",
-          value: !props.appState.localConfig.fn.stable.eraceAppDataTodayAll,
+          value: !localConfig_fn.stable.eraceAppDataTodayAll,
         });
         break;
 
@@ -98,11 +106,21 @@ const Config = (props) => {
 
       <h2>機能のon/off</h2>
 
+      {/* <div className="toggle-btn-wrapper btn__toggle">
+        <p>座席を移動する</p>
+        <button
+          id="toggle_changeSeatID"
+          className={`${"toggle-wrapper "}${localConfig_fn.stable.changeSeatID ? "active" : "unactive"}`}
+          onClick={handleChangeAppConfig}>
+          <span className="toggle"></span>
+        </button>
+      </div> */}
+
       <div className="toggle-btn-wrapper btn__toggle">
         <p>直前の操作を取り消す</p>
         <button
           id="toggle_cancelOperation"
-          className={`${"toggle-wrapper "}${localConfig_fn.nightly.cancelOperation ? "active" : "unactive"}`}
+          className={`${"toggle-wrapper "}${localConfig_fn.stable.cancelOperation ? "active" : "unactive"}`}
           onClick={handleChangeAppConfig}>
           <span className="toggle"></span>
         </button>

@@ -17,10 +17,10 @@ const appConfig = {
   localConfigTemplate: {
     fn: {
       nightly: {
-        cancelOperation: false,
       },
       stable: {
         eraceAppDataTodayAll: false,
+        cancelOperation: false,
         changeSeatID: false,
       }
     },

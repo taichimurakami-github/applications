@@ -1,5 +1,5 @@
 {
-  "version": "0.9.9",
+  "version": "0.9.9.1",
   "path":{
     "studentsList": "",
     "attendance": "",
@@ -8,11 +8,11 @@
   "appConfig": {
     "fn": {
       "stable": {
-        "eraceAppDataTodayAll": true
-      },
-      "nightly": {
+        "eraceAppDataTodayAll": true,
         "cancelOperation": true,
         "changeSeatID": true
+      },
+      "nightly": {
       }
     }
   },
