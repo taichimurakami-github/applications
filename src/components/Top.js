@@ -28,7 +28,9 @@ export const Top = (props) => {
 
   const displayCancelOperationModal = () => {
 
-    const name = props.studentsList.filter((val) => val.id == props.appState.appLog.studentID)[0].name;
+    const name = (props.appState.appLog.studentID === "__OTHERS__")
+      ? "関係者その他"
+      : props.studentsList.filter((val) => val.id == props.appState.appLog.studentID)[0].name;
     const operation = props.appState.appLog.operation === "enter" ? "入室" : "退室";
 
     // console.log(name);
@@ -59,8 +61,8 @@ export const Top = (props) => {
           :
 
           <>
-            <h1>使用<ruby>しよう</ruby>する座席を選んでください</h1>
-            <p>使用中以外の席の中から、使用する席を選んでクリックしてください。</p>
+            <h1>使用する座席を選んでください</h1>
+            <p>使用されていない席の中から、使用する席を選んでクリックしてください。</p>
             <p>自習室を退出する際は、下の「退出する」ボタンを押してください。</p>
           </>
       }

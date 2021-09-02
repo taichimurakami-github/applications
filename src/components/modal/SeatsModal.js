@@ -3,14 +3,19 @@ import { useState } from "react";
 import { SeatsTable } from "../UI/SeatsTable";
 
 import "../styles/modules/Top.scss";
+import closeButtonIcon from "../../images/close-button.svg";
 
 const StudentsList = (props) => {
   return (
-    <ul className="exit-modal-container">
-      <li className="active-seat-user">
+    <ul className="seats-modal-container">
+      <li className="active-seat-navigation">
         <span>席番号</span>
         <span>お名前</span>
         <span>入室時刻</span>
+        <button className="btn btn__close" onClick={props.onCloseModal}>
+          <img className="close-button-icon" src={closeButtonIcon} />
+          閉じる
+        </button>
       </li>
       {props.generateStudentsList()}
     </ul>
@@ -24,24 +29,37 @@ const SelectNewSeat = (props) => {
     });
   }
 
+
   return (
-    <div className="exit-modal-container">
+    <div className="seats-modal-container">
+      <nav className="title-nav active-seat-navigation">
+        <h2>座席を選んでください</h2>
+        <button className="btn btn__close" onClick={props.onHandleGoBack}>
+            戻る
+        </button>
+      </nav>
       <SeatsTable
         seatsState={props.seatsState}
         onClickFunction={onHandleSelectSeat}
       />
+
     </div>
   )
 }
 
+
+const seatsModalState_initialValue = {
+  mode: appConfig.seatsModalModeList["1001"],
+  content: {
+    nowSeatID: null,
+  }
+}
+
 const SeatsModal = (props) => {
 
-  const [seatsModalState, setSeatsModalState] = useState({
-    mode: appConfig.seatsModalModeList["1001"],
-    content: {
-      nowSeatID: null,
-    }
-  });
+  const [seatsModalState, setSeatsModalState] = useState(seatsModalState_initialValue);
+
+  const closeModal = () => props.onCloseModal(true);
 
   const handleExit = (e) => {
     // console.log(e.target.id);
@@ -55,6 +73,8 @@ const SeatsModal = (props) => {
       }
     });
   }
+
+  const handleReset = () => setSeatsModalState(seatsModalState_initialValue);
 
   const activateSelectSeat = (e) => {
     console.log(e.target.parentNode.id);
@@ -129,19 +149,20 @@ const SeatsModal = (props) => {
     }
     else{
       //activeSeatsが存在しない
-      return <li className="no-close">現在使用されている席はありません。</li>
+      return <li className="all-seats-unactive">現在使用されている席はありません。</li>
     }
 
   };
 
 
   return (
-    <div className="exit-modal-wrapper">
+    <div className="seats-modal-wrapper">
       {
         seatsModalState.mode === appConfig.seatsModalModeList["1001"]
           && 
         <StudentsList
           generateStudentsList={generateStudentsList}
+          onCloseModal={closeModal}
         />
       }
 
@@ -150,9 +171,12 @@ const SeatsModal = (props) => {
           &&
         <SelectNewSeat
           seatsState={props.seatsState}
+          onHandleGoBack={handleReset}
           onHandleChangeSeat={handleChangeSeat}
         />
       }
+
+      
     </div>
   
 
