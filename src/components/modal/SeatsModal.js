@@ -121,14 +121,14 @@ const SeatsModal = (props) => {
       return activeSeatList.map((val) => {
         let result;
 
-        //関係者が存在したら
+        //関係者が座っている席の場合
         if(seats[val].studentID === "__OTHERS__"){
           result = [{
             id: "__OTHERS__",
             name: "関係者等(記録されません)",
-            school: null,
             grade: null,
-            belongs: null
+            school: null,
+            belongs: null,
           }];
         }
         else{
@@ -138,14 +138,20 @@ const SeatsModal = (props) => {
           });
         }
         
+        //取得した入室時間を、表示する形式に変換
+        //一桁の数字だったときは、0を先頭に追加
+        let enteredTime = seats[val].enterTime.split(':').map((val, index) => {
+          return (val.length === 2) ? val : "0" + val;
+        });
+        console.log(enteredTime);
         return <li id={val} key={val} className="active-seat-user">
-          <span>{val.slice(4)}</span>
-          <span>{result[0].name}</span>
-          <span>10:00</span>
+          <span className="seat-id">{val.slice(4)}</span>
+          <span className="student-name">{result[0].name}</span>
+          <span className="entered-time">{enteredTime.join(" : ")}</span>
           <button onClick={activateSelectSeat}>座席を移動</button>
           <button onClick={handleExit}>退室する</button>
         </li>
-      });
+      })
     }
     else{
       //activeSeatsが存在しない
