@@ -7,18 +7,20 @@ import closeButtonIcon from "../../images/close-button.svg";
 
 const StudentsList = (props) => {
   return (
-    <ul className="seats-modal-container">
-      <li className="active-seat-navigation">
-        <span>席番号</span>
-        <span>お名前</span>
-        <span>入室時刻</span>
-        <button className="btn btn__close" onClick={props.onCloseModal}>
-          <img className="close-button-icon" src={closeButtonIcon} />
-          閉じる
-        </button>
-      </li>
-      {props.generateStudentsList()}
-    </ul>
+    <>
+      <nav className="active-seat-navigation">
+          <b>席番号</b>
+          <b>お名前</b>
+          <b>入室時刻</b>
+          <button className="btn btn__close" onClick={props.onCloseModal}>
+            <img className="close-button-icon" src={closeButtonIcon} />
+            閉じる
+          </button>
+      </nav>
+      <ul className="seats-modal-container scroll">
+        {props.generateStudentsList()}
+      </ul>  
+   </>
   )
 }
 
@@ -33,11 +35,12 @@ const SelectNewSeat = (props) => {
   return (
     <div className="seats-modal-container">
       <nav className="title-nav active-seat-navigation">
-        <h2>座席を選んでください</h2>
+        <h2>移動先の座席を選んでください</h2>
         <button className="btn btn__close" onClick={props.onHandleGoBack}>
             戻る
         </button>
       </nav>
+      <p>使用されていない座席の中から、移動先の座席を選択してください</p>
       <SeatsTable
         seatsState={props.seatsState}
         onClickFunction={onHandleSelectSeat}
@@ -56,7 +59,6 @@ const seatsModalState_initialValue = {
 }
 
 const SeatsModal = (props) => {
-
   const [seatsModalState, setSeatsModalState] = useState(seatsModalState_initialValue);
 
   const closeModal = () => props.onCloseModal(true);
@@ -148,8 +150,8 @@ const SeatsModal = (props) => {
           <span className="seat-id">{val.slice(4)}</span>
           <span className="student-name">{result[0].name}</span>
           <span className="entered-time">{enteredTime.join(" : ")}</span>
-          <button onClick={activateSelectSeat}>座席を移動</button>
-          <button onClick={handleExit}>退室する</button>
+          <button className="btn btn-change-seat btn__typeC" onClick={activateSelectSeat}>座席を移動</button>
+          <button className="btn btn-exit btn__typeC" onClick={handleExit}>退室する</button>
         </li>
       })
     }

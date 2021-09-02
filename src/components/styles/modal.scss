@@ -42,30 +42,41 @@
     }
   }
 }
-
 ::-webkit-scrollbar {
   width: 0px;
 }
-::-webkit-scrollbar-track {
-  background: lightgray;
-}
 
-::-webkit-scrollbar-thumb {
-  background: $vermilion;
-  border: $vermilion 3px solid;
-  border-radius: 10px;
-}
 .seats-modal-wrapper{
+  $wrapper-height: 800px;
+  $wrapper-width: 1152px;
+  $wrapper-padding: 30px;
+  $top-nav-height: 75px;
+
   font-size: 2rem;
-  padding: 50px;
+  padding: $wrapper-padding;
   border-radius: 20px;
   background:white;
-  width: 1152px;
-  height: 750px;
+  width: $wrapper-width;
+  height: $wrapper-height;
   overflow: auto;
 
-  .seats-modal-container{
+  .seats-modal-container.scroll{
+    height: 650px;
+    overflow-y: auto;
     margin: 0;
+
+    &::-webkit-scrollbar {
+      width: 15px;
+    }
+    &::-webkit-scrollbar-track {
+      background: lightgray;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: $navy;
+      border: $navy 3px solid;
+      border-radius: 10px;
+    }
   }
 
   .all-seats-unactive{
@@ -85,9 +96,9 @@
     align-items: center;
 
     .btn__close{
-      grid-column: 4 / 6;
+      grid-column: 5 / 6;
       border-radius: 0;
-      width: 250px;
+      // width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -99,15 +110,35 @@
   }
 
   .active-seat-navigation{
-    margin-bottom: 20px;
+    //高さのmax: 
+    padding-right: 15px;//スクロールバー分のズレ
+    height: 75px;
+
+    b{
+      :nth-child(2){
+        border: 1px solid $light-gray;
+        border-bottom: 0;
+        border-top: 0;
+      }
+    }
   }
 
   .active-seat-user{
     padding: 15px 0;
 
-    button{
-      width: 150px;
+    .button__typeC{
+      // width: 150px;
       height: 50px;
+      margin: 0 auto;
+
+    }
+    .btn-exit{
+      background: $vermilion;
+      &:hover{background: darken($vermilion, 20%);}
+    }
+    .btn-change-seat{
+      background: $moss-green;
+      &:hover{background: darken($moss-green, 20%);}
     }
 
     span{
@@ -125,12 +156,11 @@
   }
 
   .seat-table-container{
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 70px;
   }
 
   .title-nav h2{
-    grid-column: 1/4;
+    grid-column: 2/5;
   }
 }
 
