@@ -1,5 +1,5 @@
 //module import
-import { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   appConfig, appState_initialValue,
   studentsList_initialValue,
@@ -17,8 +17,7 @@ import { Config } from "./components/Config";
 import "./components/styles/modules/Top.scss";
 import "./components/styles/app.common.scss";
 
-
-const App = () => {
+const App:React.VFC = () => {
 
   /**
    * -------------------------------

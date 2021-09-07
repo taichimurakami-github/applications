@@ -72,7 +72,7 @@ app.whenReady().then(() => {
     console.log(nowAppConfig);
 
     //LocalConfigファイルが存在するがバージョンが古い場合、新バージョンのファイルを生成する
-    if (!"version" in nowAppConfig || nowAppConfig.version !== configTemplate.version) {
+    if ( !("version" in nowAppConfig) || nowAppConfig.version !== configTemplate.version) {
       console.log("your LocalConfig is available to be updated.");
       console.log("now making new App LocalConfig file...");
 
@@ -220,7 +220,7 @@ ipcMain.handle("handle_seatsState", (event, arg) => {
       //本日付のバックアップファイルがあるか確認
       const dirFiles = fs.readdirSync(fileDirPath);
       let existsCheck = false;
-      for (val of dirFiles) {
+      for (let val of dirFiles) {
         //定義したファイル名と一致するファイルがあればexistsCheckをtrueに、
         //それ以外のファイルは削除する(座席状態のバックアップデータ重複を避けるため)
         val === fileName ?
