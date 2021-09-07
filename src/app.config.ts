@@ -99,16 +99,9 @@ const appConfig = {
  * 
  */
 
-const appState_initialValue = {
-  selectedElement: null,
-  selectedSeat: "",
-  now: "TOP",
-  localConfig: appConfig.localConfigTemplate,
-  appLog: null,
-}
-const studentsList_initialValue = null;
+const studentsList_initialValue: null = null;
 const attendanceState_initialValue = {};
-const seatsState_initialValue = {
+const seatsState_initialValue: seatsState = {
   seat1: {
     active: false,
     enterTime: "",
@@ -190,16 +183,15 @@ const seatsState_initialValue = {
     studentID: ""
   },
 }
-const modalState_initialValue = {
+const modalState_initialValue: modalState = {
   active: false,
-  modalName: null,
-  content: null
+  name: "",
+  content: {}
 };
 
 
 export {
   appConfig,
-  appState_initialValue,
   studentsList_initialValue,
   attendanceState_initialValue,
   seatsState_initialValue,

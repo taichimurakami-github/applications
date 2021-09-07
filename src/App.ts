@@ -1,5 +1,5 @@
-//modules import
-import { useEffect, useState, useRef } from 'react';
+//module import
+import React, { VFC, useEffect, useState, useRef } from 'react';
 import {
   appConfig, appState_initialValue,
   studentsList_initialValue,
@@ -18,8 +18,22 @@ import { Config } from "./components/Config";
 import "./components/styles/modules/Top.scss";
 import "./components/styles/app.common.scss";
 
+interface appState {
+  selectedElement: null | HTMLElement
+  selectedSeat: string,
+  now: string,
+  localConfig: any,
+  appLog: any,
+}
+const appState_initialValue: appState = {
+  selectedElement: null,
+  selectedSeat: "",
+  now: "TOP",
+  localConfig: appConfig.localConfigTemplate,
+  appLog: null,
+}
 
-const App = () => {
+const App: any = () => {
 
   /**
    * -------------------------------
@@ -34,13 +48,13 @@ const App = () => {
   const [appState, setAppState] = useState(appState_initialValue);
 
   //エクセルから取得した生徒情報(生徒名簿リストデータ)を格納しておく変数
-  const [studentsList, setStudentsList] = useState(studentsList_initialValue);
+  const [studentsList, setStudentsList] = useState<null | studentsList>(studentsList_initialValue);
 
   //入退室記録のデータを保存しておく変数
-  const [attendanceState, setAttendanceState] = useState(attendanceState_initialValue);
+  const [attendanceState, setAttendanceState] = useState<{ [index: string]: any }>(attendanceState_initialValue);
 
   //現在の座席状況を管理する変数
-  const [seatsState, setSeatsState] = useState(seatsState_initialValue);
+  const [seatsState, setSeatsState] = useState<seatsState>(seatsState_initialValue);
 
   //モーダル管理変数
   const [modalState, setModalState] = useState(modalState_initialValue);
@@ -80,7 +94,7 @@ const App = () => {
    * @param {object} t 
    * @returns {void}
    */
-  const handleModalState = (t) => {
+  const handleModalState = (t: modalState) => {
 
     //t.active = falseだった場合：modalStateをリセットする
     if (!t.active) {
@@ -89,7 +103,7 @@ const App = () => {
     }
 
     //その他：引数に従ってモーダルを起動
-    if (t.active && t.name && t.content) {
+    if (t.active && t.name !== "" && t.content !== {}) {
       setModalState({
         active: true,
         name: t.name,
@@ -113,7 +127,10 @@ const App = () => {
    * 
    * @param {object} arg 
    */
-  const resetAppState = (arg = null) => {
+  const resetAppState = (arg: {
+    mode: string,
+    content: any
+  }) => {
 
     if (arg && arg.mode === "APPLOG") {
       //appLogが渡された場合
@@ -141,17 +158,17 @@ const App = () => {
    * 
    * @param {string} i : TARGET STUDENT ID (studentsList student.id)
    */
-  const handleSaveAttendanceForEnter = (i) => {
+  const handleSaveAttendanceForEnter = (i: string) => {
     console.log("出席処理を開始します...");
     //時刻を定義
     const now = new Date();
     const nowDateTime = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
 
     //席を赤くする
-    appState.selectedElement.classList.add("active");
+    appState.selectedElement && appState.selectedElement.classList.add("active");
 
     //seatsStateに挿入する値を定義
-    const insertObjectForSeatsState = {}
+    const insertObjectForSeatsState: { [index: string]: any } = {}
     insertObjectForSeatsState[appState.selectedSeat] = (i === "__OTHERS__") ?
       {
         active: true,
@@ -170,7 +187,7 @@ const App = () => {
 
     if (i !== "__OTHERS__") {
       //attendanceStateを更新
-      const insertObjectForAttendanceState = {};
+      const insertObjectForAttendanceState: { [index: string]: any } = {};
       const attendance_enterData = {
         id: i,
         seatID: appState.selectedSeat,
@@ -224,7 +241,7 @@ const App = () => {
    */
   const handleSaveAttendanceForExit = (i) => {
     console.log("退席処理を開始します...");
-    const insertObjectForSeatsState = {}
+    const insertObjectForSeatsState: { [index: string]: any } = {}
     insertObjectForSeatsState[i] = {
       active: false,
       enterTime: "",
@@ -244,7 +261,7 @@ const App = () => {
 
       //対象生徒のkeyで参照したattendanceStateのvalueの中で、
       //配列の最後の要素のみ更新し、元のattendanceStateにマージする
-      const insertObjectForAttendanceState = {};
+      const insertObjectForAttendanceState: { [index: string]: any } = {};
       insertObjectForAttendanceState[id] = attendanceState[id].map((val, index) => {
         //exitのデータを、配列の最後の要素に書き込み
         //それ以外のデータは変更しないでそのまま返す
@@ -294,15 +311,15 @@ const App = () => {
   const handleSeatOperation = (arg) => {
     console.log("activate fn handleSeatOperation()");
 
-    if(arg.mode === appConfig.seatOperetionCodeList["1001"]){
+    if (arg.mode === appConfig.seatOperetionCodeList["1001"]) {
       const nowSeatID = arg.content.nowSeatID;
       const nextSeatID = arg.content.nextSeatID;
       const targetID = seatsState[arg.content.nowSeatID].studentID;
 
       //AttendanceState書き換え
-      if(targetID !== "__OTHERS__"){
+      if (targetID !== "__OTHERS__") {
         //attendanceStateから対象生徒のarrayを取得し、書換用データ保持objを作成
-        const insertObjectForAttendanceState = {}
+        const insertObjectForAttendanceState: { [index: string]: any } = {}
         insertObjectForAttendanceState[targetID] = [...attendanceState[targetID]];
 
         // console.log("insertObj-attendance 作成直後");
@@ -316,16 +333,16 @@ const App = () => {
         insertObjectForAttendanceState[targetID].push(changeData);
         // console.log("insertObj-attendance 作成完了");
         // console.log(insertObjectForAttendanceState);
-        setAttendanceState({ ...attendanceState, ...insertObjectForAttendanceState});
+        setAttendanceState({ ...attendanceState, ...insertObjectForAttendanceState });
       }
 
       //SeatsState書き換え
       //attendanceStateから対象の席のobjectを取得し、書換用データ保持objを作成
-      const insertObjectForSeatsState = {};
-      insertObjectForSeatsState[nowSeatID] = {...seatsState_initialValue[nowSeatID]};
-      insertObjectForSeatsState[nextSeatID] = {...seatsState[nowSeatID]}
+      const insertObjectForSeatsState: { [index: string]: any } = {};
+      insertObjectForSeatsState[nowSeatID] = { ...seatsState_initialValue[nowSeatID] };
+      insertObjectForSeatsState[nextSeatID] = { ...seatsState[nowSeatID] }
 
-      setSeatsState({...seatsState, ...insertObjectForSeatsState});
+      setSeatsState({ ...seatsState, ...insertObjectForSeatsState });
 
       // console.log("insertObj-attendance");
       console.log(insertObjectForSeatsState);
@@ -506,33 +523,33 @@ const App = () => {
     switch (appState.now) {
       case "TOP":
         return <Top
-          onHandleAppState={handleAppState}
-          onHandleSeat={handleSeatsState}
-          onHandleModalState={handleModalState}
-          appState={appState}
-          seatsState={seatsState}
-          studentsList={studentsList}
-        />;
+          onHandleAppState={ handleAppState }
+        onHandleSeat = { handleSeatsState }
+        onHandleModalState = { handleModalState }
+        appState = { appState }
+        seatsState = { seatsState }
+        studentsList = { studentsList }
+          />;
 
       case "STUDENT":
         return <SelectData
-          onSaveAttendance={handleSaveAttendanceForEnter}
-          onResetAppState={resetAppState}
-          onHandleModalState={handleModalState}
-          appState={appState}
-          studentsList={studentsList}
-          seatsState={seatsState}
-        />;
+          onSaveAttendance={ handleSaveAttendanceForEnter }
+        onResetAppState = { resetAppState }
+        onHandleModalState = { handleModalState }
+        appState = { appState }
+        studentsList = { studentsList }
+        seatsState = { seatsState }
+          />;
 
       case "CONFIG":
         return <Config
-          onHandleStudentFile={setStudentsList}
-          onHandleAppState={handleAppState}
-          onReadStudentsList={setStudentsList}
-          onHandleModalState={handleModalState}
-          onHandleChangeAppLocalConfig={handleChangeAppLocalConfig}
-          appState={appState}
-        />;
+          onHandleStudentFile={ setStudentsList }
+        onHandleAppState = { handleAppState }
+        onReadStudentsList = { setStudentsList }
+        onHandleModalState = { handleModalState }
+        onHandleChangeAppLocalConfig = { handleChangeAppLocalConfig }
+        appState = { appState }
+          />;
 
 
       default:
@@ -658,19 +675,19 @@ const App = () => {
   // }, [attendanceState]);
 
   return (
-    <div className="App">
-      {handleComponent()}
-      <ModalWrapper
-        modalState={modalState}
-        onHandleModalState={handleModalState}
-        onSaveForEnter={handleSaveAttendanceForEnter}
-        onSaveForExit={handleSaveAttendanceForExit}
-        onEraceAppData={handleEraceAppData}
-        onCancelOperation={handleCancelOperation}
-        onHandleSeatOperation={handleSeatOperation}
-        studentsList={studentsList}
-        seatsState={seatsState}
-      />
+    <div className= "App" >
+    { handleComponent() }
+    < ModalWrapper
+  modalState = { modalState }
+  onHandleModalState = { handleModalState }
+  onSaveForEnter = { handleSaveAttendanceForEnter }
+  onSaveForExit = { handleSaveAttendanceForExit }
+  onEraceAppData = { handleEraceAppData }
+  onCancelOperation = { handleCancelOperation }
+  onHandleSeatOperation = { handleSeatOperation }
+  studentsList = { studentsList }
+  seatsState = { seatsState }
+    />
     </div>
   );
 }
