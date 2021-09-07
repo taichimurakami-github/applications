@@ -17,10 +17,10 @@ const appConfig = {
   localConfigTemplate: {
     fn: {
       nightly: {
-        cancelOperation: false,
       },
       stable: {
         eraceAppDataTodayAll: false,
+        cancelOperation: false,
         changeSeatID: false,
       }
     },
@@ -111,66 +111,82 @@ const attendanceState_initialValue = {};
 const seatsState_initialValue = {
   seat1: {
     active: false,
+    enterTime: "",
     studentID: ""
   },
   seat2: {
     active: false,
+    enterTime: "",
     studentID: ""
   },
   seat3: {
     active: false,
+    enterTime: "",
     studentID: ""
   },
   seat4: {
     active: false,
+    enterTime: "",
     studentID: ""
   },
   seat5: {
     active: false,
+    enterTime: "",
     studentID: ""
   },
   seat6: {
     active: false,
+    enterTime: "",
     studentID: ""
   },
   seat7: {
     active: false,
+    enterTime: "",
     studentID: ""
   },
   seat8: {
     active: false,
+    enterTime: "",
     studentID: ""
   },
   seat9: {
     active: false,
+    enterTime: "",
     studentID: ""
   },
   seat10: {
     active: false,
+    enterTime: "",
     studentID: ""
   },
   seat11: {
     active: false,
+    enterTime: "",
     studentID: ""
   },
   seat12: {
     active: false,
+    enterTime: "",
     studentID: ""
   },
   seat13: {
     active: false,
+    enterTime: "",
     studentID: ""
   },
   seat14: {
     active: false,
+    enterTime: "",
     studentID: ""
   },
   seat15: {
     active: false,
+    enterTime: "",
     studentID: ""
   },
   seat16: {
     active: false,
+    enterTime: "",
     studentID: ""
   },
 }

@@ -8,16 +8,12 @@
   "appConfig": {
     "fn": {
       "stable": {
-        "eraceAppDataTodayAll": true
-      },
-      "nightly": {
+        "eraceAppDataTodayAll": true,
         "cancelOperation": true,
         "changeSeatID": true
+      },
+      "nightly": {
       }
     }
-  },
-  "bcup": {
-    "path": {},
-    "appConfig": {}
   }
 }

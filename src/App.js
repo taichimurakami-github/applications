@@ -155,11 +155,13 @@ const App = () => {
     insertObjectForSeatsState[appState.selectedSeat] = (i === "__OTHERS__") ?
       {
         active: true,
+        enterTime: `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`,
         studentID: "__OTHERS__"
       }
       :
       {
         active: true,
+        enterTime: `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`,
         studentID: i
       }
 
@@ -205,6 +207,7 @@ const App = () => {
         mode: "APPLOG",
         content: {
           studentID: i,
+          enterTime: insertObjectForSeatsState[appState.selectedSeat].enterTime,
           seatID: appState.selectedSeat,
           operation: "enter",
         }
@@ -224,6 +227,7 @@ const App = () => {
     const insertObjectForSeatsState = {}
     insertObjectForSeatsState[i] = {
       active: false,
+      enterTime: "",
       studentID: ""
     }
 
@@ -268,6 +272,7 @@ const App = () => {
         mode: "APPLOG",
         content: {
           studentID: seatsState[i].studentID,
+          enterTime: seatsState[i].enterTime,
           seatID: i,
           operation: "exit",
         }
@@ -318,12 +323,12 @@ const App = () => {
       //attendanceStateから対象の席のobjectを取得し、書換用データ保持objを作成
       const insertObjectForSeatsState = {};
       insertObjectForSeatsState[nowSeatID] = {...seatsState_initialValue[nowSeatID]};
-      insertObjectForSeatsState[nextSeatID] = {...{active: true, studentID: targetID}}
+      insertObjectForSeatsState[nextSeatID] = {...seatsState[nowSeatID]}
 
       setSeatsState({...seatsState, ...insertObjectForSeatsState});
 
       // console.log("insertObj-attendance");
-      // console.log(insertObjectForSeatsState);
+      console.log(insertObjectForSeatsState);
 
       setModalState({
         active: true,
@@ -369,36 +374,28 @@ const App = () => {
        */
       case "enter":
 
-        //関係者その他専用処理
-        if (appState.appLog.studentID === "__OTHERS__") {
-          console.log("others enter");
+        //関係者その他ではない場合、attendanceStateのキャンセル処理を追加
+        if (appState.appLog.studentID !== "__OTHERS__") {
+          //attendanceStateのenterの記録を削除
+          //attendanceState上にはkeyとvalueが必ず存在しているので、値の存在を確認せずに直接値を参照する
 
-          insertObjectForSeatsState[appState.appLog.seatID] = {
-            active: false,
-            studentID: "",
-          }
-          setSeatsState({ ...seatsState, ...insertObjectForSeatsState });
-          break;
+          (attendanceState[appState.appLog.studentID].length === 1) ?
+            //attendanceStateのvalue内の要素が1つしかない場合、keyごと削除
+            delete insertObjectForAttendanceState[appState.appLog.studentID]
+            :
+            //要素が2つ以上の場合、最後の要素 = 新しくenterで生成された要素を削除
+            insertObjectForAttendanceState[appState.appLog.studentID].pop();
+
+          setAttendanceState({ ...insertObjectForAttendanceState });
         }
 
         //seatsStateの登録を削除
         insertObjectForSeatsState[appState.appLog.seatID] = {
           active: false,
+          enterTime: "",
           studentID: "",
         }
         setSeatsState({ ...seatsState, ...insertObjectForSeatsState });
-
-        //attendanceStateのenterの記録を削除
-        //attendanceState上にはkeyとvalueが必ず存在しているので、値の存在を確認せずに直接値を参照する
-
-        (attendanceState[appState.appLog.studentID].length === 1) ?
-          //attendanceStateのvalue内の要素が1つしかない場合、keyごと削除
-          delete insertObjectForAttendanceState[appState.appLog.studentID]
-          :
-          //要素が2つ以上の場合、最後の要素 = 新しくenterで生成された要素を削除
-          insertObjectForAttendanceState[appState.appLog.studentID].pop();
-
-        setAttendanceState({ ...insertObjectForAttendanceState });
         break;
 
       /**
@@ -412,6 +409,7 @@ const App = () => {
           console.log("others exit");
           insertObjectForSeatsState[appState.appLog.seatID] = {
             active: true,
+            enterTime: appState.appLog.enterTime,
             studentID: "__OTHERS__",
           }
 
@@ -422,6 +420,7 @@ const App = () => {
         //seatsStateに再登録する
         insertObjectForSeatsState[appState.appLog.seatID] = {
           active: true,
+          enterTime: appState.appLog.enterTime,
           studentID: appState.appLog.studentID,
         }
         setSeatsState({ ...seatsState, ...insertObjectForSeatsState });
@@ -635,20 +634,20 @@ const App = () => {
   }, [attendanceState, seatsState]);
 
   //デバッグ用コンソール表示関数
-  // useEffect(() => {
-  //   console.log("seatsState checker---------");
-  //   console.log(seatsState);
-  // }, [seatsState]);
+  useEffect(() => {
+    console.log("seatsState checker---------");
+    console.log(seatsState);
+  }, [seatsState]);
   // useEffect(() => {
   //   if (studentsList) {
   //     console.log("student list data has loaded");
   //     console.log(studentsList);
   //   }
   // }, [studentsList]);
-  // useEffect(() => {
-  //   console.log("appState checker---------");
-  //   console.log(appState);
-  // }, [appState]);
+  useEffect(() => {
+    console.log("appState checker---------");
+    console.log(appState);
+  }, [appState]);
   // useEffect(() => {
   //   console.log("appState checker---------");
   //   console.log(modalState);

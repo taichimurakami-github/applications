@@ -42,58 +42,125 @@
     }
   }
 }
-
 ::-webkit-scrollbar {
   width: 0px;
 }
-::-webkit-scrollbar-track {
-  background: lightgray;
-}
 
-::-webkit-scrollbar-thumb {
-  background: $vermilion;
-  border: $vermilion 3px solid;
-  border-radius: 10px;
-}
-.exit-modal-container{
+.seats-modal-wrapper{
+  $wrapper-height: 800px;
+  $wrapper-width: 1152px;
+  $wrapper-padding: 30px;
+  $top-nav-height: 75px;
+
   font-size: 2rem;
-  padding: 50px;
+  padding: $wrapper-padding;
   border-radius: 20px;
   background:white;
-  width: 1000px;
-  height: 500px;
+  width: $wrapper-width;
+  height: $wrapper-height;
   overflow: auto;
 
+  .seats-modal-container.scroll{
+    height: 650px;
+    overflow-y: auto;
+    margin: 0;
 
+    &::-webkit-scrollbar {
+      width: 15px;
+    }
+    &::-webkit-scrollbar-track {
+      background: lightgray;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: $navy;
+      border: $navy 3px solid;
+      border-radius: 10px;
+    }
+  }
+
+  .all-seats-unactive{
+    margin-top: 250px;
+  }
   
 
   .btn__typeB{
     margin-top: 100px;
   }
 
-  .active-seat-user{
-    padding: 15px 0;
+  .active-seat-user,
+  .active-seat-navigation{
     cursor: pointer;
     display: grid;
     grid-template: 1fr / repeat(5, 1fr) ;
     align-items: center;
 
-    button{
-      width: 150px;
+    .btn__close{
+      grid-column: 5 / 6;
+      border-radius: 0;
+      // width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    .close-button-icon{
+      margin-right: 10px;
+    }
+  }
+
+  .active-seat-navigation{
+    //高さのmax: 
+    padding-right: 15px;//スクロールバー分のズレ
+    height: 75px;
+
+    b{
+      :nth-child(2){
+        border: 1px solid $light-gray;
+        border-bottom: 0;
+        border-top: 0;
+      }
+    }
+  }
+
+  .active-seat-user{
+    padding: 15px 0;
+
+    .button__typeC{
+      // width: 150px;
       height: 50px;
+      margin: 0 auto;
+
+    }
+    .btn-exit{
+      background: $vermilion;
+      &:hover{background: darken($vermilion, 20%);}
+    }
+    .btn-change-seat{
+      background: $moss-green;
+      &:hover{background: darken($moss-green, 20%);}
     }
 
     span{
       pointer-events: none;//クリックした際にidを入手するために必要なので消さないこと
     }
+
     &:not(:last-child){
       border-bottom: $gray 1px solid;
     }
-  
+
     // &:hover{
     //   background: $gray;
     //   color: white;
     // }
+  }
+
+  .seat-table-container{
+    margin-top: 70px;
+  }
+
+  .title-nav h2{
+    grid-column: 2/5;
   }
 }
 
