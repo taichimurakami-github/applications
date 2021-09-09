@@ -46,6 +46,7 @@ const ModalWrapper = (props) => {
           return <ErrorModal
             onCloseModal={closeModal}
             onHandleBcClose={setBackgroundClose}
+            onHandleAppState={props.onHandleAppState}
             content={props.modalState.content}
           />
 

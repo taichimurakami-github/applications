@@ -3,7 +3,7 @@ import { appConfig } from "../../app.config";
 const ErrorModal = (props) => {
 
   const activateConfig = () => {
-    props.content.onHandleAppState({ now: "CONFIG" });
+    props.onHandleAppState({ now: "CONFIG" });
     props.onCloseModal(true);
   }
 

@@ -1,19 +1,34 @@
+import React, { useRef } from "react";
 import { appConfig } from "../app.config";
 
-export const Top = (props) => {
+interface TopComponentProps {
+  appState: appState,
+  studentsList: studentsList,
+  seatsState: seatsState,
+  onHandleAppState: Function,
+  // onHandleSeatState: VoidFunction,
+  onHandleModalState: Function
+}
 
-  const localConfig_fn = props.appState.localConfig.fn;
+export const Top: React.VFC<TopComponentProps> = (props) => {
 
-  const handleEnter = (e) => {
-    // console.log("now selected: ", e.target);
+  const _fn = useRef(props.appState.localConfig.fn);
+
+  const handleEnter = (e: React.MouseEvent): void => {
+
+    const targetElem = e.target as HTMLLIElement;
 
     if (props.studentsList === null) return;
 
     //activeの席をクリックしたときは何もしない
-    if (props.seatsState[e.target.id].active) return;
+    if (props.seatsState[targetElem.id].active) return;
     // e.target.classList.add("active");
 
-    props.onHandleAppState({ selectedElement: e.target, selectedSeat: e.target.id, now: "STUDENT" });
+    props.onHandleAppState({
+      selectedElement: e.target,
+      selectedSeat: targetElem.id,
+      now: "STUDENT"
+    });
   }
 
   const handleConfig = () => props.onHandleAppState({ now: "CONFIG" });
@@ -30,10 +45,10 @@ export const Top = (props) => {
 
     const name = (props.appState.appLog.studentID === "__OTHERS__")
       ? "関係者その他"
-      : props.studentsList.filter((val) => val.id == props.appState.appLog.studentID)[0].name;
+      : props.studentsList.filter(
+        (val: { [index: string]: string }) =>
+          val.id == props.appState.appLog.studentID)[0].name;
     const operation = props.appState.appLog.operation === "enter" ? "入室" : "退室";
-
-    // console.log(name);
 
     props.onHandleModalState({
       active: true,
@@ -96,7 +111,7 @@ export const Top = (props) => {
       </div>
       <div className="btn-wrapper">
         {
-          localConfig_fn.stable.cancelOperation &&
+          _fn.current.stable.cancelOperation &&
           <button className={`btn cancel-manipulation-btn ${(props.appState.appLog) ? "active" : "unactive"}`} onClick={displayCancelOperationModal}><span className="cancel-arrow"></span>直前の操作を取り消す</button>
         }
         {

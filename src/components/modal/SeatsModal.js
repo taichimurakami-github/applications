@@ -9,18 +9,18 @@ const StudentsList = (props) => {
   return (
     <>
       <nav className="active-seat-navigation">
-          <b>席番号</b>
-          <b>お名前</b>
-          <b>入室時刻</b>
-          <button className="btn btn__close" onClick={props.onCloseModal}>
-            <img className="close-button-icon" src={closeButtonIcon} />
-            閉じる
-          </button>
+        <b>席番号</b>
+        <b>お名前</b>
+        <b>入室時刻</b>
+        <button className="btn btn__close" onClick={props.onCloseModal}>
+          <img className="close-button-icon" src={closeButtonIcon} />
+          閉じる
+        </button>
       </nav>
       <ul className="seats-modal-container scroll">
         {props.generateStudentsList()}
-      </ul>  
-   </>
+      </ul>
+    </>
   )
 }
 
@@ -37,7 +37,7 @@ const SelectNewSeat = (props) => {
       <nav className="title-nav active-seat-navigation">
         <h2>移動先の座席を選んでください</h2>
         <button className="btn btn__close" onClick={props.onHandleGoBack}>
-            戻る
+          戻る
         </button>
       </nav>
       <p>使用されていない座席の中から、移動先の座席を選択してください。</p>
@@ -94,7 +94,7 @@ const SeatsModal = (props) => {
     console.log(nowSeatID, " >> ", nextSeatID);
 
     props.onHandleSeatOperation({
-      mode: appConfig.seatOperetionCodeList["1001"],
+      mode: appConfig.seatOperationCodeList["1001"],
       content: {
         nowSeatID: seatsModalState.content.nowSeatID,
         nextSeatID: arg.nextSeatID
@@ -111,20 +111,20 @@ const SeatsModal = (props) => {
     for (let key in props.seatsState) {
       //埋まっている席番号を格納
       seats[key].active && activeSeatList.push(key);
-      
+
       //関係者がいたら別配列でも監視
       seats[key].studentID === "__OTHERS__" && othersList.push(key);
     }
 
-    if(activeSeatList[0]){
-    //active状態の席一つひとつに対し、
-    //その席に登録されている生徒IDからstudentsListを検索し、該当する要素を返す
-    //valは席IDの文字列
+    if (activeSeatList[0]) {
+      //active状態の席一つひとつに対し、
+      //その席に登録されている生徒IDからstudentsListを検索し、該当する要素を返す
+      //valは席IDの文字列
       return activeSeatList.map((val) => {
         let result;
 
         //関係者が座っている席の場合
-        if(seats[val].studentID === "__OTHERS__"){
+        if (seats[val].studentID === "__OTHERS__") {
           result = [{
             id: "__OTHERS__",
             name: "関係者等(記録されません)",
@@ -133,13 +133,13 @@ const SeatsModal = (props) => {
             belongs: null,
           }];
         }
-        else{
+        else {
           //生徒IDが一致する生徒情報をデータシートのデータより取得
           result = props.studentsList.filter(elem => {
             return elem.id == seats[val].studentID;
           });
         }
-        
+
         //取得した入室時間を、表示する形式に変換
         //一桁の数字だったときは、0を先頭に追加
         let enteredTime = seats[val].enterTime.split(':').map((val, index) => {
@@ -155,7 +155,7 @@ const SeatsModal = (props) => {
         </li>
       })
     }
-    else{
+    else {
       //activeSeatsが存在しない
       return <li className="all-seats-unactive">現在使用されている席はありません。</li>
     }
@@ -167,7 +167,7 @@ const SeatsModal = (props) => {
     <div className="seats-modal-wrapper">
       {
         seatsModalState.mode === appConfig.seatsModalModeList["1001"]
-          && 
+        &&
         <StudentsList
           generateStudentsList={generateStudentsList}
           onCloseModal={closeModal}
@@ -176,7 +176,7 @@ const SeatsModal = (props) => {
 
       {
         seatsModalState.mode === appConfig.seatsModalModeList["1002"]
-          &&
+        &&
         <SelectNewSeat
           seatsState={props.seatsState}
           onHandleGoBack={handleReset}
@@ -184,12 +184,12 @@ const SeatsModal = (props) => {
         />
       }
 
-      
+
     </div>
-  
+
 
 
   )
 }
 
-export {SeatsModal};
+export { SeatsModal };

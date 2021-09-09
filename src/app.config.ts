@@ -12,7 +12,7 @@
  * 
  */
 
-const appConfig = {
+const appConfig: appConfig = {
 
   localConfigTemplate: {
     fn: {
@@ -26,7 +26,7 @@ const appConfig = {
     },
   },
 
-  //--------------これより下、いじるべからず--------------//
+  fn: {},
 
   //アプリの動作モードを切り替えるコードで使用
   appMode: {
@@ -81,7 +81,7 @@ const appConfig = {
   /**
    * for SeatsModal.js
    */
-  seatOperetionCodeList: {
+  seatOperationCodeList: {
     "1001": "CHANGE_SEATID"
   },
   seatsModalModeList: {
@@ -99,8 +99,8 @@ const appConfig = {
  * 
  */
 
-const studentsList_initialValue: null = null;
-const attendanceState_initialValue = {};
+const studentsList_initialValue: [] = [];
+const attendanceState_initialValue: {} = {};
 const seatsState_initialValue: seatsState = {
   seat1: {
     active: false,
@@ -189,9 +189,18 @@ const modalState_initialValue: modalState = {
   content: {}
 };
 
+const appState_initialValue: appState = {
+  selectedElement: null,
+  selectedSeat: "",
+  now: "TOP",
+  localConfig: appConfig.localConfigTemplate,
+  appLog: null,
+}
+
 
 export {
   appConfig,
+  appState_initialValue,
   studentsList_initialValue,
   attendanceState_initialValue,
   seatsState_initialValue,
