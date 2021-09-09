@@ -1,10 +1,19 @@
+import React from "react";
 import { appConfig } from "../app.config";
 
 //style import
 import "./styles/modules/Config.scss";
 
+interface ConfigComponentProps {
+  onHandleStudentFile: React.Dispatch<React.SetStateAction<[] | studentsList>>,
+  onHandleAppState: (d: { [index: string]: any; }) => void,
+  onReadStudentsList: React.Dispatch<React.SetStateAction<[] | studentsList>>,
+  onHandleModalState: (t: modalState) => void,
+  onHandleChangeAppLocalConfig: (arg: { id: string, status: string, value: boolean }) => Promise<void>,
+  appState: appState
+}
 
-const Config = (props) => {
+const Config: React.VFC<ConfigComponentProps> = (props) => {
 
   const localConfig_fn = props.appState.localConfig.fn;
 
@@ -12,10 +21,10 @@ const Config = (props) => {
     props.onHandleAppState({ now: "TOP" });
   };
 
-  const handleChangeAppConfig = (e) => {
-    console.log(e.target.id);
-    console.log(appConfig.fn.stable.eraceAppDataTodayAll, !appConfig.fn.stable.eraceAppDataTodayAll);
-    switch (e.target.id) {
+  const handleChangeAppConfig = (e: React.MouseEvent) => {
+    const targetElem = e.target as HTMLButtonElement;
+
+    switch (targetElem.id) {
 
       // case "toggle_changeSeatID":
       //   props.onHandleChangeAppLocalConfig({
@@ -63,8 +72,15 @@ const Config = (props) => {
     debugInput.type = "file";
     debugInput.click();
     debugInput.addEventListener("change", async (e) => {
-      const result = await window.electron.ipcRenderer.invoke("handle_studentsList", { mode: "changeConfigPath", data: e.target.files[0].path });
-      console.log(result);
+      const input = e.target as HTMLInputElement;
+      const result
+        = await window.electron.ipcRenderer
+          .invoke("handle_studentsList", {
+            mode: "changeConfigPath",
+            data: (input.files === null) ? null : input.files[0].path
+          });
+
+      // console.log(result);
       //成功した場合
       if (result === true) {
         props.onHandleModalState({

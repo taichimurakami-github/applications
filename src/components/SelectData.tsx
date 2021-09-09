@@ -1,14 +1,30 @@
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { StudentsDataList } from "./StudentsDataLists";
 
 //style imports
 import "./styles/modules/StudentData.scss";
 
-export const SelectData = (props) => {
-  const selectorContainer = useRef();
-  const navigation = useRef();
+interface SelectDataProps {
+  onSaveAttendance: (i: string) => void,
+  onResetAppState: (arg: { mode: "APPLOG" | "DEFAULT"; content?: any; }) => void,
+  onHandleModalState: (t: modalState) => void,
+  appState: appState,
+  studentsList: studentsList,
+  seatsState: seatsState
+}
 
-  const [state, setState] = useState(
+interface SelectData_ComponentState {
+  seat: string,
+  school: string,
+  grade: string,
+  nav: boolean,
+}
+
+export const SelectData: React.VFC<SelectDataProps> = (props) => {
+  const selectorContainer = useRef<HTMLDivElement>(null);
+  const navigation = useRef<HTMLDivElement>(null);
+
+  const [state, setState] = useState<SelectData_ComponentState>(
     {
       seat: props.appState.selectedSeat,
       school: "",
@@ -17,49 +33,23 @@ export const SelectData = (props) => {
     }
   );
 
-  //モーダル管理変数
-  // const [modalState, setModalState] = useState({
-  //   active: false,
-  //   modalName: null,
-  //   content: null
-  // });
-
-  //Modal制御関数
-  // const handleModalState = (t) => {
-  //   if (!t.active) {
-  //     setModalState({
-  //       active: false,
-  //       name: null,
-  //       content: null
-  //     });
-  //     return;
-  //   }
-
-  //   if (t.active && t.name && t.content) {
-  //     setModalState({
-  //       active: true,
-  //       name: t.name,
-  //       content: t.content
-  //     });
-  //     return;
-  //   }
-
-  //   throw new Error("handleModal argument type error in App.js: you need to include active, name, content properties those are truthy.");
-  // };
-
   //現在の SelectData stateに基づいて、適当な生徒をStudentsListから取り出して配列として返す
-  const generateStudentsList = () => {
-    const matchData = [];
-    props.studentsList.forEach((val) => {
+  const generateStudentsList = (): { [index: string]: string }[] => {
+    const matchData: { [index: string]: string }[] = [];
+
+    props.studentsList.forEach((val: { [index: string]: string }) => {
       return (val.school === state.school && val.grade === state.grade) && matchData.push(val);
     });
+
     return matchData;
   }
 
   const handleNavigation = () => {
-    navigation.current.classList.remove("active");
-    navigation.current.classList.add("active");
+    navigation.current?.classList.remove("active");
+    navigation.current?.classList.add("active");
   }
+
+  const handleBackToTop = () => props.onResetAppState({ mode: "DEFAULT" });
 
   //名簿表示用コンポーネントの制御
   const handleComponent = () => {
@@ -90,18 +80,20 @@ export const SelectData = (props) => {
   }
 
   //生徒用の処理
-  const handleStudentList = (e) => {
+  const handleStudentList = (e: React.MouseEvent) => {
     handleNavigation();
-    const selectedData = e.target.id.split("-");
+    const targetElem = e.target as HTMLButtonElement;
+    const selectedData = targetElem.id.split("-");
     const school = selectedData[0];
-    const grade = Number(selectedData[1]);
+    const grade = selectedData[1];
 
     //学年セレクトボタンからactiveクラスを除外
-    selectorContainer.current.childNodes.forEach(val => {
-      val.classList.remove("active");
+    selectorContainer.current?.childNodes.forEach((val) => {
+      const selectorButton = val as HTMLButtonElement;
+      selectorButton.classList.remove("active");
     });
     //クリック対象にactiveを追加
-    e.target.classList.add("active");
+    targetElem.classList.add("active");
 
     setState({ ...state, school: school, grade: grade });
   }
@@ -110,7 +102,7 @@ export const SelectData = (props) => {
     <div className="component-select-student-data-wrapper">
       <h1>あなたの学年と名前を選んでください</h1>
       <p>まずは学年を選びましょう。その後、表示された名簿リストから、あなたの名前を選んでください。</p>
-      <button onClick={props.onResetAppState} className="btn retry-btn btn__typeC">前のページに戻る</button>
+      <button onClick={handleBackToTop} className="btn retry-btn btn__typeC">前のページに戻る</button>
       <div ref={selectorContainer} className="grade-selector">
         <button onClick={handleStudentList} className="btn" id="middle-1">中学１年生</button>
         <button onClick={handleStudentList} className="btn" id="middle-2">中学２年生</button>

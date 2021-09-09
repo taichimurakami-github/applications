@@ -15,6 +15,10 @@ declare global {
     appLog: any,
   }
 
+  /**
+   * ???どういう型定義???
+   * studentsListのデータ型を考えておく必要がある
+   */
   interface studentsList {
     [index: string]: array[{ [index: string]: string }]
   }
@@ -37,7 +41,7 @@ declare global {
       // //Top.tsx
       // studentName?: string,
       // currentOperation?: string,
-      [index: string]: string
+      [index: string]: string | boolean | { [index: string]: string }
     }
   }
 

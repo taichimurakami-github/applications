@@ -1,6 +1,18 @@
+import React from "react";
 import { appConfig } from "../app.config";
 
-const StudentsDataList = (props) => {
+interface StudentsDataListProps {
+  onSaveAttendance: (i: string) => void,
+  onHandleModalState: (t: modalState) => void,
+  onHandleNav: () => void,
+  school: string,
+  grade: string,
+  seatID: string,
+  studentsList: { [index: string]: string }[],
+  seatsState: seatsState
+}
+
+const StudentsDataList: React.VFC<StudentsDataListProps> = (props) => {
   const school_ja = [];
   switch (props.school) {
     case "high":
@@ -19,12 +31,14 @@ const StudentsDataList = (props) => {
       throw new Error("mismatch exeption has occured in StudentsDataList component");
   }
 
-  const activateConfirmModal = (e) => {
+  const activateConfirmModal = (e: React.MouseEvent) => {
+    const targetElem = e.target as HTMLLIElement;
+
     const selected_student_data = props.studentsList.filter((val) => {
       //val.idがnumber, e.target.idがString
       //暗黙の型変換機能を利用するので == とする
       //returnされるのは配列であり、該当生徒は一人だけなのでreturn valのindex=0を入れる -> [0]
-      return val.id == e.target.id
+      return val.id == targetElem.id
     })[0];
 
     //選ばれた生徒は既に着席しているか？（退席していないか？）
@@ -56,7 +70,7 @@ const StudentsDataList = (props) => {
         content: {
           //入出記録前確認
           confirmCode: appConfig.confirmCodeList["1001"],
-          targetID: e.target.id,
+          targetID: targetElem.id,
           val: selected_student_data
         }
       })

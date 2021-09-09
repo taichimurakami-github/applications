@@ -115,7 +115,7 @@ const App: React.VFC = () => {
    * @param {object} arg 
    */
   const resetAppState = (arg: {
-    mode: string,
+    mode: "APPLOG" | "DEFAULT",
     content?: any
   }) => {
 
@@ -447,7 +447,7 @@ const App: React.VFC = () => {
     }
 
     //AppStaetをリセット
-    resetAppState({ mode: "reset" });
+    resetAppState({ mode: "DEFAULT" });
 
     //完了モーダルを表示
     setModalState({
@@ -472,7 +472,7 @@ const App: React.VFC = () => {
    *   target: array
    * }
    */
-  const handleChangeAppLocalConfig = async (arg: { [index: string]: string }) => {
+  const handleChangeAppLocalConfig = async (arg: { id: string, status: string, value: boolean }) => {
 
     const newAppLocalConfig = await window.electron.ipcRenderer.invoke("handle_loadAppLocalConfig", { mode: "write", content: arg });
     // console.log(appConfig);
