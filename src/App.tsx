@@ -472,11 +472,15 @@ const App: React.VFC = () => {
    *   target: array
    * }
    */
-  const handleChangeAppLocalConfig = async (arg: { fn_id: string, fn_status: string, fn_value: boolean }) => {
-
-    const newAppLocalConfig = await window.electron.ipcRenderer.invoke("handle_loadAppLocalConfig", { mode: "write", content: arg });
-    // console.log(appConfig);
-
+  const handleChangeAppLocalConfig = async (arg: {
+    fn_id?: string,
+    fn_status?: string,
+    fn_value?: boolean,
+    msg?: string
+  }) => {
+    const newAppLocalConfig
+      = await window.electron.ipcRenderer
+        .invoke("handle_loadAppLocalConfig", { mode: "write", content: arg });
     //変更を反映
     setAppState({
       ...appState,
@@ -492,7 +496,8 @@ const App: React.VFC = () => {
         fn_id: arg.fn_id,
         fn_value: arg.fn_value,
       }
-    })
+    });
+
   }
 
   //appState, seatStateを変更する

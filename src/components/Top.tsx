@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { appConfig } from "../app.config";
+import { TopMessage } from "./UI/TopMessage";
 
 interface TopComponentProps {
   appState: appState,
@@ -76,10 +77,12 @@ export const Top: React.VFC<TopComponentProps> = (props) => {
 
           <>
             <h1>使用する座席を選んでください</h1>
-            <p>使用されていない席の中から、使用する席を選んでクリックしてください。</p>
-            <p>自習室を退出する際は、下の「退出する」ボタンを押してください。</p>
+            <p>未使用の席から、使用する席を選ぶと入室操作ができます。下の「座席の操作」から、座席変更、退室操作ができます。</p>
           </>
       }
+      <div className="info-container">
+        <TopMessage msg={props.appState.localConfig.msg} />
+      </div>
       <div className={props.studentsList === null ? "seat-table-container unactive" : "seat-table-container"}>
         <ul className={"column"}>
           <li id="seat13" className={props.seatsState.seat13.active ? "active" : undefined} onClick={handleEnter}>{props.seatsState.seat13.active ? "使用中" : 13}</li>
@@ -107,7 +110,6 @@ export const Top: React.VFC<TopComponentProps> = (props) => {
           <li id="seat3" className={props.seatsState.seat3.active ? "active" : undefined} onClick={handleEnter}>{props.seatsState.seat3.active ? "使用中" : 3}</li>
           <li id="seat4" className={props.seatsState.seat4.active ? "active" : undefined} onClick={handleEnter}>{props.seatsState.seat4.active ? "使用中" : 4}</li>
         </ul>
-
       </div>
       <div className="btn-wrapper">
         {

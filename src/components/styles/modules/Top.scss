@@ -1,11 +1,39 @@
 //assets import
 @import "../assets";
 
+.top-message-wrapper{
+  background: $moss-green;
+  padding: 10px 0;
+  display: flex;
+  // align-items: center;
+  column-gap: 50px;
+
+  .title{
+    font-size: 1.3em;
+    width: 300px;
+  }
+
+  .inner{
+    overflow: hidden;
+    width: calc(100% - 350px);
+    position: relative;
+  }
+
+  .message{
+    animation: moveToLeft 100s ease-out forwards infinite;
+  }
+
+  @keyframes moveToLeft{
+    from{transform: translateX(0px);}
+    to{transform: translateX(-100%);}
+  }
+}
+
 .seat-table-container{
+  width: 1000px;
   display: flex;
   justify-content: center;
-  margin-bottom: 100px;
-  margin-top: 50px;
+  margin: 70px auto;
 
   .column{
     width: 200px;
@@ -18,7 +46,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100px;
+      height: 95px;
       // font-weight: bold;
       font-size: 4rem;
       &:not(:last-child){margin-bottom: 30px;}

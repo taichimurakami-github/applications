@@ -269,25 +269,31 @@ ipcMain.handle("handle_loadAppLocalConfig", (event, arg) => {
     case "write":
       const newAppLocalConfig = { ...appLocalConfig };
       // console.log(arg.content.value);
-      //switch文中にswitchをネストするとかいう最高に頭が悪い構造をしているので、
-      //なんかいい方法を見つけたら変更したい
+      //fn系の更新が含まれている場合
+      if (arg.content.fn_id && arg.content.fn_status && arg.content.fn_value !== undefined) {
+        switch (arg.content.fn_id) {
+          case "appConfig_fn_cancelOperation":
+            newAppLocalConfig.appConfig.fn[arg.content.fn_status].cancelOperation = arg.content.fn_value;
+            break;
 
-      switch (arg.content.id) {
-        case "appConfig_fn_cancelOperation":
-          newAppLocalConfig.appConfig.fn[arg.content.status].cancelOperation = arg.content.value;
-          break;
+          case "appConfig_fn_eraceAppDataTodayAll":
+            newAppLocalConfig.appConfig.fn[arg.content.fn_status].eraceAppDataTodayAll = arg.content.fn_value;
+            break;
 
-        case "appConfig_fn_eraceAppDataTodayAll":
-          newAppLocalConfig.appConfig.fn[arg.content.status].eraceAppDataTodayAll = arg.content.value;
-          break;
-
-        default:
-          throw new Error("invalid arg.content.id in ipcHandler_handle_appLocalConfig");
+          default:
+            throw new Error("invalid arg.content.id in ipcHandler_handle_appLocalConfig");
+        }
       }
-      // console.log(newAppLocalConfig);
+
+      //トップ画面メッセージの更新が含まれている場合
+      if (arg.content.msg) {
+        newAppLocalConfig.appConfig.msg = arg.content.msg;
+      }
+
+      //ファイルの上書き
       fs.writeFileSync(path.resolve(configDirPath, "./config.json"), JSON.stringify(newAppLocalConfig));
-      appLocalConfig = newAppLocalConfig;
-      return appLocalConfig;
+
+      return appLocalConfig = newAppLocalConfig;
 
     default:
       throw new Error("an error has occured in ipcMain.handle(handle_loadAppLocalConfig: invalid switch mode)")

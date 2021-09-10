@@ -46,6 +46,7 @@ declare global {
     fn_id?: string,
     fn_status?: string,
     fn_value?: boolean,
+    msg?: string,
 
     //StudentsData.tsx
     studentData?: { [key: string]: string },

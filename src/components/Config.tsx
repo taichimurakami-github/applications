@@ -9,7 +9,7 @@ interface ConfigComponentProps {
   onHandleAppState: (d: { [index: string]: any; }) => void,
   onReadStudentsList: React.Dispatch<React.SetStateAction<[] | studentsList>>,
   onHandleModalState: (t: modalState) => void,
-  onHandleChangeAppLocalConfig: (arg: { fn_id: string, fn_status: string, fn_value: boolean }) => Promise<void>,
+  onHandleChangeAppLocalConfig: (arg: { fn_id?: string, fn_status?: string, fn_value?: boolean, msg?: string }) => Promise<void>,
   appState: appState
 }
 
@@ -22,7 +22,14 @@ const Config: React.VFC<ConfigComponentProps> = (props) => {
   const onChangeTopMsg = (e: React.ChangeEvent<HTMLTextAreaElement>) => setTopMessage(e.target.value);
 
   const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    //submitボタンを押したときの自動リロードを停止
     e.preventDefault();
+
+    //appLocalConfigファイルを更新
+    props.onHandleChangeAppLocalConfig({
+      msg: topMessage,
+    });
+
     const changedAppState = { ...props.appState };
 
     changedAppState.localConfig.msg = topMessage;
@@ -57,10 +64,11 @@ const Config: React.VFC<ConfigComponentProps> = (props) => {
       //   break;
 
       case "toggle_cancelOperation":
+        console.log(!localConfig_fn.stable.cancelOperation);
         props.onHandleChangeAppLocalConfig({
           fn_id: "appConfig_fn_cancelOperation",
           fn_status: "stable",
-          fn_value: !localConfig_fn.stable.cancelOperation,
+          fn_value: !localConfig_fn.stable.cancelOperation
         });
         break;
 
