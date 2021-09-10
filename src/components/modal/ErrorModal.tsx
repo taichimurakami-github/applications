@@ -1,13 +1,20 @@
 import { appConfig } from "../../app.config";
 
-const ErrorModal = (props) => {
+interface ErrorModalProps {
+  onCloseModal: () => void,
+  onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>,
+  onHandleAppState: (d: { [index: string]: any; }) => void,
+  content: modalStateContent
+}
+
+const ErrorModal: React.VFC<ErrorModalProps> = (props) => {
 
   const activateConfig = () => {
     props.onHandleAppState({ now: "CONFIG" });
-    props.onCloseModal(true);
+    props.onCloseModal();
   }
 
-  const onCloseModal = () => props.onCloseModal(true);
+  const onCloseModal = () => props.onCloseModal();
 
   const handleComponent = () => {
 
@@ -44,7 +51,7 @@ const ErrorModal = (props) => {
       case appConfig.errorCodeList["3001"]:
         return (
           <>
-            <h2>{props.content.studentData.name} さんは既に着席しています</h2>
+            <h2>{props.content.studentData?.name} さんは既に着席しています</h2>
             <p>正しい名前を選択しているかもう一度ご確認ください。</p>
             <p>もしご本人の場合、一旦退席操作を行った上、改めて登録操作をしてください。</p>
             <button className="btn btn__typeC" onClick={onCloseModal}>閉じる</button>

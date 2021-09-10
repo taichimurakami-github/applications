@@ -9,7 +9,7 @@ interface ConfigComponentProps {
   onHandleAppState: (d: { [index: string]: any; }) => void,
   onReadStudentsList: React.Dispatch<React.SetStateAction<[] | studentsList>>,
   onHandleModalState: (t: modalState) => void,
-  onHandleChangeAppLocalConfig: (arg: { id: string, status: string, value: boolean }) => Promise<void>,
+  onHandleChangeAppLocalConfig: (arg: { fn_id: string, fn_status: string, fn_value: boolean }) => Promise<void>,
   appState: appState
 }
 
@@ -36,17 +36,17 @@ const Config: React.VFC<ConfigComponentProps> = (props) => {
 
       case "toggle_cancelOperation":
         props.onHandleChangeAppLocalConfig({
-          id: "appConfig_fn_cancelOperation",
-          status: "stable",
-          value: !localConfig_fn.stable.cancelOperation,
+          fn_id: "appConfig_fn_cancelOperation",
+          fn_status: "stable",
+          fn_value: !localConfig_fn.stable.cancelOperation,
         });
         break;
 
       case "toggle_eraceAppDataTodayAll":
         props.onHandleChangeAppLocalConfig({
-          id: "appConfig_fn_eraceAppDataTodayAll",
-          status: "stable",
-          value: !localConfig_fn.stable.eraceAppDataTodayAll,
+          fn_id: "appConfig_fn_eraceAppDataTodayAll",
+          fn_status: "stable",
+          fn_value: !localConfig_fn.stable.eraceAppDataTodayAll,
         });
         break;
 

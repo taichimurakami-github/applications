@@ -32,7 +32,7 @@ const App: React.VFC = () => {
   const isFirstReadAttendanceStateBCUP = useRef<boolean>(false);
 
   //アプリの動作状態を管理する変数
-  const [appState, setAppState] = useState(appState_initialValue);
+  const [appState, setAppState] = useState<appState>(appState_initialValue);
 
   //エクセルから取得した生徒情報(生徒名簿リストデータ)を格納しておく変数
   const [studentsList, setStudentsList] = useState<[] | studentsList>(studentsList_initialValue);
@@ -44,7 +44,7 @@ const App: React.VFC = () => {
   const [seatsState, setSeatsState] = useState<seatsState>(seatsState_initialValue);
 
   //モーダル管理変数
-  const [modalState, setModalState] = useState(modalState_initialValue);
+  const [modalState, setModalState] = useState<modalState>(modalState_initialValue);
 
   /**
    * -------------------------------
@@ -472,7 +472,7 @@ const App: React.VFC = () => {
    *   target: array
    * }
    */
-  const handleChangeAppLocalConfig = async (arg: { id: string, status: string, value: boolean }) => {
+  const handleChangeAppLocalConfig = async (arg: { fn_id: string, fn_status: string, fn_value: boolean }) => {
 
     const newAppLocalConfig = await window.electron.ipcRenderer.invoke("handle_loadAppLocalConfig", { mode: "write", content: arg });
     // console.log(appConfig);
@@ -489,8 +489,8 @@ const App: React.VFC = () => {
       name: appConfig.modalCodeList["1001"],
       content: {
         confirmCode: appConfig.confirmCodeList["2007"],
-        id: arg.id,
-        value: arg.value,
+        fn_id: arg.fn_id,
+        fn_value: arg.fn_value,
       }
     })
   }
@@ -568,9 +568,21 @@ const App: React.VFC = () => {
       console.log("appConfig loaded:", appConfig.fn);
 
       //生徒情報ファイルが存在していれば自動読み込み
-      const studentsList_autoloadedData = await window.electron.ipcRenderer.invoke("handle_studentsList", { mode: "read" });
-      studentsList_autoloadedData && setStudentsList(studentsList_autoloadedData);
-      console.log(studentsList_autoloadedData);
+      //grade, idが整数値で取得されるので、文字列型に変換しておく
+      const studentsList_autoloadedData: studentsList = await window.electron.ipcRenderer.invoke("handle_studentsList", { mode: "read" });
+
+      if (studentsList_autoloadedData) {
+        // const convertedStudentsList = [];
+        //keyが数値のオブジェクトが手渡されるので、
+        //grade, idを文字列に変換
+        for (let i = 0; i < studentsList_autoloadedData.length; i++) {
+          studentsList_autoloadedData[i].grade = String(studentsList_autoloadedData[i].grade);
+          studentsList_autoloadedData[i].id = String(studentsList_autoloadedData[i].id);
+        }
+
+        setStudentsList(studentsList_autoloadedData);
+        // console.log(studentsList_autoloadedData);
+      }
 
       //今日の分のseatsState記録が残っていれば読み込み
       const seatsState_bcup = await window.electron.ipcRenderer.invoke("handle_seatsState", { mode: "read" });
@@ -664,7 +676,6 @@ const App: React.VFC = () => {
     <div className="App" >
       {handleComponent()}
       < ModalWrapper
-        modalState={modalState}
         onHandleAppState={handleAppState}
         onHandleModalState={handleModalState}
         onSaveForEnter={handleSaveAttendanceForEnter}
@@ -673,6 +684,7 @@ const App: React.VFC = () => {
         onCancelOperation={handleCancelOperation}
         onHandleSeatOperation={handleSeatOperation}
         studentsList={studentsList}
+        modalState={modalState}
         seatsState={seatsState}
       />
     </div>

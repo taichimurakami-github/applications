@@ -19,30 +19,45 @@ declare global {
    * ???どういう型定義???
    * studentsListのデータ型を考えておく必要がある
    */
-  interface studentsList {
-    [index: string]: array[{ [index: string]: string }]
-  }
+  // interface studentsList {
+  //   [index: string]: array[{ [index: string]: string }]
+  // }
+
+  //interfaceではなく型エイリアスで宣言
+  type studentsList = { [index: string]: string }[]
 
   interface attendanceState {
     [index: string]: array[{ [index: string]: string }]
   }
 
+  interface modalStateContent {
+    confirmCode?: string,
+    errorCode?: string,
+
+    // //App.tsx
+    studentID?: string
+    nextSeatID?: string,
+
+    // //Top.tsx
+    studentName?: string,
+    currentOperation?: string,
+
+    // Config.tsx
+    fn_id?: string,
+    fn_status?: string,
+    fn_value?: boolean,
+
+    //StudentsData.tsx
+    studentData?: { [key: string]: string },
+    targetID?: string,
+    targetData?: { [key: string]: string },
+
+  }
+
   interface modalState {
     active: boolean,
     name: string,
-    content: {
-      // confirmCode?: string,
-      // errorCode?: string,
-
-      // //App.tsx
-      // studentID?: string
-      // nextSeatID?: string,
-
-      // //Top.tsx
-      // studentName?: string,
-      // currentOperation?: string,
-      [index: string]: string | boolean | { [index: string]: string }
-    }
+    content: modalStateContent
   }
 
   interface seatsState {

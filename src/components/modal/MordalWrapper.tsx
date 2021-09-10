@@ -3,26 +3,33 @@ import { ErrorModal } from "./ErrorModal";
 import { SeatsModal } from "./SeatsModal";
 import { ConfirmModal } from "./ConfirmModal";
 import { appConfig } from "../../app.config";
-import { useState } from "react";
+import React, { useState } from "react";
 
 //import styles
 import "../styles/modal.scss";
 
+interface ModalWrapperProps {
+  onHandleAppState: (d: { [index: string]: any; }) => void,
+  onHandleModalState: (t: modalState) => void,
+  onSaveForEnter: (i: string) => void,
+  onSaveForExit: (i: string) => void,
+  onEraceAppData: () => Promise<void>,
+  onCancelOperation: () => void,
+  onHandleSeatOperation: (arg: { mode: string; content: any; }) => void,
+  studentsList: studentsList,
+  modalState: modalState,
+  seatsState: seatsState
+}
 
-const ModalWrapper = (props) => {
+const ModalWrapper: React.VFC<ModalWrapperProps> = (props) => {
 
   const [BackgroundClose, setBackgroundClose] = useState(true);
 
-  const closeModal = (e) => {
-    //returnしないと、e.target === trueのときにe.target === undefinedとなってエラーになる
-    if (e === true) {
-      return props.onHandleModalState({ active: false });
-    }
+  //モーダル消去用関数
+  const closeModal = () => props.onHandleModalState({ active: false, name: "", content: {} });
 
-    if (e.target.classList.contains("onclick-close")) {
-      return props.onHandleModalState({ active: false });
-    }
-  }
+  //背景をクリックしてモーダル消去
+  const closeModalWithBgClose = () => BackgroundClose && closeModal();
 
   const handleModal = () => {
     if (props.modalState.active) {
@@ -33,7 +40,7 @@ const ModalWrapper = (props) => {
           return <ConfirmModal
             content={props.modalState.content}
             onCloseModal={closeModal}
-            onHandleBcClose={setBackgroundClose}
+            onHandleBgClose={setBackgroundClose}
             onSaveForEnter={props.onSaveForEnter}
             onSaveForExit={props.onSaveForExit}
             onEraceAppData={props.onEraceAppData}
@@ -45,7 +52,7 @@ const ModalWrapper = (props) => {
         case appConfig.modalCodeList["1002"]:
           return <ErrorModal
             onCloseModal={closeModal}
-            onHandleBcClose={setBackgroundClose}
+            onHandleBgClose={setBackgroundClose}
             onHandleAppState={props.onHandleAppState}
             content={props.modalState.content}
           />
@@ -53,7 +60,7 @@ const ModalWrapper = (props) => {
         case appConfig.modalCodeList["1003"]:
           return <SeatsModal
             onCloseModal={closeModal}
-            onHandleBcClose={setBackgroundClose}
+            onHandleBgClose={setBackgroundClose}
             onHandleModalState={props.onHandleModalState}
             onHandleSeatOperation={props.onHandleSeatOperation}
             onSaveForExit={props.onSaveForExit}
@@ -73,7 +80,7 @@ const ModalWrapper = (props) => {
       {
         props.modalState.active ?
 
-          <div onClick={closeModal} className={`modal-wrapper ${BackgroundClose && "onclick-close"}`}>
+          <div onClick={closeModalWithBgClose} className="modal-wrapper">
             {handleModal()}
           </div>
 

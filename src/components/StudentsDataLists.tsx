@@ -36,16 +36,16 @@ const StudentsDataList: React.VFC<StudentsDataListProps> = (props) => {
 
     const selected_student_data = props.studentsList.filter((val) => {
       //val.idがnumber, e.target.idがString
-      //暗黙の型変換機能を利用するので == とする
       //returnされるのは配列であり、該当生徒は一人だけなのでreturn valのindex=0を入れる -> [0]
-      return val.id == targetElem.id
+      return val.id === targetElem.id
     })[0];
 
     //選ばれた生徒は既に着席しているか？（退席していないか？）
     let isAlreadySeated = false;
     for (let key of Object.keys(props.seatsState)) {
-      (props.seatsState[key].studentID == selected_student_data.id) &&
-        ((!isAlreadySeated) && (isAlreadySeated = true));
+      props.seatsState[key].studentID === selected_student_data.id
+        && !isAlreadySeated
+        && (isAlreadySeated = true);
     }
 
     isAlreadySeated ?
@@ -71,7 +71,7 @@ const StudentsDataList: React.VFC<StudentsDataListProps> = (props) => {
           //入出記録前確認
           confirmCode: appConfig.confirmCodeList["1001"],
           targetID: targetElem.id,
-          val: selected_student_data
+          targetData: selected_student_data
         }
       })
   }

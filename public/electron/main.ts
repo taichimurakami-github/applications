@@ -72,7 +72,7 @@ app.whenReady().then(() => {
     console.log(nowAppConfig);
 
     //LocalConfigファイルが存在するがバージョンが古い場合、新バージョンのファイルを生成する
-    if ( !("version" in nowAppConfig) || nowAppConfig.version !== configTemplate.version) {
+    if (!("version" in nowAppConfig) || nowAppConfig.version !== configTemplate.version) {
       console.log("your LocalConfig is available to be updated.");
       console.log("now making new App LocalConfig file...");
 
@@ -134,6 +134,7 @@ ipcMain.handle("handle_studentsList", async (event, arg) => {
 
         //workbookの中からSheet情報を取得し、json化
         const Sheet = workbook.Sheets[workbook.SheetNames[SheetID]];
+        // console.log(Sheet);
         const data_json = XLSX.utils.sheet_to_json(Sheet);
 
         return data_json;
@@ -265,7 +266,7 @@ ipcMain.handle("handle_loadAppLocalConfig", (event, arg) => {
       }
 
     case "write":
-      const newAppLocalConfig = {...appLocalConfig};
+      const newAppLocalConfig = { ...appLocalConfig };
       // console.log(arg.content.value);
       //switch文中にswitchをネストするとかいう最高に頭が悪い構造をしているので、
       //なんかいい方法を見つけたら変更したい

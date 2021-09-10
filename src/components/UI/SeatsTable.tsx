@@ -10,7 +10,11 @@
  *  
  * @returns 
  */
-const SeatsTable = (props) => {
+interface SeatsTableProps {
+  seatsState: seatsState,
+  onClickFunction: (e: any) => void
+}
+const SeatsTable: React.VFC<SeatsTableProps> = (props) => {
   return (
     <div className="seat-table-container">
       <ul className={"column"}>
@@ -39,8 +43,8 @@ const SeatsTable = (props) => {
         <li id="seat3" className={props.seatsState.seat3.active ? "active" : undefined} onClick={props.onClickFunction}>{props.seatsState.seat3.active ? "使用中" : 3}</li>
         <li id="seat4" className={props.seatsState.seat4.active ? "active" : undefined} onClick={props.onClickFunction}>{props.seatsState.seat4.active ? "使用中" : 4}</li>
       </ul>
-  </div>
+    </div>
   )
 }
 
-export {SeatsTable}
+export { SeatsTable }

@@ -1,11 +1,15 @@
 import { appConfig } from "../../app.config";
-import { useState } from "react";
+import React, { useState } from "react";
 import { SeatsTable } from "../UI/SeatsTable";
 
 import "../styles/modules/Top.scss";
 import closeButtonIcon from "../../images/close-button.svg";
 
-const StudentsList = (props) => {
+interface StudentsListProps {
+  onCloseModal: () => void,
+  onGenerateStudentsList: () => JSX.Element | JSX.Element[]
+}
+const StudentsList: React.VFC<StudentsListProps> = (props) => {
   return (
     <>
       <nav className="active-seat-navigation">
@@ -18,17 +22,20 @@ const StudentsList = (props) => {
         </button>
       </nav>
       <ul className="seats-modal-container scroll">
-        {props.generateStudentsList()}
+        {props.onGenerateStudentsList()}
       </ul>
     </>
   )
 }
 
-const SelectNewSeat = (props) => {
-  const onHandleSelectSeat = (e) => {
-    props.onHandleChangeSeat({
-      nextSeatID: e.target.id
-    });
+interface SelectNewSeatProps {
+  seatsState: seatsState,
+  onHandleGoBack: () => void,
+  onHandleChangeSeat: (arg: any) => void
+}
+const SelectNewSeat: React.VFC<SelectNewSeatProps> = (props) => {
+  const onHandleSelectSeat = (e: any) => {
+    props.onHandleChangeSeat(e.target.id);
   }
 
 
@@ -50,54 +57,69 @@ const SelectNewSeat = (props) => {
   )
 }
 
-
-const seatsModalState_initialValue = {
-  mode: appConfig.seatsModalModeList["1001"],
-  content: {
-    nowSeatID: null,
-  }
+interface SeatsModalProps {
+  onCloseModal: () => void,
+  onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>,
+  onHandleModalState: (t: modalState) => void,
+  onHandleSeatOperation: (arg: { mode: string; content: { [key: string]: string }; }) => void,
+  onSaveForExit: (i: string) => void,
+  seatsState: seatsState,
+  studentsList: studentsList
 }
 
-const SeatsModal = (props) => {
+const seatsModalState_initialValue: {
+  mode: string,
+  content: {
+    nowSeatID: string
+  }
+} = {
+  mode: appConfig.seatsModalModeList["1001"],
+  content: {
+    nowSeatID: "",
+  }
+}
+const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
   const [seatsModalState, setSeatsModalState] = useState(seatsModalState_initialValue);
 
-  const closeModal = () => props.onCloseModal(true);
+  const closeModal = () => props.onCloseModal();
 
-  const handleExit = (e) => {
-    // console.log(e.target.id);
-    // props.onSaveForExit(e.target.id);
+  const handleExit = (e: React.MouseEvent) => {
+    const targetButtonElement = (e.target as HTMLButtonElement);
+    const targetLIElement = targetButtonElement.parentNode as HTMLLIElement;
+
     props.onHandleModalState({
       active: true,
       name: appConfig.modalCodeList["1001"],
       content: {
         confirmCode: appConfig.confirmCodeList["1002"],
-        targetID: e.target.parentNode.id,
+        targetID: targetLIElement.id,
       }
     });
   }
 
   const handleReset = () => setSeatsModalState(seatsModalState_initialValue);
 
-  const activateSelectSeat = (e) => {
-    console.log(e.target.parentNode.id);
+  const activateSelectSeat = (e: React.MouseEvent) => {
+    const targetButtonElement = e.target as HTMLButtonElement;
+    const targetLIElement = targetButtonElement.parentNode as HTMLLIElement;
+
     setSeatsModalState({
       mode: appConfig.seatsModalModeList["1002"],
       content: {
-        nowSeatID: e.target.parentNode.id,
+        nowSeatID: targetLIElement.id,
       }
     });
   }
 
-  const handleChangeSeat = (arg) => {
+  const handleChangeSeat = (nextSeatID: string) => {
     const nowSeatID = seatsModalState.content.nowSeatID;
-    const nextSeatID = arg.nextSeatID;
     console.log(nowSeatID, " >> ", nextSeatID);
 
     props.onHandleSeatOperation({
       mode: appConfig.seatOperationCodeList["1001"],
       content: {
         nowSeatID: seatsModalState.content.nowSeatID,
-        nextSeatID: arg.nextSeatID
+        nextSeatID: nextSeatID
       }
     });
   }
@@ -169,7 +191,7 @@ const SeatsModal = (props) => {
         seatsModalState.mode === appConfig.seatsModalModeList["1001"]
         &&
         <StudentsList
-          generateStudentsList={generateStudentsList}
+          onGenerateStudentsList={generateStudentsList}
           onCloseModal={closeModal}
         />
       }
