@@ -101,6 +101,8 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
 
       //自習室の入室を記録
       case appConfig.confirmCodeList["2001"]:
+        console.log("入出記録完了")
+
         return (
           <>
             <p className="message-cheers">自習室の入室を記録します。頑張ってください！</p>
@@ -111,6 +113,8 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
 
       //自習室の使用完了を記録
       case appConfig.confirmCodeList["2002"]:
+        console.log("退室記録完了")
+
         return (
           <>
             <p className="message-cheers">自習室の使用を記録しました。お疲れさまでした！</p>
@@ -187,6 +191,15 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
               <br></br>
               {props.content.nextSeatID.substring(4)} 番に変更しました。
             </p>
+            <button className="btn btn__close" onClick={closeModal}>閉じる</button>
+          </>
+        );
+
+      //トップ画面メッセージ変更
+      case appConfig.confirmCodeList["2009"]:
+        return (
+          <>
+            <p>トップ画面のメッセージを変更しました。</p>
             <button className="btn btn__close" onClick={closeModal}>閉じる</button>
           </>
         )

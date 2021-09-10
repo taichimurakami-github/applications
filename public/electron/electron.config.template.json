@@ -1,11 +1,12 @@
 {
-  "version": "0.9.9",
+  "version": "0.9.11",
   "path":{
     "studentsList": "",
     "attendance": "",
     "seats":""
   },
   "appConfig": {
+    "msg": "",
     "fn": {
       "stable": {
         "eraceAppDataTodayAll": true,

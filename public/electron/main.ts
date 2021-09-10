@@ -262,7 +262,8 @@ ipcMain.handle("handle_loadAppLocalConfig", (event, arg) => {
     case "read":
       //名称変更時などに対応するため、プロパティの中間変換を行う
       return {
-        fn: appLocalConfig.appConfig.fn
+        fn: appLocalConfig.appConfig.fn,
+        msg: appLocalConfig.appConfig.msg
       }
 
     case "write":

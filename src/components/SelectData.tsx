@@ -36,8 +36,7 @@ export const SelectData: React.VFC<SelectDataProps> = (props) => {
   //現在の SelectData stateに基づいて、適当な生徒をStudentsListから取り出して配列として返す
   const generateStudentsList = (): { [index: string]: string }[] => {
     const matchData: { [index: string]: string }[] = [];
-    console.log("isreadStudentsList?");
-    console.log(props.studentsList);
+
     props.studentsList.forEach((val: { [index: string]: string }) => {
       return (val.school === state.school && val.grade === state.grade) && matchData.push(val);
     });

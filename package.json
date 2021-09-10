@@ -4,7 +4,7 @@
   "version": "0.9.10",
   "author": "Taichi Murakami",
   "private": true,
-  "main": "build/electron/main.ts",
+  "main": "public/electron/main.ts",
   "homepage": "./",
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",

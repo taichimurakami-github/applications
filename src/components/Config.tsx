@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { appConfig } from "../app.config";
 
 //style import
@@ -17,14 +17,36 @@ const Config: React.VFC<ConfigComponentProps> = (props) => {
 
   const localConfig_fn = props.appState.localConfig.fn;
 
+  const [topMessage, setTopMessage] = useState<string>(props.appState.localConfig.msg);
+
+  const onChangeTopMsg = (e: React.ChangeEvent<HTMLTextAreaElement>) => setTopMessage(e.target.value);
+
+  const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const changedAppState = { ...props.appState };
+
+    changedAppState.localConfig.msg = topMessage;
+    changedAppState.now = "TOP"
+    props.onHandleAppState({
+      ...changedAppState
+    });
+
+    props.onHandleModalState({
+      active: true,
+      name: appConfig.modalCodeList["1001"],
+      content: {
+        confirmCode: appConfig.confirmCodeList["2009"]
+      }
+    });
+  }
+
   const handleBackToTop = () => {
     props.onHandleAppState({ now: "TOP" });
   };
 
-  const handleChangeAppConfig = (e: React.MouseEvent) => {
-    const targetElem = e.target as HTMLButtonElement;
+  const handleChangeAppConfig = (e: React.MouseEvent<HTMLButtonElement>) => {
 
-    switch (targetElem.id) {
+    switch (e.currentTarget.id) {
 
       // case "toggle_changeSeatID":
       //   props.onHandleChangeAppLocalConfig({
@@ -107,9 +129,19 @@ const Config: React.VFC<ConfigComponentProps> = (props) => {
     })
   };
 
+  //デバッグ用関数
+  useEffect(() => { console.log(topMessage) }, [topMessage]);
+
+
   return (
     <div className="component-config-wrapper">
       <h1>アプリ設定</h1>
+
+      <h2>メッセージ編集</h2>
+      <form onSubmit={handleOnSubmit}>
+        <textarea className="top-msg-editor" value={topMessage} onChange={onChangeTopMsg}></textarea>
+        <button type="submit">TOP画面のメッセージを変更する</button>
+      </form>
 
       <h2>設定項目</h2>
       <div className="btn-container">

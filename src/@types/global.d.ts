@@ -70,12 +70,14 @@ declare global {
 
   interface appConfig {
     localConfigTemplate: {
+      msg: string,
       fn: {
         nightly: {} | { [index: string]: any }
         stable: {} | { [index: string]: any }
       },
     },
     fn: any,
+    msg: string,
     appMode: {
       development: string,
       production: string

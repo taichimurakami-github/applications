@@ -559,11 +559,12 @@ const App: React.VFC = () => {
       // isFirstReadAttendanceStateBCUP.current = false;
 
       //アプリのローカルファイルからアプリデータを取得
-      const appLocalData = await window.electron.ipcRenderer.invoke("handle_loadAppLocalConfig", { mode: "read" });
-      appConfig.fn = appLocalData.fn;
+      const appLocalConfigData = await window.electron.ipcRenderer.invoke("handle_loadAppLocalConfig", { mode: "read" });
+      appConfig.fn = appLocalConfigData.fn;
+      appConfig.msg = appLocalConfigData.msg;
       setAppState({
         ...appState,
-        localConfig: appLocalData
+        localConfig: appLocalConfigData
       })
       console.log("appConfig loaded:", appConfig.fn);
 

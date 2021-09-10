@@ -15,6 +15,7 @@
 const appConfig: appConfig = {
 
   localConfigTemplate: {
+    msg: "",
     fn: {
       nightly: {
       },
@@ -27,6 +28,7 @@ const appConfig: appConfig = {
   },
 
   fn: {},
+  msg: "",
 
   //アプリの動作モードを切り替えるコードで使用
   appMode: {
@@ -64,6 +66,7 @@ const appConfig: appConfig = {
     "2006": "CURRENT_OPERATION_IS_CANCELED_SUCCESSFULLY",
     "2007": "APP_LOCAL_CONFIG_IS_CHANGED_SUCCESSFULLY",
     "2008": "SEATID_IS_CHANGED_SUCCESSFULLY",
+    "2009": "TOPMESSAGE_IS_CHANGED_SUCCESSFULLY"
 
   },
   errorCodeList: {
@@ -98,7 +101,13 @@ const appConfig: appConfig = {
  * いじらないでください
  * 
  */
-
+const appState_initialValue: appState = {
+  selectedElement: null,
+  selectedSeat: "",
+  now: "TOP",
+  localConfig: appConfig.localConfigTemplate,
+  appLog: null,
+}
 const studentsList_initialValue: [] = [];
 const attendanceState_initialValue: {} = {};
 const seatsState_initialValue: seatsState = {
@@ -188,14 +197,6 @@ const modalState_initialValue: modalState = {
   name: "",
   content: {}
 };
-
-const appState_initialValue: appState = {
-  selectedElement: null,
-  selectedSeat: "",
-  now: "TOP",
-  localConfig: appConfig.localConfigTemplate,
-  appLog: null,
-}
 
 
 export {
