@@ -6,7 +6,7 @@
     "seats":""
   },
   "appConfig": {
-    "msg": "",
+    "msg": "現在、お知らせは特にありません。体調に気を付けて、今日も一日頑張ってください！",
     "fn": {
       "stable": {
         "eraceAppDataTodayAll": true,
