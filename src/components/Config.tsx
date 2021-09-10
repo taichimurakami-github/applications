@@ -51,8 +51,11 @@ const Config: React.VFC<ConfigComponentProps> = (props) => {
     props.onHandleAppState({ now: "TOP" });
   };
 
-  const handleChangeAppConfig = (e: React.MouseEvent<HTMLButtonElement>) => {
-
+  const handleChangeAppConfig = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const modalContents = {
+      fn_id: "",
+      fn_value: false,
+    }
     switch (e.currentTarget.id) {
 
       // case "toggle_changeSeatID":
@@ -65,15 +68,23 @@ const Config: React.VFC<ConfigComponentProps> = (props) => {
 
       case "toggle_cancelOperation":
         console.log(!localConfig_fn.stable.cancelOperation);
-        props.onHandleChangeAppLocalConfig({
+        modalContents.fn_id = "appConfig_fn_cancelOperation";
+        modalContents.fn_value = !localConfig_fn.stable.cancelOperation;
+
+        await props.onHandleChangeAppLocalConfig({
           fn_id: "appConfig_fn_cancelOperation",
           fn_status: "stable",
           fn_value: !localConfig_fn.stable.cancelOperation
         });
+
+
         break;
 
       case "toggle_eraceAppDataTodayAll":
-        props.onHandleChangeAppLocalConfig({
+        modalContents.fn_id = "toggle_eraceAppDataTodayAll";
+        modalContents.fn_value = !localConfig_fn.stable.eraceAppDataTodayAll;
+
+        await props.onHandleChangeAppLocalConfig({
           fn_id: "appConfig_fn_eraceAppDataTodayAll",
           fn_status: "stable",
           fn_value: !localConfig_fn.stable.eraceAppDataTodayAll,
@@ -83,6 +94,16 @@ const Config: React.VFC<ConfigComponentProps> = (props) => {
       default:
         throw new Error("an Error has occued in handleChangeAppConfig: invalid target id");
     }
+
+    //モーダル表示
+    props.onHandleModalState({
+      active: true,
+      name: appConfig.modalCodeList["1001"],
+      content: {
+        confirmCode: appConfig.confirmCodeList["2007"],
+        ...modalContents
+      }
+    });
   }
 
   const onEraceAppData = () => {
@@ -138,31 +159,39 @@ const Config: React.VFC<ConfigComponentProps> = (props) => {
   };
 
   //デバッグ用関数
-  useEffect(() => { console.log(topMessage) }, [topMessage]);
+  // useEffect(() => { console.log(topMessage) }, [topMessage]);
 
 
   return (
     <div className="component-config-wrapper">
       <h1>アプリ設定</h1>
 
-      <h2>メッセージ編集</h2>
-      <form onSubmit={handleOnSubmit}>
-        <textarea className="top-msg-editor" value={topMessage} onChange={onChangeTopMsg}></textarea>
-        <button type="submit">TOP画面のメッセージを変更する</button>
-      </form>
+      <button className="btn btn__typeC back-to-top-btn" onClick={handleBackToTop}>トップページに戻る</button>
 
-      <h2>設定項目</h2>
-      <div className="btn-container">
-        <button className="btn read-student-list" onClick={onReadStudentsFile}>生徒情報ファイルを設定する</button>
-        {
-          localConfig_fn.stable.eraceAppDataTodayAll &&
-          <button className="btn erace-today-data-all" onClick={onEraceAppData}>アプリ内部データを削除する</button>
-        }
+      <div className="item-wrapper">
+        <h2>TOP画面メッセージ編集</h2>
+        <form className="top-msg-edit-form" onSubmit={handleOnSubmit}>
+          <textarea className="top-msg-editor" value={topMessage} onChange={onChangeTopMsg}></textarea>
+          <button className="btn btn__submit" type="submit">TOP画面のメッセージを変更</button>
+        </form>
       </div>
 
-      <h2>機能のon/off</h2>
+      <div className="item-wrapper">
+        <h2>設定項目</h2>
+        <div className="setting-btn-container">
+          <button className="btn read-student-list" onClick={onReadStudentsFile}>生徒情報ファイルを設定する</button>
+          {
+            localConfig_fn.stable.eraceAppDataTodayAll &&
+            <button className="btn erace-today-data-all" onClick={onEraceAppData}>アプリ内部データを削除する</button>
+          }
+        </div>
+      </div>
 
-      {/* <div className="toggle-btn-wrapper btn__toggle">
+
+      <div className="item-wrapper">
+        <h2>機能のon/off</h2>
+
+        {/* <div className="toggle-btn-wrapper btn__toggle">
         <p>座席を移動する</p>
         <button
           id="toggle_changeSeatID"
@@ -172,27 +201,26 @@ const Config: React.VFC<ConfigComponentProps> = (props) => {
         </button>
       </div> */}
 
-      <div className="toggle-btn-wrapper btn__toggle">
-        <p>直前の操作を取り消す</p>
-        <button
-          id="toggle_cancelOperation"
-          className={`${"toggle-wrapper "}${localConfig_fn.stable.cancelOperation ? "active" : "unactive"}`}
-          onClick={handleChangeAppConfig}>
-          <span className="toggle"></span>
-        </button>
+        <div className="toggle-btn-container btn__toggle">
+          <b>直前の操作を取り消す</b>
+          <button
+            id="toggle_cancelOperation"
+            className={`${"toggle-wrapper "}${localConfig_fn.stable.cancelOperation ? "active" : "unactive"}`}
+            onClick={handleChangeAppConfig}>
+            <span className="toggle"></span>
+          </button>
+        </div>
+        <div className="toggle-btn-container btn__toggle">
+          <b>アプリ内部データ(1日分)を削除する</b>
+          <button
+            id="toggle_eraceAppDataTodayAll"
+            className={`${"toggle-wrapper "}${localConfig_fn.stable.eraceAppDataTodayAll ? "active" : "unactive"}`}
+            onClick={handleChangeAppConfig}>
+            <span className="toggle"></span>
+          </button>
+        </div>
       </div>
 
-      <div className="toggle-btn-wrapper btn__toggle">
-        <p>アプリ内部データ(1日分)を削除する</p>
-        <button
-          id="toggle_eraceAppDataTodayAll"
-          className={`${"toggle-wrapper "}${localConfig_fn.stable.eraceAppDataTodayAll ? "active" : "unactive"}`}
-          onClick={handleChangeAppConfig}>
-          <span className="toggle"></span>
-        </button>
-      </div>
-
-      <button className="btn btn__typeC" onClick={handleBackToTop}>トップページに戻る</button>
     </div>
   );
 };

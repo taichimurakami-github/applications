@@ -18,6 +18,7 @@ import { Config } from "./components/Config";
 //styles import
 import "./components/styles/modules/Top.scss";
 import "./components/styles/app.common.scss";
+import { resolve } from 'path';
 
 
 const App: React.VFC = () => {
@@ -487,16 +488,7 @@ const App: React.VFC = () => {
       localConfig: { ...newAppLocalConfig.appConfig },
     });
 
-    //モーダル表示
-    setModalState({
-      active: true,
-      name: appConfig.modalCodeList["1001"],
-      content: {
-        confirmCode: appConfig.confirmCodeList["2007"],
-        fn_id: arg.fn_id,
-        fn_value: arg.fn_value,
-      }
-    });
+    resolve();
 
   }
 

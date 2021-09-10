@@ -2,29 +2,43 @@
 @import "../assets";
 
 .top-message-wrapper{
-  background: $moss-green;
-  padding: 10px 0;
+  background: $navy;
+  color: white;
+  padding: 10px 30px;
   display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
   // align-items: center;
   column-gap: 50px;
 
+  $title-width: 200px;
   .title{
     font-size: 1.3em;
-    width: 300px;
+    width: $title-width;
+    background: white;
+    color: $navy;
+    border-radius: 10px;
   }
 
   .inner{
+    display: inline-flex;
+    align-items: center;
     overflow: hidden;
-    width: calc(100% - 350px);
+    white-space: nowrap;
+    min-width: calc(100% - #{$title-width});
     position: relative;
   }
 
   .message{
-    animation: moveToLeft 100s ease-out forwards infinite;
+    text-align: right;
+    font-size: 2rem;
+    animation: moveToLeft 20s linear infinite;
+    text-decoration: underline 2px $vermilion;
+    text-underline-offset: 10px;
   }
 
   @keyframes moveToLeft{
-    from{transform: translateX(0px);}
+    from{transform: translateX(100%);}
     to{transform: translateX(-100%);}
   }
 }
@@ -33,7 +47,7 @@
   width: 1000px;
   display: flex;
   justify-content: center;
-  margin: 70px auto;
+  margin: 50px auto;
 
   .column{
     width: 200px;

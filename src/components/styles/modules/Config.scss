@@ -1,12 +1,31 @@
 //assets import
 @import "../assets";
 
+.top-msg-edit-form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.top-msg-editor{
+  width: 90%;
+  padding: 10px;
+  min-height: 200px;
+  margin-bottom: 30px;
+}
+
+
+
 .component-config-wrapper{
+
+  $max-width: 1000px;
+  $card-padding-column: 50px;
+
   .btn{
-    margin: 30px auto;
+    margin: auto;
   }
 
-  .read-student-list{
+  .read-student-list, .btn__submit{
     padding: 10px 50px;
     background: $moss-green;
     color: white;
@@ -18,29 +37,42 @@
     color: white;
   }
 
-  // .btn-container{
-  //   margin-bottom: 100px;
-  // }
+  .setting-btn-container .btn:first-child{margin-bottom: 30px;}
 
-  h1{
-    margin-bottom: 50px;
+  h2{
+    background: $navy;
+    color: white;
+    display: table;
+    width: $max-width;
+    margin: 0 auto $card-padding-column;
   }
 
-  .btn-container{
+  .back-to-top-btn{
+    margin-top: 30px;
     margin-bottom: 100px;
   }
 
-  .btn__typeC{
-    margin-top: 200px;
+  .item-wrapper{
+    align-items: center;
+    margin: 50px auto;
+    width: $max-width;
+    background: lighten(lightgray, 5%);
+    border-radius: 20px;
+    overflow: hidden;
+    padding-bottom: $card-padding-column;
   }
+
+  // .btn__typeC{
+  //   margin-top: 200px;
+  // }
 }
 
-.toggle-btn-wrapper{
+.toggle-btn-container{
   $toggleWrapperWidth: 90px;
   $toggleWrapperHeight: 40px;
   $toggleSize: 30px;
 
-  padding: 10px 0;
+  padding: 20px 0;
   display: grid;
   // grid-template-rows: auto;
   grid-template-columns: 400px 120px;

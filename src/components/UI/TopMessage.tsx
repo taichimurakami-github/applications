@@ -5,7 +5,7 @@ interface TopMessageProps {
 export const TopMessage: React.VFC<TopMessageProps> = (props) => {
   return (
     <div className="top-message-wrapper">
-      <h2 className="title">生徒の皆さんへのお知らせ</h2>
+      <h2 className="title">お知らせ</h2>
       <div className="inner">
         <p className="message">{props.msg}</p>
       </div>
