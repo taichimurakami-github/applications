@@ -79,13 +79,15 @@ const seatsModalState_initialValue: {
   }
 }
 const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
+
   const [seatsModalState, setSeatsModalState] = useState(seatsModalState_initialValue);
 
   const closeModal = () => props.onCloseModal();
 
-  const handleExit = (e: React.MouseEvent) => {
-    const targetButtonElement = (e.target as HTMLButtonElement);
-    const targetLIElement = targetButtonElement.parentNode as HTMLLIElement;
+  const handleExit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    // e.preventDefault();
+    //親要素のLi Elementを取得
+    const targetLIElement = e.currentTarget.parentNode as HTMLLIElement;
 
     props.onHandleModalState({
       active: true,
@@ -167,7 +169,7 @@ const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
         let enteredTime = seats[val].enterTime.split(':').map((val, index) => {
           return (val.length === 2) ? val : "0" + val;
         });
-        console.log(enteredTime);
+
         return <li id={val} key={val} className="active-seat-user">
           <span className="seat-id">{val.slice(4)}</span>
           <span className="student-name">{result[0].name}</span>

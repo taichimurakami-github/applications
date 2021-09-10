@@ -29,7 +29,11 @@ const ModalWrapper: React.VFC<ModalWrapperProps> = (props) => {
   const closeModal = () => props.onHandleModalState({ active: false, name: "", content: {} });
 
   //背景をクリックしてモーダル消去
-  const closeModalWithBgClose = () => BackgroundClose && closeModal();
+  const closeModalWithBgClose = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    //targetを明示的にDiv Elementと指定
+    const clickedElem = e.target as HTMLDivElement
+    BackgroundClose && clickedElem.id === "modalWrapper" && closeModal();
+  };
 
   const handleModal = () => {
     if (props.modalState.active) {
@@ -80,7 +84,7 @@ const ModalWrapper: React.VFC<ModalWrapperProps> = (props) => {
       {
         props.modalState.active ?
 
-          <div onClick={closeModalWithBgClose} className="modal-wrapper">
+          <div id="modalWrapper" onClick={closeModalWithBgClose} className="modal-wrapper">
             {handleModal()}
           </div>
 

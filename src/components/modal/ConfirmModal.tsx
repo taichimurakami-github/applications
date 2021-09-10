@@ -47,13 +47,14 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
         return (
           <div className="enter-confirm-selector-container">
             <p>本当に {props.content.targetData?.name} さんでよろしいですか？</p>
+            <p>「はい」を押すと入室します</p>
             <button className="btn btn__yes" onClick={onSaveAttendanceForEnter}>はい</button>
             <button className="btn btn__no" onClick={closeModal}>いいえ</button>
           </div>);
 
-      //退席処理を実行
+      //退室処理を実行
       case appConfig.confirmCodeList["1002"]:
-        //退席処理を実行する準備を行う
+        //処理を実行する準備を行う
         //まず、処理を実行する生徒IDをseatsStateより取り出す
         //関係者の場合は特殊パターンとして別途オブジェクトを作成する
 
@@ -68,6 +69,7 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
         return (
           <div className="exit-confirm-selector-container">
             <p>本当に {targetInfo.name} さんでよろしいですか？</p>
+            <p>「はい」を押すと退室します</p>
             <button className="btn btn__yes" onClick={onSaveAttendanceForExit}>はい</button>
             <button className="btn btn__no" onClick={closeModal}>いいえ</button>
           </div>
