@@ -37,6 +37,8 @@ declare global {
     // //App.tsx
     studentID?: string
     nextSeatID?: string,
+    exitTime?: string,
+    enterTime?: string,
 
     // //Top.tsx
     studentName?: string,

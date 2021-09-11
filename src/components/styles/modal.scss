@@ -90,7 +90,7 @@
 
   .active-seat-user,
   .active-seat-navigation{
-    cursor: pointer;
+    // cursor: pointer;
     display: grid;
     grid-template: 1fr / repeat(5, 1fr) ;
     align-items: center;

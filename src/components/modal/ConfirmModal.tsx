@@ -1,3 +1,4 @@
+import { randomComments } from "../../app.config";
 import { appConfig } from "../../app.config";
 
 interface ConfirmModalProps {
@@ -115,11 +116,25 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
 
       //自習室の使用完了を記録
       case appConfig.confirmCodeList["2002"]:
-        console.log("退室記録完了")
+        // console.log("退室記録完了")
+        if (!props.content.enterTime || !props.content.exitTime) {
+          console.log(props.content.enterTime, props.content.exitTime);
+          throw new Error("invalid props.content.enterTime or exitTime passed: undefined");
+        }
+
+        //時刻、分、秒の数値をそれぞれ数値化して、配列に格納
+        const enterTime = props.content.enterTime.split(':').map((val) => Number(val));
+        const exitTime = props.content.exitTime.split(':').map((val) => Number(val));
+        const timeDiff = [exitTime[0] - enterTime[0], exitTime[1] - enterTime[1], exitTime[2] - enterTime[2]]
 
         return (
           <>
             <p className="message-cheers">自習室の使用を記録しました。お疲れさまでした！</p>
+            <p>退室時刻： {exitTime[0]}時 {exitTime[1]}分 {exitTime[2]}秒</p>
+            <p>
+              トータル勉強時間：<b>{timeDiff[0]} 時間 {timeDiff[1]} 分 </b>
+            </p>
+
             <button className="btn btn__close" onClick={closeModal}>閉じる</button>
           </>
         );
@@ -147,7 +162,7 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
         //background closerを無効化
         props.onHandleBgClose(false);
 
-        //リロード
+        //アプリを自動リロード
         setTimeout(() => window.location.reload(), 3000);
         return (
           <>

@@ -202,7 +202,7 @@ const App: React.VFC = () => {
       active: true,
       name: appConfig.modalCodeList["1001"],
       content: {
-        //入出記録完了
+        //入室記録完了
         confirmCode: appConfig.confirmCodeList["2001"],
       }
     });
@@ -235,14 +235,13 @@ const App: React.VFC = () => {
       enterTime: "",
       studentID: ""
     }
+    const now = new Date();
+    const attendance_exitData = {
+      exit: `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
+    }
 
     if (seatsState[i].studentID !== "__OTHERS__") {
-      //"関係者その他"でなければ
-      //attendanceStateを更新
-      const now = new Date();
-      const attendance_exitData = {
-        exit: `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
-      }
+      //"関係者その他"でなければ、attendanceStateを更新
 
       //id: 対象生徒のid(objのindexになる)
       const id = seatsState[i].studentID;
@@ -266,8 +265,10 @@ const App: React.VFC = () => {
       active: true,
       name: appConfig.modalCodeList["1001"],
       content: {
-        //退出記録完了
+        //退室記録完了
         confirmCode: appConfig.confirmCodeList["2002"],
+        exitTime: attendance_exitData.exit,
+        enterTime: seatsState[i].enterTime,
       }
     });
 

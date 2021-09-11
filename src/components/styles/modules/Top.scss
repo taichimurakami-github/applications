@@ -8,8 +8,12 @@
   display: flex;
   justify-content: space-between;
   margin-top: 30px;
-  // align-items: center;
   column-gap: 50px;
+  cursor: pointer;
+
+  &:hover{
+    background: lighten($navy, 10%);
+  }
 
   $title-width: 200px;
   .title{

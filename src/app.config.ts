@@ -93,6 +93,92 @@ const appConfig: appConfig = {
   }
 }
 
+/**
+ * 名言・迷言集データベース
+ * 退室時にランダムで表示するコメントのデータベースです。
+ * 今のところは1種類のみ。
+ */
+const randomComments = {
+  adage: [
+    {
+      author: "太宰治",
+      content: "大人とは、裏切られた青年の姿である"
+    },
+    {
+      author: "アインシュタイン",
+      content: "私は天才ではありません。ただ、人より長く一つの事柄と付き合っていただけです。"
+    },
+    {
+      author: "デンマークのことわざより",
+      content: "みんなからの忠告に基づいて家を建てると、出来た家はいびつになる。"
+    },
+    {
+      author: "マーク・トウェイン",
+      content: "禁煙なんて簡単さ。私はもう何千回もやめてきたのだから。",
+    },
+    {
+      author: "アナトール・フランス",
+      content: "本は人に貸してはならない。貸せば戻ってこないからだ。私の書斎に残っている本といったら、そうやって人から借りたものばかりだ。"
+    },
+    {
+      author: "アルマン・サラクルー",
+      content: "人間は判断力の欠如によって結婚し、忍耐力の欠如によって離婚し、記憶力の欠如によって再婚する。"
+    },
+    {
+      author: "リチャード・M・ニクソン",
+      content: "人間は負けたら終わりなのではない。辞めたら終わりなのだ。"
+    },
+    {
+      author: "（出典不明）",
+      content: "幸せは去ったあとに光を放つ"
+    },
+    {
+      author: "リチャード・バック",
+      content: "責任を回避するいちばん良い方法は、「責任は果たしている」と言うことである。"
+    },
+    {
+      author: "マルセル・プルースト",
+      content: "時は過ぎゆく。そして少しずつ、我々が口にしてきた嘘は、真実になる。"
+    },
+    {
+      author: "ロバート・フロスト",
+      content: "1日8時間、誠実に働く。そうすればやがて人を使う立場になり、1日12時間働くことになる。"
+    },
+    {
+      author: "長州力",
+      content: "無事故、無違反で名を遺した人間はいない。"
+    },
+    {
+      author: "イチロー",
+      content: "何かを長期間、成し遂げるためには考えや行動を一貫させる必要がある。"
+    },
+    {
+      author: "ウィトゲンシュタイン",
+      content: "私の言語の限界が私の世界の限界を意味する。"
+    },
+    {
+      author: "羽生 善治",
+      content: "何事であれ、最終的には自分で考える覚悟がないと、情報の山に埋もれるだけである。"
+    },
+    {
+      author: "ローランド",
+      content: "世の中には3つのやり方がある。正しいやり方。間違ったやり方。そして俺のやり方。"
+    },
+    {
+      author: "",
+      content: ""
+    },
+    {
+      author: "",
+      content: ""
+    },
+    {
+      author: "",
+      content: ""
+    },
+  ]
+}
+
 
 /**
  * App.js react app states initialValue
@@ -201,6 +287,7 @@ const modalState_initialValue: modalState = {
 
 export {
   appConfig,
+  randomComments,
   appState_initialValue,
   studentsList_initialValue,
   attendanceState_initialValue,
