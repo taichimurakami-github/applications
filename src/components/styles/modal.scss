@@ -183,3 +183,23 @@
     margin-top: 50px;
   }
 }
+
+.news-modal-wrapper{
+  background: white;
+  padding: 50px;
+  width: 1152px;  
+  border-radius: 20px;
+
+  .title{
+    background: $navy;
+    margin: 0 auto;
+    color: white;
+  }
+
+  .message{
+    width: 90%;
+    margin: 50px auto;
+    text-align: left;
+  }
+  
+}

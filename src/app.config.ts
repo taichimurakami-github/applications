@@ -49,6 +49,7 @@ const appConfig: appConfig = {
     "1001": "CONFIRM",
     "1002": "ERROR",
     "1003": "SEATS",
+    "1004": "NEWS"
   },
   confirmCodeList: {
     //before execute confirm

@@ -6,9 +6,9 @@ interface TopComponentProps {
   appState: appState,
   studentsList: studentsList,
   seatsState: seatsState,
-  onHandleAppState: Function,
+  onHandleAppState: (d: { [index: string]: any }) => void,
   // onHandleSeatState: VoidFunction,
-  onHandleModalState: Function
+  onHandleModalState: (t: modalState) => void
 }
 
 export const Top: React.VFC<TopComponentProps> = (props) => {
@@ -38,6 +38,14 @@ export const Top: React.VFC<TopComponentProps> = (props) => {
     props.onHandleModalState({
       active: true,
       name: appConfig.modalCodeList["1003"],
+      content: {}
+    });
+  }
+
+  const displayNewsModal = () => {
+    props.onHandleModalState({
+      active: true,
+      name: appConfig.modalCodeList["1004"],
       content: {}
     });
   }
@@ -81,7 +89,7 @@ export const Top: React.VFC<TopComponentProps> = (props) => {
           </>
       }
       <div className="info-container">
-        <TopMessage msg={props.appState.localConfig.msg} />
+        <TopMessage activateNewsModal={displayNewsModal} msg={props.appState.localConfig.msg} />
       </div>
       <div className={props.studentsList === null ? "seat-table-container unactive" : "seat-table-container"}>
         <ul className={"column"}>

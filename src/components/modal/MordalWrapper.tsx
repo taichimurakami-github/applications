@@ -2,6 +2,7 @@
 import { ErrorModal } from "./ErrorModal";
 import { SeatsModal } from "./SeatsModal";
 import { ConfirmModal } from "./ConfirmModal";
+import { NewsModal } from "./NewsModal";
 import { appConfig } from "../../app.config";
 import React, { useState } from "react";
 
@@ -16,6 +17,7 @@ interface ModalWrapperProps {
   onEraceAppData: () => Promise<void>,
   onCancelOperation: () => void,
   onHandleSeatOperation: (arg: { mode: string; content: any; }) => void,
+  appState: appState,
   studentsList: studentsList,
   modalState: modalState,
   seatsState: seatsState
@@ -70,6 +72,12 @@ const ModalWrapper: React.VFC<ModalWrapperProps> = (props) => {
             onSaveForExit={props.onSaveForExit}
             seatsState={props.seatsState}
             studentsList={props.studentsList}
+          />
+
+        case appConfig.modalCodeList["1004"]:
+          return <NewsModal
+            onCloseModal={closeModal}
+            appState={props.appState}
           />
 
         default:

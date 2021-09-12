@@ -685,6 +685,7 @@ const App: React.VFC = () => {
         studentsList={studentsList}
         modalState={modalState}
         seatsState={seatsState}
+        appState={appState}
       />
     </div>
   );
