@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { StudentsDataList } from "../views/StudentsDataListView";
 
 //style imports
-import "./styles/modules/StudentData.scss";
+import "../styles/modules/StudentData.scss";
 
 interface SelectDataProps {
   onSaveAttendance: (i: string) => void;

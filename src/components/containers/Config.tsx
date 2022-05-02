@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { appConfig } from "../../app.config";
 
 //style import
-import "./styles/modules/Config.scss";
+import "../styles/modules/Config.scss";
 
 interface ConfigComponentProps {
   onHandleStudentFile: React.Dispatch<React.SetStateAction<[] | studentsList>>;
