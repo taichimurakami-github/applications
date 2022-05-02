@@ -140,21 +140,21 @@ const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
       seats[key].studentID === "__OTHERS__" && othersList.push(key);
     }
 
-    if (activeSeatList[0]) {
+    if (activeSeatList !== [] && activeSeatList[0]) {
       //active状態の席一つひとつに対し、
       //その席に登録されている生徒IDからstudentsListを検索し、該当する要素を返す
       //valは席IDの文字列
       return activeSeatList.map((val) => {
-        let result;
+        let result: { [key: string]: string }[];
 
         //関係者が座っている席の場合
         if (seats[val].studentID === "__OTHERS__") {
           result = [{
             id: "__OTHERS__",
             name: "関係者等(記録されません)",
-            grade: null,
-            school: null,
-            belongs: null,
+            grade: "",
+            school: "",
+            belongs: "",
           }];
         }
         else {
@@ -164,6 +164,7 @@ const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
           });
         }
 
+        console.log("seats check:", seats[val]);
         //取得した入室時間を、表示する形式に変換
         //一桁の数字だったときは、0を先頭に追加
         let enteredTime = seats[val].enterTime.split(':').map((val, index) => {
@@ -207,12 +208,7 @@ const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
           onHandleChangeSeat={handleChangeSeat}
         />
       }
-
-
     </div>
-
-
-
   )
 }
 
