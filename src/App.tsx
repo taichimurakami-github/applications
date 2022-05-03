@@ -11,7 +11,7 @@ import {
 
 //React components import
 import { Top } from "./components/containers/Top";
-import { SelectData } from "./components/containers/DataSelector";
+import { SelectData } from "./components/containers/StudentDataSelector";
 import { ModalWrapper } from "./components/containers/MordalRoot";
 import { Config } from "./components/containers/Config";
 
