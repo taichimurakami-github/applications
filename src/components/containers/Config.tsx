@@ -3,8 +3,9 @@ import { appConfig } from "../../app.config";
 
 //style import
 import "../styles/modules/Config.scss";
+import ConfigView from "../views/ConfigView";
 
-interface ConfigComponentProps {
+interface ConfigContainerProps {
   onHandleStudentFile: React.Dispatch<React.SetStateAction<[] | studentsList>>;
   onHandleAppState: (d: { [index: string]: any }) => void;
   onReadStudentsList: React.Dispatch<React.SetStateAction<[] | studentsList>>;
@@ -18,17 +19,17 @@ interface ConfigComponentProps {
   appState: appState;
 }
 
-const Config: React.VFC<ConfigComponentProps> = (props) => {
+const Config: React.VFC<ConfigContainerProps> = (props) => {
   const localConfig_fn = props.appState.localConfig.fn;
 
   const [topMessage, setTopMessage] = useState<string>(
     props.appState.localConfig.msg
   );
 
-  const onChangeTopMsg = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
+  const changeTopMessage = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setTopMessage(e.target.value);
 
-  const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const submit = (e: React.FormEvent<HTMLFormElement>) => {
     //submitボタンを押したときの自動リロードを停止
     e.preventDefault();
 
@@ -54,26 +55,20 @@ const Config: React.VFC<ConfigComponentProps> = (props) => {
     });
   };
 
-  const handleBackToTop = () => {
+  const backToTop = () => {
     props.onHandleAppState({ now: "TOP" });
   };
 
-  const handleChangeAppConfig = async (
+  const changeAppConfig = async (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
+
     const modalContents = {
       fn_id: "",
       fn_value: false,
     };
-    switch (e.currentTarget.id) {
-      // case "toggle_changeSeatID":
-      //   props.onHandleChangeAppLocalConfig({
-      //     id: "appConfig_fn_eraceAppDataTodayAll",
-      //     status: "stable",
-      //     value: !localConfig_fn.stable.changeSeatID,
-      //   });
-      //   break;
 
+    switch (e.currentTarget.id) {
       case "toggle_cancelOperation":
         console.log(!localConfig_fn.stable.cancelOperation);
         modalContents.fn_id = "appConfig_fn_cancelOperation";
@@ -115,7 +110,7 @@ const Config: React.VFC<ConfigComponentProps> = (props) => {
     });
   };
 
-  const onEraceAppData = () => {
+  const eraceAppData = () => {
     props.onHandleModalState({
       active: true,
       name: appConfig.modalCodeList["1001"],
@@ -125,7 +120,7 @@ const Config: React.VFC<ConfigComponentProps> = (props) => {
     });
   };
 
-  const onReadStudentsFile = () => {
+  const readStudentsFile = () => {
     const debugInput = document.createElement("input");
     // const acceptFileTypeList = [".xlsx", ".csv"];
 
@@ -175,89 +170,19 @@ const Config: React.VFC<ConfigComponentProps> = (props) => {
   // useEffect(() => { console.log(topMessage) }, [topMessage]);
 
   return (
-    <div className="component-config-wrapper">
-      <h1>アプリ設定</h1>
 
-      <button
-        className="btn btn__typeC back-to-top-btn"
-        onClick={handleBackToTop}
-      >
-        トップページに戻る
-      </button>
+    <ConfigView 
+      onHandleBackToTop={backToTop} 
+      onReadStudentsFile={readStudentsFile}
+      onEraceAppData={eraceAppData}
+      onChangeAppConfig={changeAppConfig}
+      onChangeTopMessage={changeTopMessage}
+      onSubmit={submit}
+      topMessage={topMessage}
+      isEraceAppDataTodayAllEnabled={localConfig_fn.stable.eraceAppDataTodayAll}
+      isCancelOperationEnabled={localConfig_fn.stable.cancelOperation}
+    />
 
-      <div className="item-wrapper">
-        <h2>TOP画面メッセージ編集</h2>
-        <form className="top-msg-edit-form" onSubmit={handleOnSubmit}>
-          <textarea
-            className="top-msg-editor"
-            value={topMessage}
-            onChange={onChangeTopMsg}
-          ></textarea>
-          <button className="btn btn__submit" type="submit">
-            TOP画面のメッセージを変更
-          </button>
-        </form>
-      </div>
-
-      <div className="item-wrapper">
-        <h2>設定項目</h2>
-        <div className="setting-btn-container">
-          <button
-            className="btn read-student-list"
-            onClick={onReadStudentsFile}
-          >
-            生徒情報ファイルを設定する
-          </button>
-          {localConfig_fn.stable.eraceAppDataTodayAll && (
-            <button
-              className="btn erace-today-data-all"
-              onClick={onEraceAppData}
-            >
-              アプリ内部データを削除する
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div className="item-wrapper">
-        <h2>機能のon/off</h2>
-
-        {/* <div className="toggle-btn-wrapper btn__toggle">
-        <p>座席を移動する</p>
-        <button
-          id="toggle_changeSeatID"
-          className={`${"toggle-wrapper "}${localConfig_fn.stable.changeSeatID ? "active" : "unactive"}`}
-          onClick={handleChangeAppConfig}>
-          <span className="toggle"></span>
-        </button>
-      </div> */}
-
-        <div className="toggle-btn-container btn__toggle">
-          <b>直前の操作を取り消す</b>
-          <button
-            id="toggle_cancelOperation"
-            className={`${"toggle-wrapper "}${
-              localConfig_fn.stable.cancelOperation ? "active" : "unactive"
-            }`}
-            onClick={handleChangeAppConfig}
-          >
-            <span className="toggle"></span>
-          </button>
-        </div>
-        <div className="toggle-btn-container btn__toggle">
-          <b>アプリ内部データ(1日分)を削除する</b>
-          <button
-            id="toggle_eraceAppDataTodayAll"
-            className={`${"toggle-wrapper "}${
-              localConfig_fn.stable.eraceAppDataTodayAll ? "active" : "unactive"
-            }`}
-            onClick={handleChangeAppConfig}
-          >
-            <span className="toggle"></span>
-          </button>
-        </div>
-      </div>
-    </div>
   );
 };
 
