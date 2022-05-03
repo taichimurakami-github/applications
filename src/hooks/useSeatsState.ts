@@ -5,7 +5,7 @@ const useSeatsState = (seatsState_initialValue: seatsState) => {
   const [seatsState, setSeatsState] = useState<seatsState | null>(null);
 
   useEffect(() => {
-    async () => {
+    (async () => {
       //今日の分のseatsState記録が残っていれば読み込み
       const seatsState_bcup = await window.electron.ipcRenderer.invoke(
         "handle_seatsState",
@@ -15,7 +15,7 @@ const useSeatsState = (seatsState_initialValue: seatsState) => {
       setSeatsState(
         seatsState_bcup ? seatsState_bcup : seatsState_initialValue
       );
-    };
+    })();
   }, []);
 
   return { seatsState, setSeatsState };
