@@ -9,7 +9,7 @@ import React, { useState } from "react";
 //import styles
 import "../styles/modal.scss";
 
-interface ModalWrapperProps {
+interface ModalRootProps {
   onHandleAppState: (d: { [index: string]: any }) => void;
   onHandleModalState: (t: modalState) => void;
   onSaveForEnter: (i: string) => void;
@@ -23,7 +23,7 @@ interface ModalWrapperProps {
   seatsState: seatsState | null;
 }
 
-const ModalWrapper: React.VFC<ModalWrapperProps> = (props) => {
+export const ModalRoot: React.VFC<ModalRootProps> = (props) => {
   const [BackgroundClose, setBackgroundClose] = useState(true);
 
   //モーダル消去用関数
@@ -107,5 +107,3 @@ const ModalWrapper: React.VFC<ModalWrapperProps> = (props) => {
     </>
   );
 };
-
-export { ModalWrapper };

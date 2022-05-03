@@ -6,7 +6,7 @@ import { appConfig } from "../../app.config";
 import "../styles/modules/StudentData.scss";
 import StudentCategorySelector from "../views/StudentCategorySelector";
 
-interface SelectDataProps {
+interface StudentDataSelectorProps {
   onSaveAttendance: (i: string) => void;
   onResetAppState: (arg: { mode: "APPLOG" | "DEFAULT"; content?: any }) => void;
   onHandleModalState: (t: modalState) => void;
@@ -15,18 +15,20 @@ interface SelectDataProps {
   seatsState: seatsState;
 }
 
-interface SelectData_ComponentState {
+interface StudentDataSelectorStates {
   seat: string;
   school: string;
   grade: string;
   nav: boolean;
 }
 
-export const SelectData: React.VFC<SelectDataProps> = (props) => {
+export const StudentDataSelector: React.VFC<StudentDataSelectorProps> = (
+  props
+) => {
   const categorySelectorContainer = useRef<HTMLDivElement>(null);
   const navigation = useRef<HTMLDivElement>(null);
 
-  const [state, setState] = useState<SelectData_ComponentState>({
+  const [state, setState] = useState<StudentDataSelectorStates>({
     seat: props.appState.selectedSeat,
     school: "",
     grade: "",

@@ -4,8 +4,8 @@ import { appConfig } from "./app.config";
 
 //React components import
 import { Top } from "./components/containers/Top";
-import { SelectData } from "./components/containers/StudentDataSelector";
-import { ModalWrapper } from "./components/containers/MordalRoot";
+import { StudentDataSelector } from "./components/containers/StudentDataSelector";
+import { ModalRoot } from "./components/containers/MordalRoot";
 import { Config } from "./components/containers/Config";
 
 //styles import
@@ -83,7 +83,7 @@ const App: React.VFC = () => {
 
       case "STUDENT":
         return (
-          <SelectData
+          <StudentDataSelector
             onSaveAttendance={useEnterRecorder}
             onResetAppState={resetAppState}
             onHandleModalState={handleModalState}
@@ -156,7 +156,7 @@ const App: React.VFC = () => {
   return (
     <div className="App">
       {handleComponent()}
-      <ModalWrapper
+      <ModalRoot
         onHandleAppState={handleAppState}
         onHandleModalState={handleModalState}
         onSaveForEnter={useEnterRecorder}
