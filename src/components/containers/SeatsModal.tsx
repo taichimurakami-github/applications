@@ -5,56 +5,6 @@ import { SeatsTable } from "../views/SeatsTable";
 import "../styles/modules/Top.scss";
 import closeButtonIcon from "../../images/close-button.svg";
 
-interface StudentsListProps {
-  onCloseModal: () => void;
-  onGenerateStudentsList: () => JSX.Element | JSX.Element[];
-}
-const StudentsList: React.VFC<StudentsListProps> = (props) => {
-  return (
-    <>
-      <nav className="active-seat-navigation">
-        <b>席番号</b>
-        <b>お名前</b>
-        <b>入室時刻</b>
-        <button className="btn btn__close" onClick={props.onCloseModal}>
-          <img className="close-button-icon" src={closeButtonIcon} />
-          閉じる
-        </button>
-      </nav>
-      <ul className="seats-modal-container scroll">
-        {props.onGenerateStudentsList()}
-      </ul>
-    </>
-  );
-};
-
-interface SelectNewSeatProps {
-  seatsState: seatsState;
-  onHandleGoBack: () => void;
-  onHandleChangeSeat: (arg: any) => void;
-}
-const SelectNewSeat: React.VFC<SelectNewSeatProps> = (props) => {
-  const onHandleSelectSeat = (e: any) => {
-    props.onHandleChangeSeat(e.target.id);
-  };
-
-  return (
-    <div className="seats-modal-container">
-      <nav className="title-nav active-seat-navigation">
-        <h2>移動先の座席を選んでください</h2>
-        <button className="btn btn__close" onClick={props.onHandleGoBack}>
-          戻る
-        </button>
-      </nav>
-      <p>使用されていない座席の中から、移動先の座席を選択してください。</p>
-      <SeatsTable
-        seatsState={props.seatsState}
-        onClickFunction={onHandleSelectSeat}
-      />
-    </div>
-  );
-};
-
 interface SeatsModalProps {
   onCloseModal: () => void;
   onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>;
@@ -128,7 +78,16 @@ const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
     });
   };
 
-  const generateStudentsList = () => {
+  /**
+   *
+   * //////////////////////////////
+   *
+   * !!! getAttendedStudentsList() 関数にissue#6のバグの原因ありそう !!!
+   *
+   * //////////////////////////////
+   *
+   */
+  const getAttendedStudentsList = () => {
     const seats = props.seatsState;
     const activeSeatList = [];
     const othersList = [];
@@ -204,18 +163,38 @@ const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
   return (
     <div className="seats-modal-wrapper">
       {seatsModalState.mode === appConfig.seatsModalModeList["1001"] && (
-        <StudentsList
-          onGenerateStudentsList={generateStudentsList}
-          onCloseModal={closeModal}
-        />
+        <>
+          <nav className="active-seat-navigation">
+            <b>席番号</b>
+            <b>お名前</b>
+            <b>入室時刻</b>
+            <button className="btn btn__close" onClick={props.onCloseModal}>
+              <img className="close-button-icon" src={closeButtonIcon} />
+              閉じる
+            </button>
+          </nav>
+          <ul className="seats-modal-container scroll">
+            {getAttendedStudentsList()}
+          </ul>
+        </>
       )}
 
       {seatsModalState.mode === appConfig.seatsModalModeList["1002"] && (
-        <SelectNewSeat
-          seatsState={props.seatsState}
-          onHandleGoBack={handleReset}
-          onHandleChangeSeat={handleChangeSeat}
-        />
+        <div className="seats-modal-container">
+          <nav className="title-nav active-seat-navigation">
+            <h2>移動先の座席を選んでください</h2>
+            <button className="btn btn__close" onClick={handleReset}>
+              戻る
+            </button>
+          </nav>
+          <p>使用されていない座席の中から、移動先の座席を選択してください。</p>
+          <SeatsTable
+            seatsState={props.seatsState}
+            onClickFunction={(e) => {
+              handleChangeSeat(e.target.id);
+            }}
+          />
+        </div>
       )}
     </div>
   );
