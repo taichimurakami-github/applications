@@ -1,6 +1,6 @@
 import React from "react";
 
-interface ConfigViewProps {
+interface ConfigView {
   onHandleBackToTop: () => void,
   onReadStudentsFile: () => void,
   onEraceAppData: () => void,
@@ -12,7 +12,7 @@ interface ConfigViewProps {
   isCancelOperationEnabled: boolean,
 }
 
-const ConfigView = (props:ConfigViewProps) => {
+const ConfigView = (props:ConfigView) => {
 
 
   return (

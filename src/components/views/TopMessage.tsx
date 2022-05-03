@@ -1,9 +1,9 @@
-interface TopMessageProps {
+interface TopMessageView {
   msg: string
   activateNewsModal: () => void,
 }
 
-export const TopMessage: React.VFC<TopMessageProps> = (props) => {
+export const TopMessage: React.VFC<TopMessageView> = (props) => {
   return (
     <div onClick={props.activateNewsModal} className="top-message-wrapper">
       <h2 className="title">お知らせ</h2>

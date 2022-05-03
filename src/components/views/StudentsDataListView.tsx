@@ -1,7 +1,7 @@
 import React from "react";
 import { appConfig } from "../../app.config";
 
-interface StudentsDataListProps {
+interface StudentsDataListView {
   onSaveAttendance: (i: string) => void;
   onHandleModalState: (t: modalState) => void;
   onHandleNav: () => void;
@@ -12,7 +12,7 @@ interface StudentsDataListProps {
   seatsState: seatsState;
 }
 
-const StudentsDataList: React.VFC<StudentsDataListProps> = (props) => {
+const StudentsDataList: React.VFC<StudentsDataListView> = (props) => {
   const school_ja = [];
   switch (props.school) {
     case "high":

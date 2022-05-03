@@ -10,11 +10,11 @@
  *  
  * @returns 
  */
-interface SeatsTableProps {
+interface SeatsTable {
   seatsState: seatsState,
   onClickFunction: (e: any) => void
 }
-const SeatsTable: React.VFC<SeatsTableProps> = (props) => {
+const SeatsTable: React.VFC<SeatsTable> = (props) => {
   return (
     <div className="seat-table-container">
       <ul className={"column"}>
