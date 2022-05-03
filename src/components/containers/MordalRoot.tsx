@@ -18,9 +18,9 @@ interface ModalWrapperProps {
   onCancelOperation: () => void;
   onHandleSeatOperation: (arg: { mode: string; content: any }) => void;
   appState: appState;
-  studentsList: studentsList;
+  studentsList: studentsList | null;
   modalState: modalState;
-  seatsState: seatsState;
+  seatsState: seatsState | null;
 }
 
 const ModalWrapper: React.VFC<ModalWrapperProps> = (props) => {

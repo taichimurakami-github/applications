@@ -9,8 +9,8 @@ interface ConfirmModalProps {
   onSaveForExit: (i: string) => void;
   onEraceAppData: () => Promise<void>;
   onCancelOperation: () => void;
-  seatsState: seatsState;
-  studentsList: studentsList;
+  seatsState: seatsState | null;
+  studentsList: studentsList | null;
 }
 
 const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
@@ -35,6 +35,10 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
   const closeModal = () => props.onCloseModal();
 
   const getStudentInfoFromStudentID = (studentID: string) => {
+    if (!props.studentsList) {
+      return console.log("studentsList null");
+    }
+
     return studentID !== "__OTHERS__"
       ? props.studentsList.filter((val: { [index: string]: string }) => {
           return val.id == studentID;
@@ -63,6 +67,11 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
 
       //退室処理を実行
       case appConfig.confirmCodeList["1002"]:
+        if (!props.seatsState) {
+          console.log("studentsList null");
+          return undefined;
+        }
+
         //処理を実行する準備を行う
         //まず、処理を実行する生徒IDをseatsStateより取り出す
         //関係者の場合は特殊パターンとして別途オブジェクトを作成する
@@ -79,7 +88,7 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
         //確認モーダルの中身
         return (
           <div className="exit-confirm-selector-container">
-            <p>本当に {targetInfo.name} さんでよろしいですか？</p>
+            <p>本当に {targetInfo?.name} さんでよろしいですか？</p>
             <p>「はい」を押すと退室します</p>
             <button className="btn btn__yes" onClick={onSaveAttendanceForExit}>
               はい
@@ -258,7 +267,7 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
 
         const studentName = getStudentInfoFromStudentID(
           props.content.studentID
-        ).name;
+        )?.name;
 
         return (
           <>

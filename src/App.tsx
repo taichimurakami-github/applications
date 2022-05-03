@@ -19,6 +19,10 @@ import { Config } from "./components/containers/Config";
 import "./components/styles/modules/Top.scss";
 import "./components/styles/app.common.scss";
 import { resolve } from "path";
+import useSeatsState from "./hooks/useSeatsState";
+import useAttendanceState from "./hooks/useAttendanceState";
+import useStudentsListState from "./hooks/useStudentsListState";
+import useAppState from "./hooks/useAppState";
 
 const App: React.VFC = () => {
   /**
@@ -27,37 +31,26 @@ const App: React.VFC = () => {
    * -------------------------------
    */
 
-  const isFirstReadSeatsStateBCUP = useRef<boolean>(false);
-  const isFirstReadAttendanceStateBCUP = useRef<boolean>(false);
-
   //アプリの動作状態を管理する変数
-  const [appState, setAppState] = useState<appState>(appState_initialValue);
+  const { appState, setAppState } = useAppState(appState_initialValue);
 
   //エクセルから取得した生徒情報(生徒名簿リストデータ)を格納しておく変数
-  const [studentsList, setStudentsList] = useState<[] | studentsList>(
+  const { studentsList, setStudentsList } = useStudentsListState(
     studentsList_initialValue
   );
 
   //入退室記録のデータを保存しておく変数
-  const [attendanceState, setAttendanceState] = useState<attendanceState>(
+  const { attendanceState, setAttendanceState } = useAttendanceState(
     attendanceState_initialValue
   );
 
   //現在の座席状況を管理する変数
-  const [seatsState, setSeatsState] = useState<seatsState>(
-    seatsState_initialValue
-  );
+  const { seatsState, setSeatsState } = useSeatsState(seatsState_initialValue);
 
   //モーダル管理変数
   const [modalState, setModalState] = useState<modalState>(
     modalState_initialValue
   );
-
-  /**
-   * -------------------------------
-   *          App functions
-   * -------------------------------
-   */
 
   /**
    * function handleEraceAppData()
@@ -150,14 +143,21 @@ const App: React.VFC = () => {
    * @param {string} i : TARGET STUDENT ID (studentsList student.id)
    */
   const handleSaveAttendanceForEnter = (i: string) => {
+    if (!attendanceState) {
+      return;
+    }
+
     console.log("出席処理を開始します...");
     //時刻を定義
     const now = new Date();
-    const nowDateTime = `${now.getFullYear()}/${
+    const nowYearMonthAndDate = `${now.getFullYear()}/${
       now.getMonth() + 1
-    }/${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
+    }/${now.getDate()}`;
+    const nowHoursMinutesAndSeconds = `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
+    const nowDateTime = `
+    ${nowYearMonthAndDate} ${nowHoursMinutesAndSeconds}`;
 
-    //席を赤くする
+    //該当の席を「使用中」にする
     appState.selectedElement &&
       appState.selectedElement.classList.add("active");
 
@@ -167,12 +167,12 @@ const App: React.VFC = () => {
       i === "__OTHERS__"
         ? {
             active: true,
-            enterTime: `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`,
+            enterTime: nowHoursMinutesAndSeconds,
             studentID: "__OTHERS__",
           }
         : {
             active: true,
-            enterTime: `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`,
+            enterTime: nowHoursMinutesAndSeconds,
             studentID: i,
           };
 
@@ -231,7 +231,7 @@ const App: React.VFC = () => {
    *
    * 退室記録を保存する関数
    *
-   * @param {string} e : SELECTED SEAT ID
+   * @param {string} i : SELECTED SEAT ID
    */
   const handleSaveAttendanceForExit = (i: string) => {
     console.log("退席処理を開始します...");
@@ -245,6 +245,19 @@ const App: React.VFC = () => {
     const attendance_exitData = {
       exit: `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`,
     };
+
+    /**
+     * ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     * エラー！seatsState or attendanceStateが読み込めていません
+     * ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     */
+    if (!seatsState || !attendanceState) {
+      return setModalState({
+        active: true,
+        name: appConfig.modalCodeList["1002"],
+        content: {},
+      });
+    }
 
     if (seatsState[i].studentID !== "__OTHERS__") {
       //"関係者その他"でなければ、attendanceStateを更新
@@ -306,8 +319,11 @@ const App: React.VFC = () => {
    * }
    * @returns
    */
-
   const handleSeatOperation = (arg: { mode: string; content: any }): void => {
+    if (!attendanceState || !seatsState) {
+      return;
+    }
+
     console.log("activate fn handleSeatOperation()");
 
     if (arg.mode === appConfig.seatOperationCodeList["1001"]) {
@@ -376,6 +392,10 @@ const App: React.VFC = () => {
    * @returns {void}
    */
   const handleCancelOperation = () => {
+    if (!attendanceState) {
+      return;
+    }
+
     console.log("launching cancel oparation...");
 
     //appState.appLogがnullだった場合、return
@@ -541,8 +561,8 @@ const App: React.VFC = () => {
             // onHandleSeatsState={handleSeatsState}
             onHandleModalState={handleModalState}
             appState={appState}
-            seatsState={seatsState}
-            studentsList={studentsList}
+            seatsState={seatsState as seatsState}
+            studentsList={studentsList as studentsList}
           />
         );
 
@@ -553,8 +573,8 @@ const App: React.VFC = () => {
             onResetAppState={resetAppState}
             onHandleModalState={handleModalState}
             appState={appState}
-            studentsList={studentsList}
-            seatsState={seatsState}
+            studentsList={studentsList as studentsList}
+            seatsState={seatsState as seatsState}
           />
         );
 
@@ -583,75 +603,6 @@ const App: React.VFC = () => {
    * -------------------------------
    */
 
-  //起動時、もしくはリロード時に1回だけ行われる処理
-  useEffect(() => {
-    console.log("バックアップファイルの読み込みを開始します");
-
-    const reloadProc = async () => {
-      // isFirstReadSeatsStateBCUP.current = false;
-      // isFirstReadAttendanceStateBCUP.current = false;
-
-      //アプリのローカルファイルからアプリデータを取得
-      const appLocalConfigData = await window.electron.ipcRenderer.invoke(
-        "handle_loadAppLocalConfig",
-        { mode: "read" }
-      );
-      appConfig.fn = appLocalConfigData.fn;
-      appConfig.msg = appLocalConfigData.msg;
-      setAppState({
-        ...appState,
-        localConfig: appLocalConfigData,
-      });
-      console.log("appConfig loaded:", appConfig.fn);
-
-      //生徒情報ファイルが存在していれば自動読み込み
-      //grade, idが整数値で取得されるので、文字列型に変換しておく
-      const studentsList_autoloadedData: studentsList =
-        await window.electron.ipcRenderer.invoke("handle_studentsList", {
-          mode: "read",
-        });
-
-      if (studentsList_autoloadedData) {
-        // const convertedStudentsList = [];
-        //keyが数値のオブジェクトが手渡されるので、
-        //grade, idを文字列に変換
-        for (let i = 0; i < studentsList_autoloadedData.length; i++) {
-          studentsList_autoloadedData[i].grade = String(
-            studentsList_autoloadedData[i].grade
-          );
-          studentsList_autoloadedData[i].id = String(
-            studentsList_autoloadedData[i].id
-          );
-        }
-
-        setStudentsList(studentsList_autoloadedData);
-        // console.log(studentsList_autoloadedData);
-      }
-
-      //今日の分のseatsState記録が残っていれば読み込み
-      const seatsState_bcup = await window.electron.ipcRenderer.invoke(
-        "handle_seatsState",
-        { mode: "read" }
-      );
-      console.log("read_seatsstate_bcup_result", seatsState_bcup);
-      seatsState_bcup && setSeatsState(seatsState_bcup);
-
-      //今日の分のattendanceState記録が残っていれば読み込み
-      const attendanceState_bcup = await window.electron.ipcRenderer.invoke(
-        "handle_attendanceState",
-        { mode: "read" }
-      );
-      console.log("attendanceState_bcup_result", attendanceState_bcup);
-      attendanceState_bcup && setAttendanceState(attendanceState_bcup);
-
-      //初回読み込みを完了、フラグを変更
-      isFirstReadSeatsStateBCUP.current = true;
-      isFirstReadAttendanceStateBCUP.current = true;
-    };
-
-    reloadProc();
-  }, []);
-
   //生徒情報ファイルが読み込まれていない時は、エラーモーダルを最初に表示
   useEffect(() => {
     if (!studentsList) {
@@ -676,47 +627,22 @@ const App: React.VFC = () => {
 
   //バックアップ兼記録ファイル 自動書き出し
   useEffect(() => {
-    const autoFileWriter = async () => {
+    (async () => {
       //attendanceState書き出し
-      isFirstReadAttendanceStateBCUP.current &&
+      attendanceState &&
         (await window.electron.ipcRenderer.invoke("handle_attendanceState", {
           mode: "write",
           data: JSON.stringify(attendanceState),
         }));
 
       //seatsState書き出し
-      isFirstReadSeatsStateBCUP.current &&
+      seatsState &&
         (await window.electron.ipcRenderer.invoke("handle_seatsState", {
           mode: "write",
           data: JSON.stringify(seatsState),
         }));
-    };
-    autoFileWriter();
+    })();
   }, [attendanceState, seatsState]);
-
-  //デバッグ用コンソール表示関数
-  // useEffect(() => {
-  //   console.log("seatsState checker---------");
-  //   console.log(seatsState);
-  // }, [seatsState]);
-  // useEffect(() => {
-  //   if (studentsList) {
-  //     console.log("student list data has loaded");
-  //     console.log(studentsList);
-  //   }
-  // }, [studentsList]);
-  // useEffect(() => {
-  //   console.log("appState checker---------");
-  //   console.log(appState);
-  // }, [appState]);
-  // useEffect(() => {
-  //   console.log("appState checker---------");
-  //   console.log(modalState);
-  // }, [modalState]);
-  // useEffect(() => {
-  //   console.log("attendanceState checker........")
-  //   console.log(attendanceState);
-  // }, [attendanceState]);
 
   return (
     <div className="App">
@@ -739,3 +665,91 @@ const App: React.VFC = () => {
 };
 
 export default App;
+
+//デバッグ用コンソール表示関数
+// useEffect(() => {
+//   console.log("seatsState checker---------");
+//   console.log(seatsState);
+// }, [seatsState]);
+// useEffect(() => {
+//   if (studentsList) {
+//     console.log("student list data has loaded");
+//     console.log(studentsList);
+//   }
+// }, [studentsList]);
+// useEffect(() => {
+//   console.log("appState checker---------");
+//   console.log(appState);
+// }, [appState]);
+// useEffect(() => {
+//   console.log("appState checker---------");
+//   console.log(modalState);
+// }, [modalState]);
+// useEffect(() => {
+//   console.log("attendanceState checker........")
+//   console.log(attendanceState);
+// }, [attendanceState]);
+//
+//---------------------------
+//
+//起動時、もしくはリロード時に1回だけ行われる処理
+// useEffect(() => {
+//   console.log("バックアップファイルの読み込みを開始します");
+
+//   const reloadProc = async () => {
+// isFirstReadSeatsStateBCUP.current = false;
+// isFirstReadAttendanceStateBCUP.current = false;
+//アプリのローカルファイルからアプリデータを取得
+// const appLocalConfigData = await window.electron.ipcRenderer.invoke(
+//   "handle_loadAppLocalConfig",
+//   { mode: "read" }
+// );
+// appConfig.fn = appLocalConfigData.fn;
+// appConfig.msg = appLocalConfigData.msg;
+// setAppState({
+//   ...appState,
+//   localConfig: appLocalConfigData,
+// });
+// console.log("appConfig loaded:", appConfig.fn);
+// //生徒情報ファイルが存在していれば自動読み込み
+// //grade, idが整数値で取得されるので、文字列型に変換しておく
+// const studentsList_autoloadedData: studentsList =
+//   await window.electron.ipcRenderer.invoke("handle_studentsList", {
+//     mode: "read",
+//   });
+// if (studentsList_autoloadedData) {
+//   // const convertedStudentsList = [];
+//   //keyが数値のオブジェクトが手渡されるので、
+//   //grade, idを文字列に変換
+//   for (let i = 0; i < studentsList_autoloadedData.length; i++) {
+//     studentsList_autoloadedData[i].grade = String(
+//       studentsList_autoloadedData[i].grade
+//     );
+//     studentsList_autoloadedData[i].id = String(
+//       studentsList_autoloadedData[i].id
+//     );
+//   }
+//   setStudentsList(studentsList_autoloadedData);
+//   // console.log(studentsList_autoloadedData);
+// }
+// //今日の分のseatsState記録が残っていれば読み込み
+// const seatsState_bcup = await window.electron.ipcRenderer.invoke(
+//   "handle_seatsState",
+//   { mode: "read" }
+// );
+// console.log("read_seatsstate_bcup_result", seatsState_bcup);
+// seatsState_bcup && setSeatsState(seatsState_bcup);
+//今日の分のattendanceState記録が残っていれば読み込み
+// const attendanceState_bcup = await window.electron.ipcRenderer.invoke(
+//   "handle_attendanceState",
+//   { mode: "read" }
+// );
+// console.log("attendanceState_bcup_result", attendanceState_bcup);
+// attendanceState_bcup && setAttendanceState(attendanceState_bcup);
+//初回読み込みを完了、フラグを変更
+// isFirstReadSeatsStateBCUP.current = true;
+// isFirstReadAttendanceStateBCUP.current = true;
+//   };
+
+//   reloadProc();
+// }, []);

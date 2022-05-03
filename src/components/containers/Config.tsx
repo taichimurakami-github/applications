@@ -6,9 +6,11 @@ import "../styles/modules/Config.scss";
 import ConfigView from "../views/ConfigView";
 
 interface ConfigContainerProps {
-  onHandleStudentFile: React.Dispatch<React.SetStateAction<[] | studentsList>>;
+  onHandleStudentFile: React.Dispatch<
+    React.SetStateAction<null | studentsList>
+  >;
   onHandleAppState: (d: { [index: string]: any }) => void;
-  onReadStudentsList: React.Dispatch<React.SetStateAction<[] | studentsList>>;
+  onReadStudentsList: React.Dispatch<React.SetStateAction<null | studentsList>>;
   onHandleModalState: (t: modalState) => void;
   onHandleChangeAppLocalConfig: (arg: {
     fn_id?: string;
@@ -59,10 +61,7 @@ const Config: React.VFC<ConfigContainerProps> = (props) => {
     props.onHandleAppState({ now: "TOP" });
   };
 
-  const changeAppConfig = async (
-    e: React.MouseEvent<HTMLButtonElement>
-  ) => {
-
+  const changeAppConfig = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const modalContents = {
       fn_id: "",
       fn_value: false,
@@ -170,9 +169,8 @@ const Config: React.VFC<ConfigContainerProps> = (props) => {
   // useEffect(() => { console.log(topMessage) }, [topMessage]);
 
   return (
-
-    <ConfigView 
-      onHandleBackToTop={backToTop} 
+    <ConfigView
+      onHandleBackToTop={backToTop}
       onReadStudentsFile={readStudentsFile}
       onEraceAppData={eraceAppData}
       onChangeAppConfig={changeAppConfig}
@@ -182,7 +180,6 @@ const Config: React.VFC<ConfigContainerProps> = (props) => {
       isEraceAppDataTodayAllEnabled={localConfig_fn.stable.eraceAppDataTodayAll}
       isCancelOperationEnabled={localConfig_fn.stable.cancelOperation}
     />
-
   );
 };
 

@@ -14,8 +14,8 @@ interface SeatsModalProps {
     content: { [key: string]: string };
   }) => void;
   onSaveForExit: (i: string) => void;
-  seatsState: seatsState;
-  studentsList: studentsList;
+  seatsState: seatsState | null;
+  studentsList: studentsList | null;
 }
 
 const seatsModalState_initialValue: {
@@ -92,6 +92,10 @@ const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
     const activeSeatList = [];
     const othersList = [];
 
+    if (!seats || !props.studentsList) {
+      throw new Error("seats or studentsList is null");
+    }
+
     //active状態の席IDを配列に格納
     for (let key in props.seatsState) {
       //埋まっている席番号を格納
@@ -121,7 +125,7 @@ const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
           ];
         } else {
           //生徒IDが一致する生徒情報をデータシートのデータより取得
-          result = props.studentsList.filter((elem) => {
+          result = (props.studentsList as studentsList).filter((elem) => {
             return elem.id == seats[val].studentID;
           });
         }
