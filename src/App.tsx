@@ -1,13 +1,6 @@
 //module import
 import React, { useEffect, useState, useContext, createContext } from "react";
-import {
-  appConfig,
-  appState_initialValue,
-  studentsList_initialValue,
-  attendanceState_initialValue,
-  seatsState_initialValue,
-  modalState_initialValue,
-} from "./app.config";
+import { appConfig } from "./app.config";
 
 //React components import
 import { Top } from "./components/containers/Top";
@@ -19,207 +12,30 @@ import { Config } from "./components/containers/Config";
 import "./components/styles/modules/Top.scss";
 import "./components/styles/app.common.scss";
 import { resolve } from "path";
-import useSeatsState from "./hooks/useSeatsState";
-import useAttendanceState from "./hooks/useAttendanceState";
-import useStudentsListState from "./hooks/useStudentsListState";
-import useAppState from "./hooks/useAppState";
 import useEnterRecorder from "./hooks/useEnterRecorder";
-import useRecordExit from "./hooks/useExitRecorder";
 import useSeatsController from "./hooks/useSeatsController";
 import useCancelController from "./hooks/useCancelController";
-import useModalStateController from "./hooks/useModalStateController";
-import useModalState from "./hooks/useModalState";
+import useAppDataEracer from "./hooks/useAppDataEracer";
 
-export const AppStatesContext = createContext({});
+import { AppStateContext } from "./AppContainer";
+import useExitRecorder from "./hooks/useExitRecorder";
 
 // export
 
 const App: React.VFC = () => {
-  /**
-   * -------------------------------
-   *    React Hooks declearation
-   * -------------------------------
-   */
+  const {
+    appState,
+    setAppState,
+    resetAppState,
+    studentsList,
+    setStudentsList,
+    attendanceState,
+    seatsState,
+    modalState,
+    setModalState,
+    handleModalState,
+  }: AppStateContext = useContext(AppStateContext);
 
-  //アプリの動作状態を管理する変数
-  const { appState, setAppState, resetAppState } = useAppState(
-    appState_initialValue
-  );
-
-  //エクセルから取得した生徒情報(生徒名簿リストデータ)を格納しておく変数
-  const { studentsList, setStudentsList } = useStudentsListState(
-    studentsList_initialValue
-  );
-
-  //入退室記録のデータを保存しておく変数
-  const { attendanceState, setAttendanceState } = useAttendanceState(
-    attendanceState_initialValue
-  );
-
-  //現在の座席状況を管理する変数
-  const { seatsState, setSeatsState } = useSeatsState(seatsState_initialValue);
-
-  //モーダル管理変数
-  // const [modalState, setModalState] = useState<modalState>(
-  //   modalState_initialValue
-  // );
-
-  const { modalState, setModalState } = useModalState(modalState_initialValue);
-
-  /**
-   * function handleEraceAppData()
-   *
-   * 本日の分の、アプリのローカルデータを完全に削除する
-   * ※削除されるのはアプリ起動日1日分のみ
-   *
-   */
-  const handleEraceAppData = async () => {
-    console.log("erace");
-    await window.electron.ipcRenderer.invoke("handle_eraceAppLocalData");
-    setModalState({
-      active: true,
-      name: appConfig.modalCodeList["1001"],
-      content: {
-        //アプリデータ削除完了
-        confirmCode: appConfig.confirmCodeList["2005"],
-      },
-    });
-  };
-
-  /**
-   * function handleModalState()
-   *
-   * モーダルの表示を管理する関数
-   * 引数tはactive, nameキーと、モーダルごとに異なるcontentキーを持つオブジェクトとする
-   *
-   * @param {object} t
-   * @returns {void}
-   */
-  const handleModalState = (t: modalState): void => {
-    useModalStateController(t, setModalState);
-  };
-
-  /**
-   * function handleSaveAttendanceForEnter()
-   *
-   * 入室記録を保存する関数
-   *
-   * @param {string} i : TARGET STUDENT ID (studentsList student.id)
-   */
-  const handleSaveAttendanceForEnter = (i: string) => {
-    if (!seatsState || !attendanceState) {
-      throw new Error("error: seatsState or attendanceState is null");
-    }
-
-    useEnterRecorder(
-      i,
-      appState,
-      seatsState,
-      attendanceState,
-      resetAppState,
-      setSeatsState,
-      setModalState,
-      setAttendanceState
-    );
-  };
-
-  /**
-   * function handleSaveAttendanceForExit()
-   *
-   * 退室記録を保存する関数
-   *
-   * @param {string} i : SELECTED SEAT ID
-   */
-  const handleSaveAttendanceForExit = (i: string) => {
-    /**
-     * ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     * エラー！seatsState or attendanceStateが読み込めていません
-     * ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     */
-    if (!seatsState || !attendanceState) {
-      return setModalState({
-        active: true,
-        name: appConfig.modalCodeList["1002"],
-        content: {},
-      });
-    }
-
-    useRecordExit(
-      i,
-      seatsState,
-      attendanceState,
-      setAttendanceState,
-      resetAppState,
-      setSeatsState,
-      setModalState
-    );
-  };
-
-  /**
-   * function handleSeatOperation()
-   * @param {object}
-   * {
-   *    mode: {String},
-   *    content: {Object}
-   * }
-   * @returns
-   */
-  const handleSeatOperation = (arg: { mode: string; content: any }): void => {
-    if (!attendanceState || !seatsState) {
-      return;
-    }
-
-    console.log("activate fn handleSeatOperation()");
-
-    useSeatsController(
-      arg,
-      seatsState,
-      attendanceState,
-      setSeatsState,
-      setAttendanceState,
-      setModalState
-    );
-  };
-
-  /**
-   * function handleCancelOparation()
-   *
-   * 一つ前の操作を取り消す関数
-   * 今の所、一旦取り消したらもとに戻すことはできないし、
-   * 一つ前以上の操作を取り消すことはできない
-   *
-   * @returns {void}
-   */
-  const handleCancelOperation = () => {
-    if (!attendanceState || !seatsState) {
-      return;
-    }
-
-    console.log("launching cancel oparation...");
-
-    useCancelController(
-      appState,
-      seatsState,
-      attendanceState,
-      resetAppState,
-      setSeatsState,
-      setModalState,
-      setAttendanceState
-    );
-  };
-
-  /**
-   * function handleChangeAppLocalConfig()
-   *
-   * appLocalConfigに保存するデータを変更する
-   * 複数項目の変更を考慮し、変更項目と変更内容を格納したオブジェクトを引数に渡す
-   *
-   * @param {array} args
-   *
-   * {
-   *   target: array
-   * }
-   */
   const handleChangeAppLocalConfig = async (arg: {
     fn_id?: string;
     fn_status?: string;
@@ -258,7 +74,6 @@ const App: React.VFC = () => {
         return (
           <Top
             onHandleAppState={handleAppState}
-            // onHandleSeatsState={handleSeatsState}
             onHandleModalState={handleModalState}
             appState={appState}
             seatsState={seatsState as seatsState}
@@ -269,7 +84,7 @@ const App: React.VFC = () => {
       case "STUDENT":
         return (
           <SelectData
-            onSaveAttendance={handleSaveAttendanceForEnter}
+            onSaveAttendance={useEnterRecorder}
             onResetAppState={resetAppState}
             onHandleModalState={handleModalState}
             appState={appState}
@@ -296,12 +111,6 @@ const App: React.VFC = () => {
         );
     }
   };
-
-  /**
-   * -------------------------------
-   *      useEffect functions
-   * -------------------------------
-   */
 
   //生徒情報ファイルが読み込まれていない時は、エラーモーダルを最初に表示
   useEffect(() => {
@@ -346,35 +155,20 @@ const App: React.VFC = () => {
 
   return (
     <div className="App">
-      <AppStatesContext.Provider
-        value={{
-          appState,
-          setAppState,
-          seatsState,
-          setSeatsState,
-          attendanceState,
-          setAttendanceState,
-          studentsList,
-          setStudentsList,
-          modalState,
-          setModalState,
-        }}
-      >
-        {handleComponent()}
-        <ModalWrapper
-          onHandleAppState={handleAppState}
-          onHandleModalState={handleModalState}
-          onSaveForEnter={handleSaveAttendanceForEnter}
-          onSaveForExit={handleSaveAttendanceForExit}
-          onEraceAppData={handleEraceAppData}
-          onCancelOperation={handleCancelOperation}
-          onHandleSeatOperation={handleSeatOperation}
-          studentsList={studentsList}
-          modalState={modalState}
-          seatsState={seatsState}
-          appState={appState}
-        />
-      </AppStatesContext.Provider>
+      {handleComponent()}
+      <ModalWrapper
+        onHandleAppState={handleAppState}
+        onHandleModalState={handleModalState}
+        onSaveForEnter={useEnterRecorder}
+        onSaveForExit={useExitRecorder}
+        onEraceAppData={useAppDataEracer}
+        onCancelOperation={useCancelController}
+        onHandleSeatOperation={useSeatsController}
+        studentsList={studentsList}
+        modalState={modalState}
+        seatsState={seatsState}
+        appState={appState}
+      />
     </div>
   );
 };

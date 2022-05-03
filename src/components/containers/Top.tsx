@@ -8,7 +8,6 @@ interface TopComponentProps {
   studentsList: studentsList;
   seatsState: seatsState;
   onHandleAppState: (d: { [index: string]: any }) => void;
-  // onHandleSeatState: VoidFunction,
   onHandleModalState: (t: modalState) => void;
 }
 
@@ -22,7 +21,6 @@ export const Top: React.VFC<TopComponentProps> = (props) => {
 
     //activeの席をクリックしたときは何もしない
     if (props.seatsState[targetElem.id].active) return;
-    // e.target.classList.add("active");
 
     props.onHandleAppState({
       selectedElement: e.target,

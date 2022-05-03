@@ -5,6 +5,15 @@ const useModalState = (modalState_initialValue: modalState) => {
     modalState_initialValue
   );
 
+  /**
+   * function handleModalState()
+   *
+   * モーダルの表示を管理する関数
+   * 引数tはactive, nameキーと、モーダルごとに異なるcontentキーを持つオブジェクトとする
+   *
+   * @param {object} t
+   * @returns {void}
+   */
   const handleModalState = useCallback((t: modalState) => {
     //t.active = falseだった場合：modalStateをリセットする
     if (!t.active) {

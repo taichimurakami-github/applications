@@ -1,16 +1,31 @@
+import { useContext } from "react";
 import { appConfig } from "../app.config";
+import { AppStateContext } from "../AppContainer";
 
-const useCancelController = (
-  appState: appState,
-  seatsState: seatsState,
-  attendanceState: attendanceState,
-  resetAppState: (arg: { mode: "APPLOG" | "DEFAULT"; content?: any }) => void,
-  setSeatsState: React.Dispatch<React.SetStateAction<seatsState | null>>,
-  setModalState: React.Dispatch<React.SetStateAction<modalState>>,
-  setAttendanceState: React.Dispatch<
-    React.SetStateAction<attendanceState | null>
-  >
-) => {
+/**
+ * function handleCancelOparation()
+ *
+ * 一つ前の操作を取り消す関数
+ * 今の所、一旦取り消したらもとに戻すことはできないし、
+ * 一つ前以上の操作を取り消すことはできない
+ *
+ * @returns {void}
+ */
+const useCancelController = () => {
+  const {
+    appState,
+    seatsState,
+    attendanceState,
+    resetAppState,
+    setSeatsState,
+    setModalState,
+    setAttendanceState,
+  }: AppStateContext = useContext(AppStateContext);
+
+  if (!attendanceState) {
+    throw new Error("attendanceState is null");
+  }
+
   //appState.appLogがnullだった場合、return
   if (!appState.appLog) return;
 

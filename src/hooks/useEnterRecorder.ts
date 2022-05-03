@@ -1,17 +1,39 @@
+import { useContext } from "react";
 import { appConfig } from "../app.config";
+import { AppStateContext } from "../AppContainer";
 
+/**
+ * function handleSaveAttendanceForEnter()
+ *
+ * 入室記録を保存する関数
+ *
+ * @param {string} i : TARGET STUDENT ID (studentsList student.id)
+ */
 const useEnterRecorder = (
-  i: string,
-  appState: appState,
-  seatsState: seatsState,
-  attendanceState: attendanceState,
-  resetAppState: (arg: { mode: "APPLOG" | "DEFAULT"; content?: any }) => void,
-  setSeatsState: React.Dispatch<React.SetStateAction<seatsState | null>>,
-  setModalState: React.Dispatch<React.SetStateAction<modalState>>,
-  setAttendanceState: React.Dispatch<
-    React.SetStateAction<attendanceState | null>
-  >
+  i: string
+  // appState: appState,
+  // seatsState: seatsState,
+  // attendanceState: attendanceState,
+  // resetAppState: (arg: { mode: "APPLOG" | "DEFAULT"; content?: any }) => void,
+  // setSeatsState: React.Dispatch<React.SetStateAction<seatsState | null>>,
+  // setModalState: React.Dispatch<React.SetStateAction<modalState>>,
+  // setAttendanceState: React.Dispatch<
+  //   React.SetStateAction<attendanceState | null>
+  // >
 ) => {
+  const {
+    appState,
+    seatsState,
+    attendanceState,
+    resetAppState,
+    setSeatsState,
+    setAttendanceState,
+    setModalState,
+  }: AppStateContext = useContext(AppStateContext);
+
+  if (!attendanceState) {
+    throw new Error("state is empty");
+  }
   console.log("出席処理を開始します...");
   //時刻を定義
   const now = new Date();

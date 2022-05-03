@@ -1,15 +1,38 @@
+import { useContext } from "react";
 import { appConfig, seatsState_initialValue } from "../app.config";
+import { AppStateContext } from "../AppContainer";
 
+/**
+ * function handleSeatOperation()
+ * @param {object}
+ * {
+ *    mode: {String},
+ *    content: {Object}
+ * }
+ * @returns
+ */
 const useSeatsController = (
-  arg: { mode: string; content: any },
-  seatsState: seatsState,
-  attendanceState: attendanceState,
-  setSeatsState: React.Dispatch<React.SetStateAction<seatsState | null>>,
-  setAttendanceState: React.Dispatch<
-    React.SetStateAction<attendanceState | null>
-  >,
-  setModalState: React.Dispatch<React.SetStateAction<modalState>>
+  arg: { mode: string; content: any }
+  // seatsState: seatsState,
+  // attendanceState: attendanceState,
+  // setSeatsState: React.Dispatch<React.SetStateAction<seatsState | null>>,
+  // setAttendanceState: React.Dispatch<
+  //   React.SetStateAction<attendanceState | null>
+  // >,
+  // setModalState: React.Dispatch<React.SetStateAction<modalState>>
 ) => {
+  const {
+    seatsState,
+    attendanceState,
+    setSeatsState,
+    setModalState,
+    setAttendanceState,
+  }: AppStateContext = useContext(AppStateContext);
+
+  if (!seatsState || !attendanceState) {
+    throw new Error("state is empty");
+  }
+
   if (arg.mode === appConfig.seatOperationCodeList["1001"]) {
     const nowSeatID: string = arg.content.nowSeatID;
     const nextSeatID: string = arg.content.nextSeatID;

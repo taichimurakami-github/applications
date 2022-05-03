@@ -1,14 +1,36 @@
+import { useContext } from "react";
 import { appConfig } from "../app.config";
+import { AppStateContext } from "../AppContainer";
 
+/**
+ * function handleSaveAttendanceForExit()
+ *
+ * 退室記録を保存する関数
+ *
+ * @param {string} i : SELECTED SEAT ID
+ */
 const useExitRecorder = (
-  i: string,
-  seatsState: seatsState,
-  attendanceState: attendanceState,
-  setAttendanceState: any,
-  resetAppState: (arg: { mode: "APPLOG" | "DEFAULT"; content?: any }) => void,
-  setSeatsState: React.Dispatch<React.SetStateAction<seatsState | null>>,
-  setModalState: React.Dispatch<React.SetStateAction<modalState>>
+  i: string
+  // seatsState: seatsState,
+  // attendanceState: attendanceState,
+  // setAttendanceState: any,
+  // resetAppState: (arg: { mode: "APPLOG" | "DEFAULT"; content?: any }) => void,
+  // setSeatsState: React.Dispatch<React.SetStateAction<seatsState | null>>,
+  // setModalState: React.Dispatch<React.SetStateAction<modalState>>
 ) => {
+  const {
+    seatsState,
+    attendanceState,
+    resetAppState,
+    setSeatsState,
+    setAttendanceState,
+    setModalState,
+  }: AppStateContext = useContext(AppStateContext);
+
+  if (!seatsState || !attendanceState) {
+    throw new Error("state is empty");
+  }
+
   console.log("退席処理を開始します...");
   const insertObjectForSeatsState: { [index: string]: any } = {};
   insertObjectForSeatsState[i] = {
