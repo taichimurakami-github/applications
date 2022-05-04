@@ -1,32 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { appConfig } from "../../app.config";
+import { AppStateContext } from "../../AppContainer";
+import useStudentsFileReader from "../../hooks/controllers/useStudentsFileReader";
 
 //style import
 import "../styles/modules/Config.scss";
 import ConfigView from "../views/ConfigView";
 
 interface ConfigContainerProps {
-  onHandleStudentFile: React.Dispatch<
-    React.SetStateAction<null | studentsList>
-  >;
+  // onHandleStudentFile: React.Dispatch<
+  //   React.SetStateAction<null | studentsList>
+  // >;
+  // onReadStudentsList: React.Dispatch<React.SetStateAction<null | studentsList>>;
+  // onHandleModalState: (t: modalState) => void;
   onHandleAppState: (d: { [index: string]: any }) => void;
-  onReadStudentsList: React.Dispatch<React.SetStateAction<null | studentsList>>;
-  onHandleModalState: (t: modalState) => void;
   onHandleChangeAppLocalConfig: (arg: {
     fn_id?: string;
     fn_status?: string;
     fn_value?: boolean;
     msg?: string;
   }) => Promise<void>;
-  appState: appState;
+  // appState: appState;
 }
 
 const Config: React.VFC<ConfigContainerProps> = (props) => {
-  const localConfig_fn = props.appState.localConfig.fn;
+  const { appState, handleModalState }: AppStateContext =
+    useContext(AppStateContext);
+
+  const studentsFileReader = useStudentsFileReader();
 
   const [topMessage, setTopMessage] = useState<string>(
-    props.appState.localConfig.msg
+    appState.localConfig.msg
   );
+
+  const localConfig_fn = appState.localConfig.fn;
 
   const changeTopMessage = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setTopMessage(e.target.value);
@@ -40,7 +47,7 @@ const Config: React.VFC<ConfigContainerProps> = (props) => {
       msg: topMessage,
     });
 
-    const changedAppState = { ...props.appState };
+    const changedAppState = { ...appState };
 
     changedAppState.localConfig.msg = topMessage;
     changedAppState.now = "TOP";
@@ -48,7 +55,7 @@ const Config: React.VFC<ConfigContainerProps> = (props) => {
       ...changedAppState,
     });
 
-    props.onHandleModalState({
+    handleModalState({
       active: true,
       name: appConfig.modalCodeList["1001"],
       content: {
@@ -99,7 +106,7 @@ const Config: React.VFC<ConfigContainerProps> = (props) => {
     }
 
     //モーダル表示
-    props.onHandleModalState({
+    handleModalState({
       active: true,
       name: appConfig.modalCodeList["1001"],
       content: {
@@ -110,7 +117,7 @@ const Config: React.VFC<ConfigContainerProps> = (props) => {
   };
 
   const eraceAppData = () => {
-    props.onHandleModalState({
+    handleModalState({
       active: true,
       name: appConfig.modalCodeList["1001"],
       content: {
@@ -119,51 +126,51 @@ const Config: React.VFC<ConfigContainerProps> = (props) => {
     });
   };
 
-  const readStudentsFile = () => {
-    const debugInput = document.createElement("input");
-    // const acceptFileTypeList = [".xlsx", ".csv"];
+  // const readStudentsFile = () => {
+  //   const debugInput = document.createElement("input");
+  //   // const acceptFileTypeList = [".xlsx", ".csv"];
 
-    debugInput.type = "file";
-    debugInput.click();
-    debugInput.addEventListener("change", async (e) => {
-      const input = e.target as HTMLInputElement;
-      const result = await window.electron.ipcRenderer.invoke(
-        "handle_studentsList",
-        {
-          mode: "changeConfigPath",
-          data: input.files === null ? null : input.files[0].path,
-        }
-      );
+  //   debugInput.type = "file";
+  //   debugInput.click();
+  //   debugInput.addEventListener("change", async (e) => {
+  //     const input = e.target as HTMLInputElement;
+  //     const result = await window.electron.ipcRenderer.invoke(
+  //       "handle_studentsList",
+  //       {
+  //         mode: "changeConfigPath",
+  //         data: input.files === null ? null : input.files[0].path,
+  //       }
+  //     );
 
-      // console.log(result);
-      //成功した場合
-      if (result === true) {
-        props.onHandleModalState({
-          active: true,
-          name: appConfig.modalCodeList["1001"],
-          content: {
-            confirmCode: appConfig.confirmCodeList["2004"],
-          },
-        });
-        const studentsList_loadedData =
-          await window.electron.ipcRenderer.invoke("handle_studentsList", {
-            mode: "read",
-          });
-        studentsList_loadedData &&
-          props.onReadStudentsList(studentsList_loadedData);
-      }
-      //失敗した場合
-      else {
-        props.onHandleModalState({
-          active: true,
-          name: appConfig.modalCodeList["1002"],
-          content: {
-            errorCode: appConfig.errorCodeList["2001"],
-          },
-        });
-      }
-    });
-  };
+  //     // console.log(result);
+  //     //成功した場合
+  //     if (result === true) {
+  //       handleModalState({
+  //         active: true,
+  //         name: appConfig.modalCodeList["1001"],
+  //         content: {
+  //           confirmCode: appConfig.confirmCodeList["2004"],
+  //         },
+  //       });
+  //       const studentsList_loadedData =
+  //         await window.electron.ipcRenderer.invoke("handle_studentsList", {
+  //           mode: "read",
+  //         });
+  //       studentsList_loadedData &&
+  //         props.onReadStudentsList(studentsList_loadedData);
+  //     }
+  //     //失敗した場合
+  //     else {
+  //       handleModalState({
+  //         active: true,
+  //         name: appConfig.modalCodeList["1002"],
+  //         content: {
+  //           errorCode: appConfig.errorCodeList["2001"],
+  //         },
+  //       });
+  //     }
+  //   });
+  // };
 
   //デバッグ用関数
   // useEffect(() => { console.log(topMessage) }, [topMessage]);
@@ -171,7 +178,7 @@ const Config: React.VFC<ConfigContainerProps> = (props) => {
   return (
     <ConfigView
       onHandleBackToTop={backToTop}
-      onReadStudentsFile={readStudentsFile}
+      onReadStudentsFile={studentsFileReader}
       onEraceAppData={eraceAppData}
       onChangeAppConfig={changeAppConfig}
       onChangeTopMessage={changeTopMessage}

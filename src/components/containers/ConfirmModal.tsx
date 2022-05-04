@@ -1,46 +1,55 @@
+import { useContext } from "react";
 import { randomComments } from "../../app.config";
 import { appConfig } from "../../app.config";
+import { AppStateContext } from "../../AppContainer";
+import useCancelController from "../../hooks/controllers/useCancelController";
+import useEnterRecorder from "../../hooks/controllers/useEnterRecorder";
+import useExitRecorder from "../../hooks/controllers/useExitRecorder";
 
 interface ConfirmModalProps {
   content: modalStateContent;
   onCloseModal: () => void;
   onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>;
-  onSaveForEnter: (i: string) => void;
-  onSaveForExit: (i: string) => void;
-  onEraceAppData: () => Promise<void>;
-  onCancelOperation: () => void;
-  seatsState: seatsState | null;
-  studentsList: studentsList | null;
+  // onSaveForEnter: (i: string) => void;
+  // onSaveForExit: (i: string) => void;
+  // onEraceAppData: () => Promise<void>;
+  // onCancelOperation: () => void;
+  // seatsState: seatsState | null;
+  // studentsList: studentsList | null;
 }
 
 const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
+  const { seatsState, studentsList } = useContext(AppStateContext);
+  const enterRecorder = useEnterRecorder();
+  const exitRecorder = useExitRecorder();
+  const cancelController = useCancelController();
   //props.content.targetIDが未設定の時はエラーを吐く
-  const onSaveAttendanceForEnter = () => {
-    if (props.content.targetID) props.onSaveForEnter(props.content.targetID);
-    else
-      throw new Error(
-        "invalid props.content.targetID value: undefined has passed."
-      );
-  };
-  const onSaveAttendanceForExit = () => {
-    if (props.content.targetID) props.onSaveForExit(props.content.targetID);
-    else
-      throw new Error(
-        "invalid props.content.targetID value: undefined has passed."
-      );
-  };
+  // const onSaveAttendanceForEnter = () => {
+  //   if (props.content.targetID) props.onSaveForEnter(props.content.targetID);
+  //   else
+  //     throw new Error(
+  //       "invalid props.content.targetID value: undefined has passed."
+  //     );
+  // };
+  // const onSaveAttendanceForExit = () => {
+  //   if (props.content.targetID) props.onSaveForExit(props.content.targetID);
+  //   else
+  //     throw new Error(
+  //       "invalid props.content.targetID value: undefined has passed."
+  //     );
+  // };
 
-  const onEraceAppData = () => props.onEraceAppData();
-  const onCancelOperation = () => props.onCancelOperation();
+  // const onEraceAppData = () => props.onEraceAppData();
+  // const onCancelOperation = () => props.onCancelOperation();
   const closeModal = () => props.onCloseModal();
 
   const getStudentInfoFromStudentID = (studentID: string) => {
-    if (!props.studentsList) {
+    if (!studentsList) {
       return console.log("studentsList null");
     }
 
     return studentID !== "__OTHERS__"
-      ? props.studentsList.filter((val: { [index: string]: string }) => {
+      ? studentsList.filter((val: { [index: string]: string }) => {
           return val.id == studentID;
         })[0]
       : { id: "__OTHERS__", name: "(関係者その他)" };
@@ -56,7 +65,12 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
               本当に {props.content.targetData?.name} さんでよろしいですか？
             </p>
             <p>「はい」を押すと入室します</p>
-            <button className="btn btn__yes" onClick={onSaveAttendanceForEnter}>
+            <button
+              className="btn btn__yes"
+              onClick={() => {
+                enterRecorder(props.content.targetID);
+              }}
+            >
               はい
             </button>
             <button className="btn btn__no" onClick={closeModal}>
@@ -67,7 +81,7 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
 
       //退室処理を実行
       case appConfig.confirmCodeList["1002"]:
-        if (!props.seatsState) {
+        if (!seatsState) {
           console.log("studentsList null");
           return undefined;
         }
@@ -81,7 +95,7 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
           throw new Error("invalid props.content.targetID value: undefined");
 
         const targetInfo = getStudentInfoFromStudentID(
-          props.seatsState[props.content.targetID].studentID
+          seatsState[props.content.targetID].studentID
         );
 
         // console.log(targetInfo);
@@ -90,7 +104,12 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
           <div className="exit-confirm-selector-container">
             <p>本当に {targetInfo?.name} さんでよろしいですか？</p>
             <p>「はい」を押すと退室します</p>
-            <button className="btn btn__yes" onClick={onSaveAttendanceForExit}>
+            <button
+              className="btn btn__yes"
+              onClick={() => {
+                exitRecorder(props.content.targetID);
+              }}
+            >
               はい
             </button>
             <button className="btn btn__no" onClick={closeModal}>
@@ -107,7 +126,7 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
             <p>※この機能はアプリの動作が不安定な場合のみ使用してください※</p>
             <p>一度削除したデータはもとに戻せません。本当によろしいですか？</p>
 
-            <button className="btn btn__yes" onClick={onEraceAppData}>
+            <button className="btn btn__yes" onClick={cancelController}>
               はい
             </button>
             <button className="btn btn__no" onClick={closeModal}>
@@ -126,7 +145,7 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
               <b>{props.content.currentOperation}</b>しました
             </p>
             <p>※一度取り消すと元に戻せません</p>
-            <button className="btn btn__yes" onClick={onCancelOperation}>
+            <button className="btn btn__yes" onClick={cancelController}>
               はい
             </button>
             <button className="btn btn__no" onClick={closeModal}>

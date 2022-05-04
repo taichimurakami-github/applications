@@ -12,6 +12,7 @@ const useSeatsState = (seatsState_initialValue: seatsState) => {
         { mode: "read" }
       );
       console.log("read_seatsstate_bcup_result", seatsState_bcup);
+      console.log(seatsState_bcup);
       setSeatsState(
         seatsState_bcup ? seatsState_bcup : seatsState_initialValue
       );

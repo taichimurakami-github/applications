@@ -34,6 +34,10 @@ const useAppState = (appState_initialValue: appState) => {
     []
   );
 
+  //appState, seatStateを変更する
+  const handleAppState = (d: { [index: string]: any }) =>
+    setAppState({ ...appState, ...d });
+
   useEffect(() => {
     (async () => {
       //アプリのローカルファイルからアプリデータを取得
@@ -51,7 +55,7 @@ const useAppState = (appState_initialValue: appState) => {
       }
     })();
   }, []);
-  return { appState, setAppState, resetAppState };
+  return { appState, setAppState, resetAppState, handleAppState };
 };
 
 export default useAppState;

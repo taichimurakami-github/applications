@@ -15,6 +15,7 @@ const useStudentsListState = (studentsList_initialValue: studentsList) => {
           mode: "read",
         });
 
+      console.log(studentsList_autoloadedData);
       if (studentsList_autoloadedData) {
         // const convertedStudentsList = [];
         //keyが数値のオブジェクトが手渡されるので、

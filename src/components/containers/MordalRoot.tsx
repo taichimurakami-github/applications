@@ -4,31 +4,21 @@ import { SeatsModal } from "./SeatsModal";
 import { ConfirmModal } from "./ConfirmModal";
 import { NewsModal } from "./NewsModal";
 import { appConfig } from "../../app.config";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 //import styles
 import "../styles/modal.scss";
+import { AppStateContext } from "../../AppContainer";
 
-interface ModalRootProps {
-  onHandleAppState: (d: { [index: string]: any }) => void;
-  onHandleModalState: (t: modalState) => void;
-  onSaveForEnter: (i: string) => void;
-  onSaveForExit: (i: string) => void;
-  onEraceAppData: () => Promise<void>;
-  onCancelOperation: () => void;
-  onHandleSeatOperation: (arg: { mode: string; content: any }) => void;
-  appState: appState;
-  studentsList: studentsList | null;
-  modalState: modalState;
-  seatsState: seatsState | null;
-}
-
-export const ModalRoot: React.VFC<ModalRootProps> = (props) => {
+export const ModalRoot: React.VFC = (props) => {
   const [BackgroundClose, setBackgroundClose] = useState(true);
+
+  const { modalState, handleModalState }: AppStateContext =
+    useContext(AppStateContext);
 
   //モーダル消去用関数
   const closeModal = () =>
-    props.onHandleModalState({ active: false, name: "", content: {} });
+    handleModalState({ active: false, name: "", content: {} });
 
   //背景をクリックしてモーダル消去
   const closeModalWithBgClose = (
@@ -40,21 +30,15 @@ export const ModalRoot: React.VFC<ModalRootProps> = (props) => {
   };
 
   const handleModal = () => {
-    if (props.modalState.active) {
+    if (modalState.active) {
       // console.log(props.modalState);
-      switch (props.modalState.name) {
+      switch (modalState.name) {
         case appConfig.modalCodeList["1001"]:
           return (
             <ConfirmModal
-              content={props.modalState.content}
+              content={modalState.content}
               onCloseModal={closeModal}
               onHandleBgClose={setBackgroundClose}
-              onSaveForEnter={props.onSaveForEnter}
-              onSaveForExit={props.onSaveForExit}
-              onEraceAppData={props.onEraceAppData}
-              onCancelOperation={props.onCancelOperation}
-              seatsState={props.seatsState}
-              studentsList={props.studentsList}
             />
           );
 
@@ -63,8 +47,7 @@ export const ModalRoot: React.VFC<ModalRootProps> = (props) => {
             <ErrorModal
               onCloseModal={closeModal}
               onHandleBgClose={setBackgroundClose}
-              onHandleAppState={props.onHandleAppState}
-              content={props.modalState.content}
+              content={modalState.content}
             />
           );
 
@@ -73,18 +56,11 @@ export const ModalRoot: React.VFC<ModalRootProps> = (props) => {
             <SeatsModal
               onCloseModal={closeModal}
               onHandleBgClose={setBackgroundClose}
-              onHandleModalState={props.onHandleModalState}
-              onHandleSeatOperation={props.onHandleSeatOperation}
-              onSaveForExit={props.onSaveForExit}
-              seatsState={props.seatsState}
-              studentsList={props.studentsList}
             />
           );
 
         case appConfig.modalCodeList["1004"]:
-          return (
-            <NewsModal onCloseModal={closeModal} appState={props.appState} />
-          );
+          return <NewsModal onCloseModal={closeModal} />;
 
         default:
           console.log("invalid modalCode has been passed");
@@ -95,7 +71,7 @@ export const ModalRoot: React.VFC<ModalRootProps> = (props) => {
 
   return (
     <>
-      {props.modalState.active ? (
+      {modalState.active ? (
         <div
           id="modalWrapper"
           onClick={closeModalWithBgClose}

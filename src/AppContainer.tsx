@@ -1,4 +1,4 @@
-import { createContext, ReactChild, ReactChildren } from "react";
+import { createContext, ReactChild, ReactChildren, useCallback } from "react";
 import App from "./App";
 import {
   appState_initialValue,
@@ -7,15 +7,15 @@ import {
   seatsState_initialValue,
   studentsList_initialValue,
 } from "./app.config";
-import useAppState from "./hooks/useAppState";
-import useAttendanceState from "./hooks/useAttendanceState";
-import useModalState from "./hooks/useModalState";
-import useSeatsState from "./hooks/useSeatsState";
-import useStudentsListState from "./hooks/useStudentsListState";
+import useAppState from "./hooks/states/useAppState";
+import useAttendanceState from "./hooks/states/useAttendanceState";
+import useModalState from "./hooks/states/useModalState";
+import useSeatsState from "./hooks/states/useSeatsState";
+import useStudentsListState from "./hooks/states/useStudentsListState";
 
 export const AppStateContext = createContext<any>(null);
 
-const AppContainer = (props: { children: ReactChildren }) => {
+const AppContainer: React.VFC = (props) => {
   /**
    * -------------------------------
    *    React Hooks declearation
@@ -23,7 +23,7 @@ const AppContainer = (props: { children: ReactChildren }) => {
    */
 
   //アプリの動作状態を管理する変数
-  const { appState, setAppState, resetAppState } = useAppState(
+  const { appState, setAppState, resetAppState, handleAppState } = useAppState(
     appState_initialValue
   );
 
@@ -41,9 +41,39 @@ const AppContainer = (props: { children: ReactChildren }) => {
   const { seatsState, setSeatsState } = useSeatsState(seatsState_initialValue);
 
   //モーダル管理変数
-  const { modalState, setModalState, handleModalState } = useModalState(
-    modalState_initialValue
-  );
+  const { modalState, setModalState } = useModalState(modalState_initialValue);
+
+  /**
+   * function handleModalState()
+   *
+   * モーダルの表示を管理する関数
+   * 引数tはactive, nameキーと、モーダルごとに異なるcontentキーを持つオブジェクトとする
+   *
+   * @param {object} t
+   * @returns {void}
+   */
+  const handleModalState = useCallback((t: modalState) => {
+    //t.active = falseだった場合：modalStateをリセットする
+    if (!t.active) {
+      setModalState(modalState_initialValue);
+      return;
+    }
+
+    //その他：引数に従ってモーダルを起動
+    if (t.active && t.name !== "" && t.content !== {}) {
+      setModalState({
+        active: true,
+        name: t.name,
+        content: t.content,
+      });
+      return;
+    }
+
+    //正しく引数が指定されていない場合はエラー
+    throw new Error(
+      "handleModal argument type error in App.js: you need to include active, name, content properties those are truthy."
+    );
+  }, []);
 
   return (
     <AppStateContext.Provider
@@ -51,6 +81,7 @@ const AppContainer = (props: { children: ReactChildren }) => {
         appState: appState,
         setAppState,
         resetAppState,
+        handleAppState,
         studentsList: studentsList,
         setStudentsList,
         attendanceState: attendanceState,
@@ -59,6 +90,7 @@ const AppContainer = (props: { children: ReactChildren }) => {
         setSeatsState,
         modalState: modalState,
         setModalState,
+        handleModalState,
       }}
     >
       <App></App>

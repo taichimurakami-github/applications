@@ -1,6 +1,5 @@
 //module import
-import React, { useEffect, useState, useContext, createContext } from "react";
-import { appConfig } from "./app.config";
+import React, { useContext } from "react";
 
 //React components import
 import { Top } from "./components/containers/Top";
@@ -12,29 +11,22 @@ import { Config } from "./components/containers/Config";
 import "./components/styles/modules/Top.scss";
 import "./components/styles/app.common.scss";
 import { resolve } from "path";
-import useEnterRecorder from "./hooks/useEnterRecorder";
-import useSeatsController from "./hooks/useSeatsController";
-import useCancelController from "./hooks/useCancelController";
-import useAppDataEracer from "./hooks/useAppDataEracer";
 
 import { AppStateContext } from "./AppContainer";
-import useExitRecorder from "./hooks/useExitRecorder";
-
-// export
+import useAutoDataReadChecker from "./hooks/controllers/useAutoDataReadChecker";
+import useAutoFileWriter from "./hooks/controllers/useAutoFileWriter";
 
 const App: React.VFC = () => {
   const {
     appState,
     setAppState,
-    resetAppState,
     studentsList,
-    setStudentsList,
-    attendanceState,
     seatsState,
-    modalState,
-    setModalState,
     handleModalState,
   }: AppStateContext = useContext(AppStateContext);
+
+  console.log("test");
+  console.log(appState, studentsList, handleModalState);
 
   const handleChangeAppLocalConfig = async (arg: {
     fn_id?: string;
@@ -74,34 +66,21 @@ const App: React.VFC = () => {
         return (
           <Top
             onHandleAppState={handleAppState}
-            onHandleModalState={handleModalState}
-            appState={appState}
-            seatsState={seatsState as seatsState}
-            studentsList={studentsList as studentsList}
+            // onHandleModalState={handleModalState}
+            // appState={appState}
+            // seatsState={seatsState as seatsState}
+            // studentsList={studentsList as studentsList}
           />
         );
 
       case "STUDENT":
-        return (
-          <StudentDataSelector
-            onSaveAttendance={useEnterRecorder}
-            onResetAppState={resetAppState}
-            onHandleModalState={handleModalState}
-            appState={appState}
-            studentsList={studentsList as studentsList}
-            seatsState={seatsState as seatsState}
-          />
-        );
+        return <StudentDataSelector />;
 
       case "CONFIG":
         return (
           <Config
-            onHandleStudentFile={setStudentsList}
             onHandleAppState={handleAppState}
-            onReadStudentsList={setStudentsList}
-            onHandleModalState={handleModalState}
             onHandleChangeAppLocalConfig={handleChangeAppLocalConfig}
-            appState={appState}
           />
         );
 
@@ -112,63 +91,16 @@ const App: React.VFC = () => {
     }
   };
 
-  //生徒情報ファイルが読み込まれていない時は、エラーモーダルを最初に表示
-  useEffect(() => {
-    if (!studentsList) {
-      setModalState({
-        active: true,
-        name: appConfig.modalCodeList["1002"],
-        content: {
-          errorCode: appConfig.errorCodeList["1001"],
-        },
-      });
-    } else {
-      modalState.active &&
-        modalState.name === appConfig.modalCodeList["1002"] &&
-        modalState.content.errorCode === appConfig.errorCodeList["1001"] &&
-        setModalState({
-          active: false,
-          name: "",
-          content: {},
-        });
-    }
-  }, [studentsList]);
+  // //生徒情報ファイルが読み込まれていない時は、エラーモーダルを最初に表示
+  useAutoDataReadChecker();
 
-  //バックアップ兼記録ファイル 自動書き出し
-  useEffect(() => {
-    (async () => {
-      //attendanceState書き出し
-      attendanceState &&
-        (await window.electron.ipcRenderer.invoke("handle_attendanceState", {
-          mode: "write",
-          data: JSON.stringify(attendanceState),
-        }));
-
-      //seatsState書き出し
-      seatsState &&
-        (await window.electron.ipcRenderer.invoke("handle_seatsState", {
-          mode: "write",
-          data: JSON.stringify(seatsState),
-        }));
-    })();
-  }, [attendanceState, seatsState]);
+  // //バックアップ兼記録ファイル 自動書き出し
+  useAutoFileWriter();
 
   return (
     <div className="App">
       {handleComponent()}
-      <ModalRoot
-        onHandleAppState={handleAppState}
-        onHandleModalState={handleModalState}
-        onSaveForEnter={useEnterRecorder}
-        onSaveForExit={useExitRecorder}
-        onEraceAppData={useAppDataEracer}
-        onCancelOperation={useCancelController}
-        onHandleSeatOperation={useSeatsController}
-        studentsList={studentsList}
-        modalState={modalState}
-        seatsState={seatsState}
-        appState={appState}
-      />
+      <ModalRoot />
     </div>
   );
 };

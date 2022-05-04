@@ -1,18 +1,20 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { StudentsList } from "../views/StudentsList";
 import { appConfig } from "../../app.config";
 
 //style imports
 import "../styles/modules/StudentData.scss";
 import StudentCategorySelector from "../views/StudentCategorySelector";
+import { AppStateContext } from "../../AppContainer";
+import useEnterRecorder from "../../hooks/controllers/useEnterRecorder";
 
 interface StudentDataSelectorProps {
-  onSaveAttendance: (i: string) => void;
-  onResetAppState: (arg: { mode: "APPLOG" | "DEFAULT"; content?: any }) => void;
-  onHandleModalState: (t: modalState) => void;
-  appState: appState;
-  studentsList: studentsList;
-  seatsState: seatsState;
+  // onSaveAttendance: (i: string) => void;
+  // onResetAppState: (arg: { mode: "APPLOG" | "DEFAULT"; content?: any }) => void;
+  // onHandleModalState: (t: modalState) => void;
+  // appState: appState;
+  // studentsList: studentsList;
+  // seatsState: seatsState;
 }
 
 interface StudentDataSelectorStates {
@@ -28,8 +30,26 @@ export const StudentDataSelector: React.VFC<StudentDataSelectorProps> = (
   const categorySelectorContainer = useRef<HTMLDivElement>(null);
   const navigation = useRef<HTMLDivElement>(null);
 
+  const {
+    appState,
+    seatsState,
+    studentsList,
+    resetAppState,
+    handleModalState,
+  }: AppStateContext = useContext(AppStateContext);
+
+  if (!studentsList) {
+    throw new Error("no studentsList data has been loaded.");
+  }
+
+  if (!seatsState) {
+    throw new Error("no seatsState data has been loaded.");
+  }
+
+  const enterRecorder = useEnterRecorder();
+
   const [state, setState] = useState<StudentDataSelectorStates>({
-    seat: props.appState.selectedSeat,
+    seat: appState.selectedSeat,
     school: "",
     grade: "",
     nav: false,
@@ -39,7 +59,7 @@ export const StudentDataSelector: React.VFC<StudentDataSelectorProps> = (
   const getStudentsList = (): { [index: string]: string }[] => {
     const matchData: { [index: string]: string }[] = [];
 
-    props.studentsList.forEach((val: { [index: string]: string }) => {
+    studentsList.forEach((val: { [index: string]: string }) => {
       return (
         val.school === state.school &&
         val.grade === state.grade &&
@@ -55,12 +75,11 @@ export const StudentDataSelector: React.VFC<StudentDataSelectorProps> = (
     navigation.current?.classList.add("active");
   };
 
-  const backToTop = () => props.onResetAppState({ mode: "DEFAULT" });
+  const backToTop = () => resetAppState({ mode: "DEFAULT" });
 
   //関係者用の処理
   const selectOthers = () => {
-    const e = "__OTHERS__";
-    props.onSaveAttendance(e);
+    enterRecorder("__OTHERS__");
   };
 
   //生徒用の処理
@@ -85,7 +104,7 @@ export const StudentDataSelector: React.VFC<StudentDataSelectorProps> = (
   const activateConfirmModal = (e: React.MouseEvent) => {
     const targetElem = e.target as HTMLLIElement;
 
-    const selected_student_data = props.studentsList.filter((val) => {
+    const selected_student_data = studentsList.filter((val) => {
       //val.idがnumber, e.target.idがString
       //returnされるのは配列であり、該当生徒は一人だけなのでreturn valのindex=0を入れる -> [0]
       return val.id === targetElem.id;
@@ -93,8 +112,8 @@ export const StudentDataSelector: React.VFC<StudentDataSelectorProps> = (
 
     //選ばれた生徒は既に着席しているか？（退席していないか？）
     let isAlreadySeated = false;
-    for (let key of Object.keys(props.seatsState)) {
-      props.seatsState[key].studentID === selected_student_data.id &&
+    for (let key of Object.keys(seatsState)) {
+      seatsState[key].studentID === selected_student_data.id &&
         !isAlreadySeated &&
         (isAlreadySeated = true);
     }
@@ -102,7 +121,7 @@ export const StudentDataSelector: React.VFC<StudentDataSelectorProps> = (
     isAlreadySeated
       ? //退席していない生徒を選択したとき
         //エラーモーダルを起動
-        props.onHandleModalState({
+        handleModalState({
           active: true,
           name: appConfig.modalCodeList["1002"],
           content: {
@@ -112,7 +131,7 @@ export const StudentDataSelector: React.VFC<StudentDataSelectorProps> = (
           },
         })
       : //確認モーダルを起動
-        props.onHandleModalState({
+        handleModalState({
           active: true,
           name: appConfig.modalCodeList["1001"],
           content: {
@@ -136,15 +155,15 @@ export const StudentDataSelector: React.VFC<StudentDataSelectorProps> = (
       <div ref={navigation} className="scroll-nav">
         {state.school !== "" && state.grade !== "" ? (
           <StudentsList
-            onSaveAttendance={props.onSaveAttendance}
-            onHandleModalState={props.onHandleModalState}
+            onSaveAttendance={enterRecorder}
+            onHandleModalState={handleModalState}
             onHandleScrollNavigation={handleScrollNavigation}
             activateConfirmModal={activateConfirmModal}
             school={state.school}
             grade={state.grade}
-            seatID={props.appState.selectedSeat}
+            seatID={appState.selectedSeat}
             studentsList={getStudentsList()}
-            seatsState={props.seatsState}
+            seatsState={seatsState}
           />
         ) : undefined}
         <svg

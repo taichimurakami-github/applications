@@ -1,25 +1,26 @@
+import { useContext } from "react";
 import { appConfig } from "../../app.config";
+import { AppStateContext } from "../../AppContainer";
 
 interface ErrorModalProps {
-  onCloseModal: () => void,
-  onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>,
-  onHandleAppState: (d: { [index: string]: any; }) => void,
-  content: modalStateContent
+  onCloseModal: () => void;
+  onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>;
+  // handleAppState: (d: { [index: string]: any; }) => void,
+  content: modalStateContent;
 }
 
 const ErrorModal: React.VFC<ErrorModalProps> = (props) => {
+  const { handleAppState } = useContext(AppStateContext);
 
   const activateConfig = () => {
-    props.onHandleAppState({ now: "CONFIG" });
+    handleAppState({ now: "CONFIG" });
     props.onCloseModal();
-  }
+  };
 
-  const onCloseModal = () => props.onCloseModal();
+  const closeModal = () => props.onCloseModal();
 
   const handleComponent = () => {
-
     switch (props.content.errorCode) {
-
       //エラー：生徒情報が表示されていない
       case appConfig.errorCodeList["1001"]:
         return (
@@ -27,7 +28,9 @@ const ErrorModal: React.VFC<ErrorModalProps> = (props) => {
             <h2>生徒情報ファイルが読み込まれていません。</h2>
             <p>入室管理システムを使用できません。</p>
             <p>設定画面から、生徒情報ファイルを読み込んでください。</p>
-            <button className="btn btn__typeC" onClick={activateConfig}>設定画面を開く</button>
+            <button className="btn btn__typeC" onClick={activateConfig}>
+              設定画面を開く
+            </button>
           </>
         );
 
@@ -35,8 +38,12 @@ const ErrorModal: React.VFC<ErrorModalProps> = (props) => {
         return (
           <>
             <h2>ファイル読み込み中にエラーが発生しました。</h2>
-            <p>指定されたファイル形式が間違っています。読み込めるファイル形式はxlsxのみです。</p>
-            <button className="btn btn__typeC" onClick={onCloseModal}>閉じる</button>
+            <p>
+              指定されたファイル形式が間違っています。読み込めるファイル形式はxlsxのみです。
+            </p>
+            <button className="btn btn__typeC" onClick={closeModal}>
+              閉じる
+            </button>
           </>
         );
 
@@ -44,7 +51,9 @@ const ErrorModal: React.VFC<ErrorModalProps> = (props) => {
         return (
           <>
             <h2>生徒情報ファイルの読み込みに失敗しました。</h2>
-            <p>指定されたファイル形式が間違っています。読み込めるファイル形式はxlsxのみです。</p>
+            <p>
+              指定されたファイル形式が間違っています。読み込めるファイル形式はxlsxのみです。
+            </p>
           </>
         );
 
@@ -53,23 +62,25 @@ const ErrorModal: React.VFC<ErrorModalProps> = (props) => {
           <>
             <h2>{props.content.studentData?.name} さんは既に着席しています</h2>
             <p>正しい名前を選択しているかもう一度ご確認ください。</p>
-            <p>もしご本人の場合、一旦退席操作を行った上、改めて登録操作をしてください。</p>
-            <button className="btn btn__typeC" onClick={onCloseModal}>閉じる</button>
+            <p>
+              もしご本人の場合、一旦退席操作を行った上、改めて登録操作をしてください。
+            </p>
+            <button className="btn btn__typeC" onClick={closeModal}>
+              閉じる
+            </button>
           </>
-        )
+        );
 
       default:
         throw new Error("Unexpected errorCode in ErrorModal.js");
     }
-  }
+  };
 
   return (
     <>
-      <div className="error-modal-container">
-        {handleComponent()}
-      </div>
+      <div className="error-modal-container">{handleComponent()}</div>
     </>
   );
-}
+};
 
 export { ErrorModal };

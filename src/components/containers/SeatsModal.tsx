@@ -1,21 +1,23 @@
 import { appConfig } from "../../app.config";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { SeatsTable } from "../views/SeatsTable";
 
 import "../styles/modules/Top.scss";
 import closeButtonIcon from "../../images/close-button.svg";
+import { AppStateContext } from "../../AppContainer";
+import useSeatsController from "../../hooks/controllers/useSeatsController";
 
 interface SeatsModalProps {
   onCloseModal: () => void;
   onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>;
-  onHandleModalState: (t: modalState) => void;
-  onHandleSeatOperation: (arg: {
-    mode: string;
-    content: { [key: string]: string };
-  }) => void;
-  onSaveForExit: (i: string) => void;
-  seatsState: seatsState | null;
-  studentsList: studentsList | null;
+  // onHandleModalState: (t: modalState) => void;
+  // onHandleSeatOperation: (arg: {
+  //   mode: string;
+  //   content: { [key: string]: string };
+  // }) => void;
+  // onSaveForExit: (i: string) => void;
+  // seatsState: seatsState | null;
+  // studentsList: studentsList | null;
 }
 
 const seatsModalState_initialValue: {
@@ -30,6 +32,10 @@ const seatsModalState_initialValue: {
   },
 };
 const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
+  const { seatsState, studentsList, handleModalState }: AppStateContext =
+    useContext(AppStateContext);
+  const seatsController = useSeatsController();
+
   const [seatsModalState, setSeatsModalState] = useState(
     seatsModalState_initialValue
   );
@@ -41,7 +47,7 @@ const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
     //親要素のLi Elementを取得
     const targetLIElement = e.currentTarget.parentNode as HTMLLIElement;
 
-    props.onHandleModalState({
+    handleModalState({
       active: true,
       name: appConfig.modalCodeList["1001"],
       content: {
@@ -69,7 +75,7 @@ const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
     const nowSeatID = seatsModalState.content.nowSeatID;
     console.log(nowSeatID, " >> ", nextSeatID);
 
-    props.onHandleSeatOperation({
+    seatsController({
       mode: appConfig.seatOperationCodeList["1001"],
       content: {
         nowSeatID: seatsModalState.content.nowSeatID,
@@ -88,16 +94,16 @@ const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
    *
    */
   const getAttendedStudentsList = () => {
-    const seats = props.seatsState;
+    const seats = seatsState;
     const activeSeatList = [];
     const othersList = [];
 
-    if (!seats || !props.studentsList) {
+    if (!seats || !studentsList) {
       throw new Error("seats or studentsList is null");
     }
 
     //active状態の席IDを配列に格納
-    for (let key in props.seatsState) {
+    for (let key in seatsState) {
       //埋まっている席番号を格納
       seats[key].active && activeSeatList.push(key);
 
@@ -125,7 +131,7 @@ const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
           ];
         } else {
           //生徒IDが一致する生徒情報をデータシートのデータより取得
-          result = (props.studentsList as studentsList).filter((elem) => {
+          result = (studentsList as studentsList).filter((elem) => {
             return elem.id == seats[val].studentID;
           });
         }
@@ -193,7 +199,7 @@ const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
           </nav>
           <p>使用されていない座席の中から、移動先の座席を選択してください。</p>
           <SeatsTable
-            seatsState={props.seatsState}
+            seatsState={seatsState}
             onClickFunction={(e) => {
               handleChangeSeat(e.target.id);
             }}
