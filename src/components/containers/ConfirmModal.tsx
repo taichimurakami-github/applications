@@ -161,11 +161,16 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
         const exitTime = props.content.exitTime
           .split(":")
           .map((val) => Number(val));
+
+        console.log(enterTime, exitTime);
+
         const timeDiff = [
           exitTime[0] - enterTime[0],
           exitTime[1] - enterTime[1],
           exitTime[2] - enterTime[2],
         ];
+
+        console.log(timeDiff);
 
         return (
           <>

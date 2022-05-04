@@ -128,6 +128,15 @@ export const Top: React.VFC<TopComponentProps> = (props) => {
         <button className="btn btn__typeC" onClick={showAppConfig}>
           設定画面を開く
         </button>
+        <div style={{ height: 30 }}></div>
+        <button
+          className="btn btn__typeC"
+          onClick={() => {
+            window.location.reload();
+          }}
+        >
+          リロードする
+        </button>
       </div>
     </>
   );

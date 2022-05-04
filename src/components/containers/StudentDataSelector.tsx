@@ -1,12 +1,12 @@
 import React, { useState, useRef, useContext } from "react";
 import { StudentsList } from "../views/StudentsList";
 import { appConfig } from "../../app.config";
-
-//style imports
-import "../styles/modules/StudentData.scss";
-import StudentCategorySelector from "../views/StudentCategorySelector";
 import { AppStateContext } from "../../AppContainer";
 import useEnterRecorder from "../../hooks/controllers/useEnterRecorder";
+import StudentCategorySelector from "../views/StudentCategorySelector";
+
+//style imports
+import "../styles/modules/StudentDataSelector.scss";
 
 interface StudentDataSelectorStates {
   seat: string;
@@ -134,14 +134,14 @@ export const StudentDataSelector: React.VFC = (props) => {
 
   return (
     <>
-      <StudentCategorySelector
-        backToTop={backToTop}
-        onSelect={selectStudentsCategory}
-        onSelectOthers={selectOthers}
-        ref={categorySelectorContainer}
-      />
+      <div className="component-select-student-data-wrapper">
+        <StudentCategorySelector
+          backToTop={backToTop}
+          onSelect={selectStudentsCategory}
+          onSelectOthers={selectOthers}
+          ref={categorySelectorContainer}
+        />
 
-      <div ref={navigation} className="scroll-nav">
         {state.school !== "" && state.grade !== "" ? (
           <StudentsList
             onSaveAttendance={enterRecorder}
@@ -155,19 +155,21 @@ export const StudentDataSelector: React.VFC = (props) => {
             seatsState={seatsState}
           />
         ) : undefined}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="100"
-          height="100"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="#FFFFFF"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
-        </svg>
+        <div ref={navigation} className="scroll-nav">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="100"
+            height="100"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#FFFFFF"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
+          </svg>
+        </div>
       </div>
     </>
   );
