@@ -3,17 +3,8 @@ import { appConfig } from "../../app.config";
 import { AppStateContext } from "../../AppContainer";
 
 const useStudentsFileReader = () => {
-  const {
-    appState,
-    seatsState,
-    attendanceState,
-    resetAppState,
-    setSeatsState,
-    setAttendanceState,
-    setModalState,
-    setStudentsList,
-    handleModalState,
-  }: AppStateContext = useContext(AppStateContext);
+  const { setStudentsList, handleModalState }: AppStateContext =
+    useContext(AppStateContext);
 
   const studentsFileReader = useCallback(() => {
     const debugInput = document.createElement("input");

@@ -5,11 +5,7 @@ import { SeatsTable } from "../views/SeatsTable";
 import { TopMessage } from "../views/TopMessage";
 
 interface TopComponentProps {
-  // appState: appState;
-  // studentsList: studentsList;
-  // seatsState: seatsState;
   onHandleAppState: (d: { [index: string]: any }) => void;
-  // onHandleModalState: (t: modalState) => void;
 }
 
 export const Top: React.VFC<TopComponentProps> = (props) => {

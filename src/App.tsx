@@ -21,7 +21,6 @@ const App: React.VFC = () => {
     appState,
     setAppState,
     studentsList,
-    seatsState,
     handleModalState,
   }: AppStateContext = useContext(AppStateContext);
 
@@ -50,8 +49,6 @@ const App: React.VFC = () => {
   //appState, seatStateを変更する
   const handleAppState = (d: { [index: string]: any }) =>
     setAppState({ ...appState, ...d });
-  // const handleSeatsState = (d: { [index: string]: any }) =>
-  //   setSeatsState({ ...seatsState, ...d });
 
   /**
    * function handleComponent()
@@ -63,15 +60,7 @@ const App: React.VFC = () => {
   const handleComponent = () => {
     switch (appState.now) {
       case "TOP":
-        return (
-          <Top
-            onHandleAppState={handleAppState}
-            // onHandleModalState={handleModalState}
-            // appState={appState}
-            // seatsState={seatsState as seatsState}
-            // studentsList={studentsList as studentsList}
-          />
-        );
+        return <Top onHandleAppState={handleAppState} />;
 
       case "STUDENT":
         return <StudentDataSelector />;

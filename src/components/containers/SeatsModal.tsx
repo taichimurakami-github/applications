@@ -10,14 +10,6 @@ import useSeatsController from "../../hooks/controllers/useSeatsController";
 interface SeatsModalProps {
   onCloseModal: () => void;
   onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>;
-  // onHandleModalState: (t: modalState) => void;
-  // onHandleSeatOperation: (arg: {
-  //   mode: string;
-  //   content: { [key: string]: string };
-  // }) => void;
-  // onSaveForExit: (i: string) => void;
-  // seatsState: seatsState | null;
-  // studentsList: studentsList | null;
 }
 
 const seatsModalState_initialValue: {
@@ -39,8 +31,6 @@ const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
   const [seatsModalState, setSeatsModalState] = useState(
     seatsModalState_initialValue
   );
-
-  const closeModal = () => props.onCloseModal();
 
   const handleExit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     // e.preventDefault();

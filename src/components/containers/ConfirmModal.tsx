@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { randomComments } from "../../app.config";
 import { appConfig } from "../../app.config";
 import { AppStateContext } from "../../AppContainer";
 import useCancelController from "../../hooks/controllers/useCancelController";
@@ -10,12 +9,6 @@ interface ConfirmModalProps {
   content: modalStateContent;
   onCloseModal: () => void;
   onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>;
-  // onSaveForEnter: (i: string) => void;
-  // onSaveForExit: (i: string) => void;
-  // onEraceAppData: () => Promise<void>;
-  // onCancelOperation: () => void;
-  // seatsState: seatsState | null;
-  // studentsList: studentsList | null;
 }
 
 const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
@@ -23,24 +16,6 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
   const enterRecorder = useEnterRecorder();
   const exitRecorder = useExitRecorder();
   const cancelController = useCancelController();
-  //props.content.targetIDが未設定の時はエラーを吐く
-  // const onSaveAttendanceForEnter = () => {
-  //   if (props.content.targetID) props.onSaveForEnter(props.content.targetID);
-  //   else
-  //     throw new Error(
-  //       "invalid props.content.targetID value: undefined has passed."
-  //     );
-  // };
-  // const onSaveAttendanceForExit = () => {
-  //   if (props.content.targetID) props.onSaveForExit(props.content.targetID);
-  //   else
-  //     throw new Error(
-  //       "invalid props.content.targetID value: undefined has passed."
-  //     );
-  // };
-
-  // const onEraceAppData = () => props.onEraceAppData();
-  // const onCancelOperation = () => props.onCancelOperation();
   const closeModal = () => props.onCloseModal();
 
   const getStudentInfoFromStudentID = (studentID: string) => {

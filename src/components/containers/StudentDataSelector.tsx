@@ -8,15 +8,6 @@ import StudentCategorySelector from "../views/StudentCategorySelector";
 import { AppStateContext } from "../../AppContainer";
 import useEnterRecorder from "../../hooks/controllers/useEnterRecorder";
 
-interface StudentDataSelectorProps {
-  // onSaveAttendance: (i: string) => void;
-  // onResetAppState: (arg: { mode: "APPLOG" | "DEFAULT"; content?: any }) => void;
-  // onHandleModalState: (t: modalState) => void;
-  // appState: appState;
-  // studentsList: studentsList;
-  // seatsState: seatsState;
-}
-
 interface StudentDataSelectorStates {
   seat: string;
   school: string;
@@ -24,9 +15,7 @@ interface StudentDataSelectorStates {
   nav: boolean;
 }
 
-export const StudentDataSelector: React.VFC<StudentDataSelectorProps> = (
-  props
-) => {
+export const StudentDataSelector: React.VFC = (props) => {
   const categorySelectorContainer = useRef<HTMLDivElement>(null);
   const navigation = useRef<HTMLDivElement>(null);
 

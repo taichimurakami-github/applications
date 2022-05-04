@@ -5,7 +5,6 @@ import { AppStateContext } from "../../AppContainer";
 interface ErrorModalProps {
   onCloseModal: () => void;
   onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>;
-  // handleAppState: (d: { [index: string]: any; }) => void,
   content: modalStateContent;
 }
 
