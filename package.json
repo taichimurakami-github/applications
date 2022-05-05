@@ -6,24 +6,6 @@
   "private": true,
   "main": "public/electron/main.js",
   "homepage": "./",
-  "jest": {
-    "moduleFileExtensions": [
-      "ts",
-      "js"
-    ],
-    "transform": {
-      "^.+\\.ts$": "ts-jest"
-    },
-    "globals": {
-      "ts-jest": {
-        "tsConfig": "tsconfig.json"
-      }
-    },
-    "testMatch": [
-      "**/src/tests/**/*.test.ts",
-      "**/src/tests/*.test.ts"
-    ]
-  },
   "scripts": {
     "react-start": "cross-env BROWSER=none react-scripts start",
     "react-build": "react-scripts build",
