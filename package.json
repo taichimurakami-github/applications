@@ -6,15 +6,23 @@
   "private": true,
   "main": "public/electron/main.js",
   "homepage": "./",
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
-    "electron-is-dev": "^2.0.0",
-    "electron-store": "^8.0.0",
-    "file-type": "^16.5.2",
-    "web-vitals": "^1.1.2",
-    "xlsx": "^0.17.0"
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.json"
+      }
+    },
+    "testMatch": [
+      "**/src/tests/**/*.test.ts",
+      "**/src/tests/*.test.ts"
+    ]
   },
   "scripts": {
     "react-start": "cross-env BROWSER=none react-scripts start",
@@ -24,7 +32,8 @@
     "electron-start": "wait-on http://localhost:3000 && electron .",
     "electron-build": "electron-builder",
     "start": "run-p react-start electron-start",
-    "build": "run-s react-build electron-build"
+    "build": "run-s react-build electron-build",
+    "test": "jest"
   },
   "build": {
     "appId": "com.electron.attendance-management_v1.00.app",
@@ -61,8 +70,18 @@
       "last 1 safari version"
     ]
   },
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3",
+    "electron-is-dev": "^2.0.0",
+    "electron-store": "^8.0.0",
+    "file-type": "^16.5.2",
+    "web-vitals": "^1.1.2",
+    "xlsx": "^0.17.0"
+  },
   "devDependencies": {
-    "@types/jest": "^27.0.1",
+    "@types/jest": "^27.5.0",
     "@types/node": "^16.7.10",
     "@types/react": "^17.0.19",
     "@types/react-dom": "^17.0.9",
@@ -71,13 +90,16 @@
     "electron": "^13.1.7",
     "electron-builder": "^22.11.7",
     "html-webpack-plugin": "^5.3.2",
+    "jest": "^28.0.3",
     "mini-css-extract-plugin": "^2.2.2",
+    "mocha": "^10.0.0",
     "node-sass": "^6.0.1",
     "npm-run-all": "^4.1.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "^4.0.3",
     "sass-loader": "^12.1.0",
+    "ts-jest": "^28.0.1",
     "ts-loader": "^9.2.5",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.2",
