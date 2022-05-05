@@ -42,10 +42,10 @@ const useEnterRecorder = () => {
 
     insertObjectForAttendanceState[i].push(attendance_enterData);
     //atttendanceStateを更新
-    setAttendanceState({
-      ...attendanceState,
+    setAttendanceState((beforeAttendanceState) => ({
+      ...beforeAttendanceState,
       ...insertObjectForAttendanceState,
-    });
+    }));
   };
 
   const enterRecorder = useCallback((i: string | undefined) => {
@@ -72,6 +72,7 @@ const useEnterRecorder = () => {
     insertObjectForSeatsState[appState.selectedSeat] =
       i === "__OTHERS__"
         ? {
+            active: true,
             enterTime: nowDate.HMS,
             studentID: "__OTHERS__",
           }
@@ -82,7 +83,10 @@ const useEnterRecorder = () => {
           };
 
     //seatsStateを更新
-    setSeatsState({ ...seatsState, ...insertObjectForSeatsState });
+    setSeatsState((beforeSeatsState) => ({
+      ...beforeSeatsState,
+      ...insertObjectForSeatsState,
+    }));
 
     if (i !== "__OTHERS__") {
       handleStudentsAttendanceState(i, `${nowDate.YMD} ${nowDate.HMS}`);
