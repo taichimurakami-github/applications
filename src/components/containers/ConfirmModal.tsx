@@ -12,7 +12,8 @@ interface ConfirmModalProps {
 }
 
 const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
-  const { seatsState, studentsList } = useContext(AppStateContext);
+  const { seatsState, studentsList, resetAppState }: AppStateContext =
+    useContext(AppStateContext);
   const enterRecorder = useEnterRecorder();
   const exitRecorder = useExitRecorder();
   const cancelController = useCancelController();
@@ -82,6 +83,8 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
             <button
               className="btn btn__yes"
               onClick={() => {
+                //TOP画面に遷移
+                resetAppState({ mode: "DEFAULT" });
                 exitRecorder(props.content.targetID);
               }}
             >
