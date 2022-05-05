@@ -1,6 +1,7 @@
 import { useCallback, useContext } from "react";
 import { appConfig } from "../../app.config";
 import { AppStateContext } from "../../AppContainer";
+import { getFormattedDate } from "../../utils/getFormattedDate";
 
 /**
  * function handleSaveAttendanceForEnter()
@@ -20,6 +21,33 @@ const useEnterRecorder = () => {
     setModalState,
   }: AppStateContext = useContext(AppStateContext);
 
+  const handleStudentsAttendanceState = (i: string, enterDateTime: string) => {
+    //関係者その他（i === "__OTHERS__"）ではないとき、
+    //attendanceStateを更新
+    const insertObjectForAttendanceState: { [index: string]: any } = {};
+    const attendance_enterData = {
+      id: i,
+      seatID: appState.selectedSeat,
+      enter: enterDateTime,
+    };
+
+    //attendanceState内に該当生徒のkeyが存在するか確認
+    i in (attendanceState as attendanceState)
+      ? //既に同日内に自習室に記録が残っている場合、要素を追加する形で記録
+        (insertObjectForAttendanceState[i] = (
+          attendanceState as attendanceState
+        )[i].map((val: any) => val))
+      : //同日内で初めて自習室に来た場合、新しくkeyと配列を作成
+        (insertObjectForAttendanceState[i] = []);
+
+    insertObjectForAttendanceState[i].push(attendance_enterData);
+    //atttendanceStateを更新
+    setAttendanceState({
+      ...attendanceState,
+      ...insertObjectForAttendanceState,
+    });
+  };
+
   const enterRecorder = useCallback((i: string | undefined) => {
     if (!i) {
       throw new Error(
@@ -28,17 +56,12 @@ const useEnterRecorder = () => {
     }
 
     if (!attendanceState) {
-      throw new Error("state is empty");
+      throw new Error("attendanceState is empty.");
     }
+
     console.log("出席処理を開始します...");
-    //時刻を定義
-    const now = new Date();
-    const nowYearMonthAndDate = `${now.getFullYear()}/${
-      now.getMonth() + 1
-    }/${now.getDate()}`;
-    const nowHoursMinutesAndSeconds = `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
-    const nowDateTime = `
-    ${nowYearMonthAndDate} ${nowHoursMinutesAndSeconds}`;
+    //時刻を取得
+    const nowDate = getFormattedDate();
 
     //該当の席を「使用中」にする
     appState.selectedElement &&
@@ -49,13 +72,12 @@ const useEnterRecorder = () => {
     insertObjectForSeatsState[appState.selectedSeat] =
       i === "__OTHERS__"
         ? {
-            active: true,
-            enterTime: nowHoursMinutesAndSeconds,
+            enterTime: nowDate.HMS,
             studentID: "__OTHERS__",
           }
         : {
             active: true,
-            enterTime: nowHoursMinutesAndSeconds,
+            enterTime: nowDate.HMS,
             studentID: i,
           };
 
@@ -63,29 +85,7 @@ const useEnterRecorder = () => {
     setSeatsState({ ...seatsState, ...insertObjectForSeatsState });
 
     if (i !== "__OTHERS__") {
-      //attendanceStateを更新
-      const insertObjectForAttendanceState: { [index: string]: any } = {};
-      const attendance_enterData = {
-        id: i,
-        seatID: appState.selectedSeat,
-        enter: nowDateTime,
-      };
-
-      //attendanceState内に該当生徒のkeyが存在するか確認
-      i in attendanceState
-        ? //既に同日内に自習室に記録が残っている場合、要素を追加する形で記録
-          (insertObjectForAttendanceState[i] = attendanceState[i].map(
-            (val: any) => val
-          ))
-        : //同日内で初めて自習室に来た場合、新しくkeyと配列を作成
-          (insertObjectForAttendanceState[i] = []);
-
-      insertObjectForAttendanceState[i].push(attendance_enterData);
-      //atttendanceStateを更新
-      setAttendanceState({
-        ...attendanceState,
-        ...insertObjectForAttendanceState,
-      });
+      handleStudentsAttendanceState(i, `${nowDate.YMD} ${nowDate.HMS}`);
     }
 
     //確認モーダルの表示
