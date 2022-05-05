@@ -1,6 +1,8 @@
 import { useCallback, useContext } from "react";
 import { appConfig } from "../../app.config";
 import { AppStateContext } from "../../AppContainer";
+import { calculateTimeDiff } from "../../utils/calculateTimeDiff";
+import { getFormattedDate } from "../../utils/getFormattedDate";
 
 const useExitRecorder = () => {
   const {
@@ -35,9 +37,9 @@ const useExitRecorder = () => {
       enterTime: "",
       studentID: "",
     };
-    const now = new Date();
+    const nowDate = getFormattedDate();
     const attendance_exitData = {
-      exit: `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`,
+      exit: nowDate.HMS,
     };
 
     if (seatsState[i].studentID !== "__OTHERS__") {
@@ -67,6 +69,9 @@ const useExitRecorder = () => {
 
     setSeatsState({ ...seatsState, ...insertObjectForSeatsState });
 
+    const exitTime = attendance_exitData.exit;
+    const enterTime = seatsState[i].enterTime;
+
     //確認モーダルの表示
     setModalState({
       active: true,
@@ -74,6 +79,7 @@ const useExitRecorder = () => {
       content: {
         //退室記録完了
         confirmCode: appConfig.confirmCodeList["2002"],
+        timeLength: calculateTimeDiff(enterTime, exitTime),
         exitTime: attendance_exitData.exit,
         enterTime: seatsState[i].enterTime,
       },
