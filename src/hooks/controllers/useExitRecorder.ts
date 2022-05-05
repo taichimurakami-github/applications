@@ -41,6 +41,36 @@ const useExitRecorder = () => {
     });
   };
 
+  const recordAttendanceState = (
+    i: string,
+    nowDate: { YMD: string; HMS: string }
+  ) => {
+    //id: 対象生徒のid(objのindexになる)
+    const id = (seatsState as seatsState)[i].studentID;
+    const attendance_exitData = {
+      exit: nowDate.HMS,
+    };
+
+    //対象生徒のkeyで参照したattendanceStateのvalueの中で、
+    //配列の最後の要素のみ更新し、元のattendanceStateにマージする
+    const insertObjectForAttendanceState: { [index: string]: any } = {};
+    insertObjectForAttendanceState[id] = (attendanceState as attendanceState)[
+      id
+    ].map((val: any, index: number) => {
+      //exitのデータを、配列の最後の要素に書き込み
+      //それ以外のデータは変更しないでそのまま返す
+      return index ===
+        Number((attendanceState as attendanceState)[id].length) - 1
+        ? { ...val, ...attendance_exitData }
+        : val;
+    });
+
+    setAttendanceState({
+      ...attendanceState,
+      ...insertObjectForAttendanceState,
+    });
+  };
+
   /**
    * function handleSaveAttendanceForExit()
    *
@@ -70,40 +100,20 @@ const useExitRecorder = () => {
         studentID: "",
       };
       const nowDate = getFormattedDate();
-      const attendance_exitData = {
-        exit: nowDate.HMS,
-      };
 
       if (seatsState[i].studentID !== "__OTHERS__") {
         //"関係者その他"でなければ、attendanceStateを更新
-
-        //id: 対象生徒のid(objのindexになる)
-        const id = seatsState[i].studentID;
-
-        //対象生徒のkeyで参照したattendanceStateのvalueの中で、
-        //配列の最後の要素のみ更新し、元のattendanceStateにマージする
-        const insertObjectForAttendanceState: { [index: string]: any } = {};
-        insertObjectForAttendanceState[id] = attendanceState[id].map(
-          (val: any, index: number) => {
-            //exitのデータを、配列の最後の要素に書き込み
-            //それ以外のデータは変更しないでそのまま返す
-            return index === Number(attendanceState[id].length) - 1
-              ? { ...val, ...attendance_exitData }
-              : val;
-          }
-        );
-
-        setAttendanceState({
-          ...attendanceState,
-          ...insertObjectForAttendanceState,
-        });
+        recordAttendanceState(i, nowDate);
       }
 
-      setSeatsState({ ...seatsState, ...insertObjectForSeatsState });
+      setSeatsState((beforeSeatsState) => ({
+        ...beforeSeatsState,
+        ...insertObjectForSeatsState,
+      }));
 
       if (showModalEnabled) {
         //退席完了のモーダルを表示
-        const exitTime = attendance_exitData.exit;
+        const exitTime = nowDate.HMS;
         const enterTime = (seatsState as seatsState)[i].enterTime;
         showExittedModal(i, enterTime, exitTime);
       }

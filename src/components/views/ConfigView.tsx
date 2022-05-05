@@ -4,6 +4,7 @@ interface ConfigView {
   onHandleBackToTop: () => void;
   onReadStudentsFile: () => void;
   onEraceAppData: () => void;
+  onExitAllStudents: () => void;
   onChangeAppConfig: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onChangeTopMessage: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -43,7 +44,7 @@ const ConfigView = (props: ConfigView) => {
         <div className="setting-btn-container">
           <button
             className="btn btn__typeC read-student-list"
-            onClick={props.onReadStudentsFile}
+            onClick={props.onExitAllStudents}
           >
             全員退席させる
           </button>
@@ -70,7 +71,7 @@ const ConfigView = (props: ConfigView) => {
         <div className="toggle-btn-container btn__toggle">
           <b>直前の操作を取り消す</b>
           <button
-            id="toggle_isCancelOperationEnabled"
+            id="toggle_cancelOperation"
             className={`${"toggle-wrapper "}${
               props.isCancelOperationEnabled ? "active" : "unactive"
             }`}
@@ -82,7 +83,7 @@ const ConfigView = (props: ConfigView) => {
         <div className="toggle-btn-container btn__toggle">
           <b>アプリ内部データ(1日分)を削除する</b>
           <button
-            id="toggle_isEraceAppDataTodayAllEnabled"
+            id="toggle_eraceAppDataTodayAll"
             className={`${"toggle-wrapper "}${
               props.isEraceAppDataTodayAllEnabled ? "active" : "unactive"
             }`}
