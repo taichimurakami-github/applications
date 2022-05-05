@@ -1,20 +1,19 @@
 import React from "react";
 
 interface ConfigView {
-  onHandleBackToTop: () => void,
-  onReadStudentsFile: () => void,
-  onEraceAppData: () => void,
-  onChangeAppConfig: (e: React.MouseEvent<HTMLButtonElement>) => void,
-  onChangeTopMessage: (e: React.ChangeEvent<HTMLTextAreaElement>) => void,
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void,
-  topMessage: string,
-  isEraceAppDataTodayAllEnabled: boolean,
-  isCancelOperationEnabled: boolean,
+  onHandleBackToTop: () => void;
+  onReadStudentsFile: () => void;
+  onEraceAppData: () => void;
+  onExitAllStudents: () => void;
+  onChangeAppConfig: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onChangeTopMessage: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  topMessage: string;
+  isEraceAppDataTodayAllEnabled: boolean;
+  isCancelOperationEnabled: boolean;
 }
 
-const ConfigView = (props:ConfigView) => {
-
-
+const ConfigView = (props: ConfigView) => {
   return (
     <div className="component-config-wrapper">
       <h1>アプリ設定</h1>
@@ -34,7 +33,7 @@ const ConfigView = (props:ConfigView) => {
             value={props.topMessage}
             onChange={props.onChangeTopMessage}
           ></textarea>
-          <button className="btn btn__submit" type="submit">
+          <button className="btn  btn__typeC btn__submit" type="submit">
             TOP画面のメッセージを変更
           </button>
         </form>
@@ -44,14 +43,20 @@ const ConfigView = (props:ConfigView) => {
         <h2>設定項目</h2>
         <div className="setting-btn-container">
           <button
-            className="btn read-student-list"
+            className="btn btn__typeC read-student-list"
+            onClick={props.onExitAllStudents}
+          >
+            全員退席させる
+          </button>
+          <button
+            className="btn  btn__typeC read-student-list"
             onClick={props.onReadStudentsFile}
           >
             生徒情報ファイルを設定する
           </button>
           {props.isEraceAppDataTodayAllEnabled && (
             <button
-              className="btn erace-today-data-all"
+              className="btn  btn__typeC erace-today-data-all"
               onClick={props.onEraceAppData}
             >
               アプリ内部データを削除する
@@ -66,7 +71,7 @@ const ConfigView = (props:ConfigView) => {
         <div className="toggle-btn-container btn__toggle">
           <b>直前の操作を取り消す</b>
           <button
-            id="toggle_isCancelOperationEnabled"
+            id="toggle_cancelOperation"
             className={`${"toggle-wrapper "}${
               props.isCancelOperationEnabled ? "active" : "unactive"
             }`}
@@ -78,7 +83,7 @@ const ConfigView = (props:ConfigView) => {
         <div className="toggle-btn-container btn__toggle">
           <b>アプリ内部データ(1日分)を削除する</b>
           <button
-            id="toggle_isEraceAppDataTodayAllEnabled"
+            id="toggle_eraceAppDataTodayAll"
             className={`${"toggle-wrapper "}${
               props.isEraceAppDataTodayAllEnabled ? "active" : "unactive"
             }`}
@@ -90,6 +95,6 @@ const ConfigView = (props:ConfigView) => {
       </div>
     </div>
   );
-}
+};
 
 export default ConfigView;

@@ -17,15 +17,8 @@ import useAutoDataReadChecker from "./hooks/controllers/useAutoDataReadChecker";
 import useAutoFileWriter from "./hooks/controllers/useAutoFileWriter";
 
 const App: React.VFC = () => {
-  const {
-    appState,
-    setAppState,
-    studentsList,
-    handleModalState,
-  }: AppStateContext = useContext(AppStateContext);
-
-  console.log("test");
-  console.log(appState, studentsList, handleModalState);
+  const { appState, setAppState }: AppStateContext =
+    useContext(AppStateContext);
 
   const handleChangeAppLocalConfig = async (arg: {
     fn_id?: string;

@@ -35,8 +35,14 @@ const useAppState = (appState_initialValue: appState) => {
   );
 
   //appState, seatStateを変更する
-  const handleAppState = (d: { [index: string]: any }) =>
-    setAppState({ ...appState, ...d });
+  const handleAppState = useCallback(
+    (d: { [index: string]: any }) =>
+      setAppState((beforeAppState) => ({
+        ...beforeAppState,
+        ...d,
+      })),
+    []
+  );
 
   useEffect(() => {
     (async () => {

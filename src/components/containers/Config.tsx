@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { appConfig } from "../../app.config";
 import { AppStateContext } from "../../AppContainer";
+import useExitRecorder from "../../hooks/controllers/useExitRecorder";
 import useStudentsFileReader from "../../hooks/controllers/useStudentsFileReader";
 
 //style import
@@ -19,10 +20,11 @@ interface ConfigContainerProps {
 }
 
 const Config: React.VFC<ConfigContainerProps> = (props) => {
-  const { appState, handleModalState }: AppStateContext =
+  const { appState, seatsState, handleModalState }: AppStateContext =
     useContext(AppStateContext);
 
   const studentsFileReader = useStudentsFileReader();
+  const exitRecorder = useExitRecorder();
 
   const [topMessage, setTopMessage] = useState<string>(
     appState.localConfig.msg
@@ -121,10 +123,18 @@ const Config: React.VFC<ConfigContainerProps> = (props) => {
     });
   };
 
+  const exitAllStudents = () => {
+    if (!seatsState) throw new Error("seatsState is empty.");
+    for (const seatId of Object.keys(seatsState)) {
+      seatsState[seatId].active && exitRecorder(seatId, false, false);
+    }
+  };
+
   return (
     <ConfigView
       onHandleBackToTop={backToTop}
       onReadStudentsFile={studentsFileReader}
+      onExitAllStudents={exitAllStudents}
       onEraceAppData={eraceAppData}
       onChangeAppConfig={changeAppConfig}
       onChangeTopMessage={changeTopMessage}
