@@ -37,6 +37,7 @@ declare global {
     // //App.tsx
     studentID?: string;
     nextSeatID?: string;
+    timeLength?: number[];
     exitTime?: string;
     enterTime?: string;
 
