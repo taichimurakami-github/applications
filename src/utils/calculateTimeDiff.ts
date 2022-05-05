@@ -14,14 +14,11 @@ export const calculateTimeDiff = (
 
   for (let i = 2; i >= 0; i--) {
     result[i] = exitTimeArr[i] - enterTimeArr[i];
-    console.log(i, result);
     if (result[i] < 0) {
       result[i] += 60;
       exitTimeArr[i - 1] -= 1;
     }
   }
-
-  console.log(result);
 
   return result;
 };
