@@ -68,6 +68,7 @@ const appConfig: appConfig = {
     "2008": "SEATID_IS_CHANGED_SUCCESSFULLY",
     "2009": "TOPMESSAGE_IS_CHANGED_SUCCESSFULLY",
     "2010": "FORCE_EXIT_ALL_STUDENTS_NOW_ATTENDING_DONE",
+    "2011": "ERACE_APPDATA_TODAY_ALL_DONE",
   },
   errorCodeList: {
     //top page error list

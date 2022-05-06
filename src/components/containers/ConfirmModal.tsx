@@ -303,6 +303,16 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
           </>
         );
 
+      case appConfig.confirmCodeList["2011"]:
+        return (
+          <>
+            <p>本日分のアプリ内部データを削除しました。</p>
+            <button className="btn btn__close" onClick={closeModal}>
+              閉じる
+            </button>
+          </>
+        );
+
       default:
         console.log("confirm code:", props.content.confirmCode);
         throw new Error("Unexpected confirmCode in ConfirmModal.js");

@@ -29,7 +29,7 @@ const useCancelController = () => {
       name: appConfig.modalCodeList["1001"],
       content: {
         //アプリの内部データが取り消されました。
-        confirmCode: appConfig.confirmCodeList["2006"],
+        confirmCode: appConfig.confirmCodeList["2011"],
       },
     });
   };
