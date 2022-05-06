@@ -6,7 +6,7 @@ import useEnterRecorder from "../../hooks/controllers/useEnterRecorder";
 import useExitRecorder from "../../hooks/controllers/useExitRecorder";
 
 interface ConfirmModalProps {
-  content: modalStateContent;
+  content: modalStateContents;
   onCloseModal: () => void;
   onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -124,6 +124,21 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
             </p>
             <p>※一度取り消すと元に戻せません</p>
             <button className="btn btn__yes" onClick={cancelController}>
+              はい
+            </button>
+            <button className="btn btn__no" onClick={closeModal}>
+              いいえ
+            </button>
+          </>
+        );
+
+      //着席している生徒全員の
+      case appConfig.confirmCodeList["1005"]:
+        return (
+          <>
+            <p>着席している生徒全員を退席させますか？</p>
+            <p>※一度実行すると元に戻せません</p>
+            <button className="btn btn__yes" onClick={props.content.handler}>
               はい
             </button>
             <button className="btn btn__no" onClick={closeModal}>
@@ -272,6 +287,16 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
         return (
           <>
             <p>トップ画面のメッセージを変更しました。</p>
+            <button className="btn btn__close" onClick={closeModal}>
+              閉じる
+            </button>
+          </>
+        );
+
+      case appConfig.confirmCodeList["2010"]:
+        return (
+          <>
+            <p>現在着席していた生徒を全員退席しました。</p>
             <button className="btn btn__close" onClick={closeModal}>
               閉じる
             </button>

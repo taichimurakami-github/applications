@@ -73,7 +73,7 @@ const Config: React.VFC<ConfigContainerProps> = (props) => {
 
     switch (e.currentTarget.id) {
       case "toggle_cancelOperation":
-        console.log(!localConfig_fn.stable.cancelOperation);
+        // console.log(!localConfig_fn.stable.cancelOperation);
         modalContents.fn_id = "appConfig_fn_cancelOperation";
         modalContents.fn_value = !localConfig_fn.stable.cancelOperation;
 
@@ -86,6 +86,7 @@ const Config: React.VFC<ConfigContainerProps> = (props) => {
         break;
 
       case "toggle_eraceAppDataTodayAll":
+        console.log(!localConfig_fn.stable.eraceAppDataTodayAll);
         modalContents.fn_id = "toggle_eraceAppDataTodayAll";
         modalContents.fn_value = !localConfig_fn.stable.eraceAppDataTodayAll;
 
@@ -124,10 +125,32 @@ const Config: React.VFC<ConfigContainerProps> = (props) => {
   };
 
   const exitAllStudents = () => {
-    if (!seatsState) throw new Error("seatsState is empty.");
-    for (const seatId of Object.keys(seatsState)) {
-      seatsState[seatId].active && exitRecorder(seatId, false, false);
-    }
+    //退席処理終了モーダルを表示
+    const showExecutionCompletedModal = () => {
+      handleModalState({
+        active: true,
+        name: appConfig.modalCodeList["1001"],
+        content: {
+          confirmCode: appConfig.confirmCodeList["2010"],
+        },
+      });
+    };
+
+    //確認モーダルを表示
+    handleModalState({
+      active: true,
+      name: appConfig.modalCodeList["1001"],
+      content: {
+        confirmCode: appConfig.confirmCodeList["1005"],
+        handler: () => {
+          if (!seatsState) throw new Error("seatsState is empty.");
+          for (const seatId of Object.keys(seatsState)) {
+            seatsState[seatId].active && exitRecorder(seatId, false, false);
+          }
+          showExecutionCompletedModal();
+        },
+      },
+    });
   };
 
   return (
