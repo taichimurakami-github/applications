@@ -15,7 +15,7 @@ const useExitRecorder = () => {
     setModalState,
   }: AppStateContext = useContext(AppStateContext);
 
-  const showExittedModal = (i: string, enterTime: string, exitTime: string) => {
+  const showExecuted = (i: string, enterTime: string, exitTime: string) => {
     //確認モーダルの表示
     setModalState({
       active: true,
@@ -115,7 +115,7 @@ const useExitRecorder = () => {
         //退席完了のモーダルを表示
         const exitTime = nowDate.HMS;
         const enterTime = (seatsState as seatsState)[i].enterTime;
-        showExittedModal(i, enterTime, exitTime);
+        showExecuted(i, enterTime, exitTime);
       }
 
       if (appLogRecorderEnabled) {
