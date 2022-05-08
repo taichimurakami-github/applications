@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 
-const useAttendanceState = (attendanceState_initialValue: attendanceState) => {
+export const attendanceState_initialValue: {} = {};
+
+const useAttendanceState = () => {
   const [attendanceState, setAttendanceState] = useState<attendanceState>(
     attendanceState_initialValue
   );

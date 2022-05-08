@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 
-const useStudentsListState = (studentsList_initialValue: studentsList) => {
+export const studentsList_initialValue: [] = [];
+
+const useStudentsListState = () => {
   //エクセルから取得した生徒情報(生徒名簿リストデータ)を格納しておく変数
   const [studentsList, setStudentsList] = useState<studentsList>(
     studentsList_initialValue

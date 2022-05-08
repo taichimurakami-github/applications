@@ -1,6 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
+import { appConfig } from "../../app.config";
 
-const useAppState = (appState_initialValue: appState) => {
+const appState_initialValue: appState = {
+  selectedElement: null,
+  selectedSeat: "",
+  now: "TOP",
+  localConfig: appConfig.localConfigTemplate,
+  appLog: null,
+};
+
+const useAppState = () => {
   const [appState, setAppState] = useState<appState>(appState_initialValue);
 
   /**

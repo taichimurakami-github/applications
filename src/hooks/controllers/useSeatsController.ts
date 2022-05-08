@@ -1,6 +1,7 @@
 import { useCallback, useContext } from "react";
-import { appConfig, seatsState_initialValue } from "../../app.config";
+import { appConfig } from "../../app.config";
 import { AppStateContext } from "../../AppContainer";
+import { seatsState_initialValue } from "../states/useSeatsState";
 
 const useSeatsController = () => {
   const {
@@ -66,7 +67,7 @@ const useSeatsController = () => {
       }));
 
       // console.log("insertObj-attendance");
-      console.log(insertObjectForSeatsState);
+      // console.log(insertObjectForSeatsState);
 
       setModalState({
         active: true,

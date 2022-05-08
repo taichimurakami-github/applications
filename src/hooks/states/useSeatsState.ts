@@ -1,6 +1,21 @@
 import { useState, useEffect } from "react";
 
-const useSeatsState = (seatsState_initialValue: seatsState) => {
+const getSeatsStateInitialValue = () => {
+  const initialValue: seatsState = {};
+  for (let i = 1; i <= 16; i++) {
+    initialValue[`seat${i}`] = {
+      active: false,
+      enterTime: "",
+      studentID: "",
+    };
+  }
+
+  return initialValue;
+};
+
+export const seatsState_initialValue = getSeatsStateInitialValue();
+
+const useSeatsState = () => {
   //現在の座席状況を管理する変数
   const [seatsState, setSeatsState] = useState<seatsState>(
     seatsState_initialValue
@@ -14,7 +29,7 @@ const useSeatsState = (seatsState_initialValue: seatsState) => {
         { mode: "read" }
       );
       console.log("read_seatsstate_bcup_result", seatsState_bcup);
-      console.log(seatsState_bcup);
+      // console.log(seatsState_bcup);
       setSeatsState(
         seatsState_bcup ? seatsState_bcup : seatsState_initialValue
       );
