@@ -20,10 +20,6 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
   const closeModal = () => props.onCloseModal();
 
   const getStudentInfoFromStudentID = (studentID: string) => {
-    if (!studentsList) {
-      return console.log("studentsList null");
-    }
-
     return studentID !== "__OTHERS__"
       ? studentsList.filter((val: { [index: string]: string }) => {
           return val.id == studentID;
@@ -57,11 +53,6 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
 
       //退室処理を実行
       case appConfig.confirmCodeList["1002"]:
-        if (!seatsState) {
-          console.log("studentsList null");
-          return undefined;
-        }
-
         //処理を実行する準備を行う
         //まず、処理を実行する生徒IDをseatsStateより取り出す
         //関係者の場合は特殊パターンとして別途オブジェクトを作成する

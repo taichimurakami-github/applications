@@ -21,10 +21,6 @@ const useSeatsController = () => {
    * @returns
    */
   const seatsController = useCallback((arg: { mode: string; content: any }) => {
-    if (!seatsState || !attendanceState) {
-      throw new Error("state is empty");
-    }
-
     if (arg.mode === appConfig.seatOperationCodeList["1001"]) {
       const nowSeatID: string = arg.content.nowSeatID;
       const nextSeatID: string = arg.content.nextSeatID;

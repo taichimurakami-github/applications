@@ -105,9 +105,9 @@ declare global {
 
   type AppStateContext = {
     appState: appState;
-    seatsState: seatsState | null;
-    attendanceState: attendanceState | null;
-    studentsList: studentsList | null;
+    seatsState: seatsState;
+    attendanceState: attendanceState;
+    studentsList: studentsList;
     modalState: modalState;
     resetAppState: (arg: { mode: "APPLOG" | "DEFAULT"; content?: any }) => void;
     handleAppState: (d: { [index: string]: any }) => void;

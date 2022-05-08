@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 
 const useStudentsListState = (studentsList_initialValue: studentsList) => {
   //エクセルから取得した生徒情報(生徒名簿リストデータ)を格納しておく変数
-  const [studentsList, setStudentsList] = useState<studentsList | null>(null);
+  const [studentsList, setStudentsList] = useState<studentsList>(
+    studentsList_initialValue
+  );
 
   useEffect(() => {
     // console.log("バックアップファイルの読み込みを開始します");

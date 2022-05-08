@@ -8,7 +8,7 @@ const useAutoDataReadChecker = (): void => {
 
   //生徒情報ファイルが読み込まれていない時は、エラーモーダルを最初に表示
   useEffect(() => {
-    if (!studentsList) {
+    if (studentsList.length === 0) {
       setModalState({
         active: true,
         name: appConfig.modalCodeList["1002"],

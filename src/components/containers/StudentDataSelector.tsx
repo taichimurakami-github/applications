@@ -27,14 +27,6 @@ export const StudentDataSelector: React.VFC = (props) => {
     handleModalState,
   }: AppStateContext = useContext(AppStateContext);
 
-  if (!studentsList) {
-    throw new Error("no studentsList data has been loaded.");
-  }
-
-  if (!seatsState) {
-    throw new Error("no seatsState data has been loaded.");
-  }
-
   const enterRecorder = useEnterRecorder();
 
   const [state, setState] = useState<StudentDataSelectorStates>({

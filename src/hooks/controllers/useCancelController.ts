@@ -52,7 +52,7 @@ const useCancelController = () => {
 
     //attendanceStateのenterの記録を削除
     //attendanceState上にはkeyとvalueが必ず存在しているので、値の存在を確認せずに直接値を参照する
-    (attendanceState as attendanceState)[appState.appLog.studentID].length === 1
+    attendanceState[appState.appLog.studentID].length === 1
       ? //attendanceStateのvalue内の要素が1つしかない場合、keyごと削除
         delete insertObjectForAttendanceState[appState.appLog.studentID]
       : //要素が2つ以上の場合、最後の要素 = 新しくenterで生成された要素を削除
@@ -130,10 +130,6 @@ const useCancelController = () => {
   };
 
   const cancelController = useCallback(() => {
-    if (!attendanceState) {
-      throw new Error("attendanceState is null");
-    }
-
     //appState.appLogがnullだった場合、return
     if (!appState.appLog || !appState.appLog.operation) {
       console.log("本日付のappLogがありません");

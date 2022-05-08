@@ -143,7 +143,6 @@ const Config: React.VFC<ConfigContainerProps> = (props) => {
       content: {
         confirmCode: appConfig.confirmCodeList["1005"],
         handler: () => {
-          if (!seatsState) throw new Error("seatsState is empty.");
           for (const seatId of Object.keys(seatsState)) {
             seatsState[seatId].active && exitRecorder(seatId, false, false);
           }
