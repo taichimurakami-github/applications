@@ -88,10 +88,6 @@ const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
     const activeSeatList = [];
     const othersList = [];
 
-    if (!seats || !studentsList) {
-      throw new Error("seats or studentsList is null");
-    }
-
     //active状態の席IDを配列に格納
     for (let key in seatsState) {
       //埋まっている席番号を格納
@@ -121,7 +117,7 @@ const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
           ];
         } else {
           //生徒IDが一致する生徒情報をデータシートのデータより取得
-          result = (studentsList as studentsList).filter((elem) => {
+          result = studentsList.filter((elem) => {
             return elem.id == seats[val].studentID;
           });
         }

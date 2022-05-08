@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { appConfig } from "../../app.config";
 import { AppStateContext } from "../../AppContainer";
+import useAppDataEracer from "../../hooks/controllers/useAppDataEracer";
 import useCancelController from "../../hooks/controllers/useCancelController";
 import useEnterRecorder from "../../hooks/controllers/useEnterRecorder";
 import useExitRecorder from "../../hooks/controllers/useExitRecorder";
@@ -18,12 +19,9 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
   const exitRecorder = useExitRecorder();
   const cancelController = useCancelController();
   const closeModal = () => props.onCloseModal();
+  const appDataEracer = useAppDataEracer();
 
   const getStudentInfoFromStudentID = (studentID: string) => {
-    if (!studentsList) {
-      return console.log("studentsList null");
-    }
-
     return studentID !== "__OTHERS__"
       ? studentsList.filter((val: { [index: string]: string }) => {
           return val.id == studentID;
@@ -57,11 +55,6 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
 
       //退室処理を実行
       case appConfig.confirmCodeList["1002"]:
-        if (!seatsState) {
-          console.log("studentsList null");
-          return undefined;
-        }
-
         //処理を実行する準備を行う
         //まず、処理を実行する生徒IDをseatsStateより取り出す
         //関係者の場合は特殊パターンとして別途オブジェクトを作成する
@@ -74,7 +67,6 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
           seatsState[props.content.targetID].studentID
         );
 
-        // console.log(targetInfo);
         //確認モーダルの中身
         return (
           <div className="exit-confirm-selector-container">
@@ -104,7 +96,7 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
             <p>※この機能はアプリの動作が不安定な場合のみ使用してください※</p>
             <p>一度削除したデータはもとに戻せません。本当によろしいですか？</p>
 
-            <button className="btn btn__yes" onClick={cancelController}>
+            <button className="btn btn__yes" onClick={appDataEracer}>
               はい
             </button>
             <button className="btn btn__no" onClick={closeModal}>
@@ -267,7 +259,7 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
 
         const studentName = getStudentInfoFromStudentID(
           props.content.studentID
-        )?.name;
+        ).name;
 
         return (
           <>
@@ -303,15 +295,15 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
           </>
         );
 
-      case appConfig.confirmCodeList["2011"]:
-        return (
-          <>
-            <p>本日分のアプリ内部データを削除しました。</p>
-            <button className="btn btn__close" onClick={closeModal}>
-              閉じる
-            </button>
-          </>
-        );
+      // case appConfig.confirmCodeList["2011"]:
+      //   return (
+      //     <>
+      //       <p>本日分のアプリ内部データを削除しました。</p>
+      //       <button className="btn btn__close" onClick={closeModal}>
+      //         閉じる
+      //       </button>
+      //     </>
+      //   );
 
       default:
         console.log("confirm code:", props.content.confirmCode);

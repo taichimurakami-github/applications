@@ -1,6 +1,12 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 
-const useModalState = (modalState_initialValue: modalState) => {
+export const modalState_initialValue: modalState = {
+  active: false,
+  name: "",
+  content: {},
+};
+
+const useModalState = () => {
   const [modalState, setModalState] = useState<modalState>(
     modalState_initialValue
   );

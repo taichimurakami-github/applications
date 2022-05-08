@@ -32,11 +32,11 @@ const useEnterRecorder = () => {
     };
 
     //attendanceState内に該当生徒のkeyが存在するか確認
-    i in (attendanceState as attendanceState)
+    i in attendanceState
       ? //既に同日内に自習室に記録が残っている場合、要素を追加する形で記録
-        (insertObjectForAttendanceState[i] = (
-          attendanceState as attendanceState
-        )[i].map((val: any) => val))
+        (insertObjectForAttendanceState[i] = attendanceState[i].map(
+          (val: any) => val
+        ))
       : //同日内で初めて自習室に来た場合、新しくkeyと配列を作成
         (insertObjectForAttendanceState[i] = []);
 
@@ -53,10 +53,6 @@ const useEnterRecorder = () => {
       throw new Error(
         "invalid props.content.targetID value: undefined has passed."
       );
-    }
-
-    if (!attendanceState) {
-      throw new Error("attendanceState is empty.");
     }
 
     console.log("出席処理を開始します...");

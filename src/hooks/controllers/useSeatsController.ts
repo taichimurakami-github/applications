@@ -1,6 +1,7 @@
 import { useCallback, useContext } from "react";
-import { appConfig, seatsState_initialValue } from "../../app.config";
+import { appConfig } from "../../app.config";
 import { AppStateContext } from "../../AppContainer";
+import { seatsState_initialValue } from "../states/useSeatsState";
 
 const useSeatsController = () => {
   const {
@@ -21,10 +22,6 @@ const useSeatsController = () => {
    * @returns
    */
   const seatsController = useCallback((arg: { mode: string; content: any }) => {
-    if (!seatsState || !attendanceState) {
-      throw new Error("state is empty");
-    }
-
     if (arg.mode === appConfig.seatOperationCodeList["1001"]) {
       const nowSeatID: string = arg.content.nowSeatID;
       const nextSeatID: string = arg.content.nextSeatID;
@@ -50,10 +47,10 @@ const useSeatsController = () => {
         insertObjectForAttendanceState[targetID].push(changeData);
         // console.log("insertObj-attendance 作成完了");
         // console.log(insertObjectForAttendanceState);
-        setAttendanceState({
-          ...attendanceState,
+        setAttendanceState((beforeAttendanceState) => ({
+          ...beforeAttendanceState,
           ...insertObjectForAttendanceState,
-        });
+        }));
       }
 
       //SeatsState書き換え
@@ -64,10 +61,13 @@ const useSeatsController = () => {
       };
       insertObjectForSeatsState[nextSeatID] = { ...seatsState[nowSeatID] };
 
-      setSeatsState({ ...seatsState, ...insertObjectForSeatsState });
+      setSeatsState((beforeSeatsState) => ({
+        ...beforeSeatsState,
+        ...insertObjectForSeatsState,
+      }));
 
       // console.log("insertObj-attendance");
-      console.log(insertObjectForSeatsState);
+      // console.log(insertObjectForSeatsState);
 
       setModalState({
         active: true,

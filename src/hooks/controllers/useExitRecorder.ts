@@ -46,7 +46,7 @@ const useExitRecorder = () => {
     nowDate: { YMD: string; HMS: string }
   ) => {
     //id: 対象生徒のid(objのindexになる)
-    const id = (seatsState as seatsState)[i].studentID;
+    const id = seatsState[i].studentID;
     const attendance_exitData = {
       exit: nowDate.HMS,
     };
@@ -54,21 +54,20 @@ const useExitRecorder = () => {
     //対象生徒のkeyで参照したattendanceStateのvalueの中で、
     //配列の最後の要素のみ更新し、元のattendanceStateにマージする
     const insertObjectForAttendanceState: { [index: string]: any } = {};
-    insertObjectForAttendanceState[id] = (attendanceState as attendanceState)[
-      id
-    ].map((val: any, index: number) => {
-      //exitのデータを、配列の最後の要素に書き込み
-      //それ以外のデータは変更しないでそのまま返す
-      return index ===
-        Number((attendanceState as attendanceState)[id].length) - 1
-        ? { ...val, ...attendance_exitData }
-        : val;
-    });
+    insertObjectForAttendanceState[id] = attendanceState[id].map(
+      (val: any, index: number) => {
+        //exitのデータを、配列の最後の要素に書き込み
+        //それ以外のデータは変更しないでそのまま返す
+        return index === Number(attendanceState[id].length) - 1
+          ? { ...val, ...attendance_exitData }
+          : val;
+      }
+    );
 
-    setAttendanceState({
-      ...attendanceState,
+    setAttendanceState((beforeAttendanceState) => ({
+      ...beforeAttendanceState,
       ...insertObjectForAttendanceState,
-    });
+    }));
   };
 
   /**
@@ -86,10 +85,6 @@ const useExitRecorder = () => {
     ) => {
       if (!i) {
         throw new Error("targetID is empty");
-      }
-
-      if (!seatsState || !attendanceState) {
-        throw new Error("state is empty");
       }
 
       // console.log("退席処理を開始します...");
@@ -114,7 +109,7 @@ const useExitRecorder = () => {
       if (showModalEnabled) {
         //退席完了のモーダルを表示
         const exitTime = nowDate.HMS;
-        const enterTime = (seatsState as seatsState)[i].enterTime;
+        const enterTime = seatsState[i].enterTime;
         showExecuted(i, enterTime, exitTime);
       }
 

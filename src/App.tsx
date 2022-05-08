@@ -31,17 +31,17 @@ const App: React.VFC = () => {
       { mode: "write", content: arg }
     );
     //変更を反映
-    setAppState({
-      ...appState,
+    setAppState((beforeAppState) => ({
+      ...beforeAppState,
       localConfig: { ...newAppLocalConfig.appConfig },
-    });
+    }));
 
     resolve();
   };
 
   //appState, seatStateを変更する
   const handleAppState = (d: { [index: string]: any }) =>
-    setAppState({ ...appState, ...d });
+    setAppState((beforeAppState) => ({ ...beforeAppState, ...d }));
 
   /**
    * function handleComponent()
