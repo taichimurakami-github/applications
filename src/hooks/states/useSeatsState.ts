@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 
 const useSeatsState = (seatsState_initialValue: seatsState) => {
   //現在の座席状況を管理する変数
-  const [seatsState, setSeatsState] = useState<seatsState | null>(null);
+  const [seatsState, setSeatsState] = useState<seatsState>(
+    seatsState_initialValue
+  );
 
   useEffect(() => {
     (async () => {
