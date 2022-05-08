@@ -112,12 +112,10 @@ declare global {
     resetAppState: (arg: { mode: "APPLOG" | "DEFAULT"; content?: any }) => void;
     handleAppState: (d: { [index: string]: any }) => void;
     setAppState: React.Dispatch<React.SetStateAction<appState>>;
-    setSeatsState: React.Dispatch<React.SetStateAction<seatsState | null>>;
-    setStudentsList: React.Dispatch<React.SetStateAction<studentsList | null>>;
+    setSeatsState: React.Dispatch<React.SetStateAction<seatsState>>;
+    setStudentsList: React.Dispatch<React.SetStateAction<studentsList>>;
     setModalState: React.Dispatch<React.SetStateAction<modalState>>;
-    setAttendanceState: React.Dispatch<
-      React.SetStateAction<attendanceState | null>
-    >;
+    setAttendanceState: React.Dispatch<React.SetStateAction<attendanceState>>;
     handleModalState: (t: modalState) => void;
   };
 }

@@ -51,6 +51,9 @@ const useExitRecorder = () => {
       exit: nowDate.HMS,
     };
 
+    console.log(attendanceState);
+    console.log(id);
+    console.log(attendanceState[id]);
     //対象生徒のkeyで参照したattendanceStateのvalueの中で、
     //配列の最後の要素のみ更新し、元のattendanceStateにマージする
     const insertObjectForAttendanceState: { [index: string]: any } = {};
@@ -63,6 +66,8 @@ const useExitRecorder = () => {
           : val;
       }
     );
+
+    console.log(insertObjectForAttendanceState);
 
     setAttendanceState((beforeAttendanceState) => ({
       ...beforeAttendanceState,

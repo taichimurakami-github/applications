@@ -40,6 +40,8 @@ const useEnterRecorder = () => {
         (insertObjectForAttendanceState[i] = []);
 
     insertObjectForAttendanceState[i].push(attendance_enterData);
+
+    console.log(insertObjectForAttendanceState);
     //atttendanceStateを更新
     setAttendanceState((beforeAttendanceState) => ({
       ...beforeAttendanceState,

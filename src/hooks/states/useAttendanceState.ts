@@ -9,10 +9,10 @@ const useAttendanceState = () => {
 
   useEffect(() => {
     (async () => {
-      const attendanceState_bcup = await window.electron.ipcRenderer.invoke(
-        "handle_attendanceState",
-        { mode: "read" }
-      );
+      const attendanceState_bcup: attendanceState =
+        await window.electron.ipcRenderer.invoke("handle_attendanceState", {
+          mode: "read",
+        });
       console.log("attendanceState_bcup_result", attendanceState_bcup);
 
       setAttendanceState(
@@ -22,6 +22,10 @@ const useAttendanceState = () => {
       );
     })();
   }, []);
+
+  useEffect(() => {
+    console.log(attendanceState);
+  }, [attendanceState]);
 
   return { attendanceState, setAttendanceState };
 };
