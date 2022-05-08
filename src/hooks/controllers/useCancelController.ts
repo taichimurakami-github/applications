@@ -58,7 +58,10 @@ const useCancelController = () => {
       : //要素が2つ以上の場合、最後の要素 = 新しくenterで生成された要素を削除
         insertObjectForAttendanceState[appState.appLog.studentID].pop();
 
-    setAttendanceState({ ...insertObjectForAttendanceState });
+    setAttendanceState((beforeAttendanceState) => ({
+      ...beforeAttendanceState,
+      ...insertObjectForAttendanceState,
+    }));
 
     //seatsStateの登録を削除
     insertObjectForSeatsState[appState.appLog.seatID] = {
@@ -66,7 +69,10 @@ const useCancelController = () => {
       enterTime: "",
       studentID: "",
     };
-    setSeatsState({ ...seatsState, ...insertObjectForSeatsState });
+    setSeatsState((beforeSeatsState) => ({
+      ...beforeSeatsState,
+      ...insertObjectForSeatsState,
+    }));
   };
 
   const cancelExitOperation = (
@@ -88,7 +94,10 @@ const useCancelController = () => {
         studentID: "__OTHERS__",
       };
 
-      setSeatsState({ ...seatsState, ...insertObjectForSeatsState });
+      setSeatsState((beforeSeatsState) => ({
+        ...beforeSeatsState,
+        ...insertObjectForSeatsState,
+      }));
       return;
     }
 
@@ -98,7 +107,10 @@ const useCancelController = () => {
       enterTime: appState.appLog.enterTime,
       studentID: appState.appLog.studentID,
     };
-    setSeatsState({ ...seatsState, ...insertObjectForSeatsState });
+    setSeatsState((beforeSeatsState) => ({
+      ...beforeSeatsState,
+      ...insertObjectForSeatsState,
+    }));
 
     //attendanceStateからexitの記録を削除
 
@@ -111,10 +123,10 @@ const useCancelController = () => {
     insertObjectForAttendanceState[appState.appLog.studentID].pop();
     insertObjectForAttendanceState[appState.appLog.studentID].push(lastElem);
 
-    setAttendanceState({
-      ...attendanceState,
+    setAttendanceState((beforeAttendanceState) => ({
+      ...beforeAttendanceState,
       ...insertObjectForAttendanceState,
-    });
+    }));
   };
 
   const cancelController = useCallback(() => {

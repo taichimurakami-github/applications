@@ -50,10 +50,10 @@ const useSeatsController = () => {
         insertObjectForAttendanceState[targetID].push(changeData);
         // console.log("insertObj-attendance 作成完了");
         // console.log(insertObjectForAttendanceState);
-        setAttendanceState({
-          ...attendanceState,
+        setAttendanceState((beforeAttendanceState) => ({
+          ...beforeAttendanceState,
           ...insertObjectForAttendanceState,
-        });
+        }));
       }
 
       //SeatsState書き換え
@@ -64,7 +64,10 @@ const useSeatsController = () => {
       };
       insertObjectForSeatsState[nextSeatID] = { ...seatsState[nowSeatID] };
 
-      setSeatsState({ ...seatsState, ...insertObjectForSeatsState });
+      setSeatsState((beforeSeatsState) => ({
+        ...beforeSeatsState,
+        ...insertObjectForSeatsState,
+      }));
 
       // console.log("insertObj-attendance");
       console.log(insertObjectForSeatsState);

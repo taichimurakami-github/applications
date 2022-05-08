@@ -65,10 +65,10 @@ const useExitRecorder = () => {
         : val;
     });
 
-    setAttendanceState({
-      ...attendanceState,
+    setAttendanceState((beforeAttendanceState) => ({
+      ...beforeAttendanceState,
       ...insertObjectForAttendanceState,
-    });
+    }));
   };
 
   /**
