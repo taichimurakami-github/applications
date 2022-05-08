@@ -30,7 +30,7 @@ declare global {
     [index: string]: array[{ [index: string]: string }];
   }
 
-  interface modalStateContent {
+  interface modalStateContents {
     confirmCode?: string;
     errorCode?: string;
 
@@ -50,6 +50,7 @@ declare global {
     fn_status?: string;
     fn_value?: boolean;
     msg?: string;
+    handler?: (arg?: any) => void;
 
     //StudentsData.tsx
     studentData?: { [key: string]: string };
@@ -60,7 +61,7 @@ declare global {
   interface modalState {
     active: boolean;
     name: string;
-    content: modalStateContent;
+    content: modalStateContents;
   }
 
   interface seatsState {
