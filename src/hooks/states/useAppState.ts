@@ -25,20 +25,24 @@ const useAppState = () => {
    */
   const resetAppState = useCallback(
     (arg: { mode: "APPLOG" | "DEFAULT"; content?: any }) => {
+      const resetPropaties = {
+        selectedElement: null,
+        selectedSeat: "",
+        now: "TOP",
+      };
       if (arg.mode === "APPLOG") {
         //appLogが渡された場合
         setAppState((beforeAppState) => ({
           ...beforeAppState,
-          ...appState_initialValue,
-          localConfig: { ...appState.localConfig },
+          ...resetPropaties,
           appLog: arg.content,
         }));
       } else {
         //appLogが渡されなかった場合
         setAppState((beforeAppState) => ({
           ...beforeAppState,
-          ...appState_initialValue,
-          localConfig: { ...appState.localConfig },
+          ...resetPropaties,
+          appLog: null,
         }));
       }
     },
@@ -72,6 +76,11 @@ const useAppState = () => {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    console.log(appState);
+  }, [appState]);
+
   return { appState, setAppState, resetAppState, handleAppState };
 };
 

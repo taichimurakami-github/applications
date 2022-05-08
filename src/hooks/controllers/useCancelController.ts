@@ -15,7 +15,7 @@ import { AppStateContext } from "../../AppContainer";
 const useCancelController = () => {
   const {
     appState,
-    seatsState,
+    resetAppState,
     attendanceState,
     setSeatsState,
     setModalState,
@@ -28,10 +28,14 @@ const useCancelController = () => {
       active: true,
       name: appConfig.modalCodeList["1001"],
       content: {
-        //アプリの内部データが取り消されました。
-        confirmCode: appConfig.confirmCodeList["2011"],
+        //取り消し操作完了
+        confirmCode: appConfig.confirmCodeList["2006"],
       },
     });
+  };
+
+  const removeCurrentLog = () => {
+    resetAppState({ mode: "DEFAULT" });
   };
 
   const cancelEnterOperation = (

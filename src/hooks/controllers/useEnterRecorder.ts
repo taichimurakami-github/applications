@@ -13,9 +13,8 @@ import { getFormattedDate } from "../../utils/getFormattedDate";
 const useEnterRecorder = () => {
   const {
     appState,
-    seatsState,
     attendanceState,
-    resetAppState,
+    handleAppState,
     setSeatsState,
     setAttendanceState,
     setModalState,
@@ -98,9 +97,9 @@ const useEnterRecorder = () => {
       },
     });
 
-    resetAppState({
-      mode: "APPLOG",
-      content: {
+    handleAppState({
+      now: "TOP",
+      appLog: {
         studentID: i,
         enterTime: insertObjectForSeatsState[appState.selectedSeat].enterTime,
         seatID: appState.selectedSeat,
