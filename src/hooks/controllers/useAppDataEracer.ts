@@ -9,18 +9,22 @@ import { AppStateContext } from "../../AppContainer";
  * ※削除されるのはアプリ起動日1日分のみ
  *
  */
-const useAppDataEracer = async () => {
-  const { setModalState }: AppStateContext = useContext(AppStateContext);
+const useAppDataEracer = () => {
+  const { handleModalState }: AppStateContext = useContext(AppStateContext);
 
-  await window.electron.ipcRenderer.invoke("handle_eraceAppLocalData");
-  setModalState({
-    active: true,
-    name: appConfig.modalCodeList["1001"],
-    content: {
-      //アプリデータ削除完了
-      confirmCode: appConfig.confirmCodeList["2005"],
-    },
-  });
+  const appDataEracer = async () => {
+    await window.electron.ipcRenderer.invoke("handle_eraceAppLocalData");
+    handleModalState({
+      active: true,
+      name: appConfig.modalCodeList["1001"],
+      content: {
+        //アプリデータ削除完了
+        confirmCode: appConfig.confirmCodeList["2005"],
+      },
+    });
+  };
+
+  return appDataEracer;
 };
 
 export default useAppDataEracer;

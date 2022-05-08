@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { appConfig } from "../../app.config";
 import { AppStateContext } from "../../AppContainer";
+import useAppDataEracer from "../../hooks/controllers/useAppDataEracer";
 import useExitRecorder from "../../hooks/controllers/useExitRecorder";
 import useStudentsFileReader from "../../hooks/controllers/useStudentsFileReader";
 
@@ -25,6 +26,7 @@ const Config: React.VFC<ConfigContainerProps> = (props) => {
 
   const studentsFileReader = useStudentsFileReader();
   const exitRecorder = useExitRecorder();
+  const appDataEracer = useAppDataEracer();
 
   const [topMessage, setTopMessage] = useState<string>(
     appState.localConfig.msg
@@ -115,11 +117,13 @@ const Config: React.VFC<ConfigContainerProps> = (props) => {
   };
 
   const eraceAppData = () => {
+    //データ消去確認モーダルを表示
     handleModalState({
       active: true,
       name: appConfig.modalCodeList["1001"],
       content: {
         confirmCode: appConfig.confirmCodeList["1003"],
+        handler: appDataEracer,
       },
     });
   };
