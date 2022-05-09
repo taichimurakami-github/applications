@@ -1,22 +1,33 @@
 import { useContext, useEffect } from "react";
 import { AppStateContext } from "../../AppContainer";
+import { isObjectNotEmpty } from "../../utils/isObjectNotEmpty";
 
 const useAutoFileWriter = (): void => {
   const { attendanceState, seatsState }: AppStateContext =
     useContext(AppStateContext);
 
+  //seatsStateの全てのactiveプロパティがfalseだったら初期化されている状態とみなす
+  const isSeatsStateInitialized = () => {
+    for (const seatData of Object.values(seatsState)) {
+      if (seatData.active) return false;
+    }
+
+    return true;
+  };
+
   //バックアップ兼記録ファイル 自動書き出し
   useEffect(() => {
     (async () => {
-      //attendanceState書き出し
-      attendanceState &&
+      //attendanceStateが初期値{}でなければ書き出し
+      isObjectNotEmpty(attendanceState) &&
         (await window.electron.ipcRenderer.invoke("handle_attendanceState", {
           mode: "write",
           data: JSON.stringify(attendanceState),
         }));
 
       //seatsState書き出し
-      seatsState &&
+      // isObjectNotEmpty(seatsState) &&
+      !isSeatsStateInitialized() &&
         (await window.electron.ipcRenderer.invoke("handle_seatsState", {
           mode: "write",
           data: JSON.stringify(seatsState),
