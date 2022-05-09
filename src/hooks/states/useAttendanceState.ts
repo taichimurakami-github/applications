@@ -23,10 +23,6 @@ const useAttendanceState = () => {
     })();
   }, []);
 
-  useEffect(() => {
-    console.log(attendanceState);
-  }, [attendanceState]);
-
   return { attendanceState, setAttendanceState };
 };
 
