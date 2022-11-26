@@ -42,7 +42,6 @@ const StudentsList: React.VFC<StudentsList> = (props) => {
       </h3>
       <ul className="students-list">
         {props.studentsList.map((val) => {
-          console.log(val);
           return (
             <li
               id={val.id}
