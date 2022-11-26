@@ -1,43 +1,45 @@
 //assets import
-@import "./assets";
+@import "./_assets";
 
-.modal-wrapper{
+.modal-wrapper {
   position: fixed;
   height: 100vh;
   width: 100vw;
   top: 0;
   left: 0;
   z-index: 1;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.confirm-modal-wrapper{
+.confirm-modal-wrapper {
   background: white;
   padding: 50px;
   border-radius: 20px;
   font-size: 2rem;
-  p:first-child{
+  p:first-child {
     font-weight: bold;
   }
 
-  .btn{
+  .btn {
     margin-top: 30px;
   }
 
-  .current-operation b{
+  .current-operation b {
     display: inline-block;
     margin: 0 10px;
   }
 
   .enter-confirm-selector-container,
-  .exit-confirm-selector-container{
-    p{margin-bottom: 30px;}
+  .exit-confirm-selector-container {
+    p {
+      margin-bottom: 30px;
+    }
 
     .btn__yes,
-    .btn__no{
+    .btn__no {
       margin-top: 0;
     }
   }
@@ -46,7 +48,7 @@
   width: 0px;
 }
 
-.seats-modal-wrapper{
+.seats-modal-wrapper {
   $wrapper-height: 800px;
   $wrapper-width: 1152px;
   $wrapper-padding: 30px;
@@ -55,12 +57,12 @@
   font-size: 2rem;
   padding: $wrapper-padding;
   border-radius: 20px;
-  background:white;
+  background: white;
   width: $wrapper-width;
   height: $wrapper-height;
   overflow: auto;
 
-  .seats-modal-container.scroll{
+  .seats-modal-container.scroll {
     height: 650px;
     overflow-y: auto;
     margin: 0;
@@ -71,7 +73,7 @@
     &::-webkit-scrollbar-track {
       background: lightgray;
     }
-    
+
     &::-webkit-scrollbar-thumb {
       background: $navy;
       border: $navy 3px solid;
@@ -79,23 +81,22 @@
     }
   }
 
-  .all-seats-unactive{
+  .all-seats-unactive {
     margin-top: 250px;
   }
-  
 
-  .btn__typeB{
+  .btn__typeB {
     margin-top: 100px;
   }
 
   .active-seat-user,
-  .active-seat-navigation{
+  .active-seat-navigation {
     // cursor: pointer;
     display: grid;
-    grid-template: 1fr / repeat(5, 1fr) ;
+    grid-template: 1fr / repeat(5, 1fr);
     align-items: center;
 
-    .btn__close{
+    .btn__close {
       grid-column: 5 / 6;
       border-radius: 0;
       // width: 100%;
@@ -103,19 +104,19 @@
       align-items: center;
       justify-content: center;
     }
-  
-    .close-button-icon{
+
+    .close-button-icon {
       margin-right: 10px;
     }
   }
 
-  .active-seat-navigation{
-    //高さのmax: 
-    padding-right: 15px;//スクロールバー分のズレ
+  .active-seat-navigation {
+    //高さのmax:
+    padding-right: 15px; //スクロールバー分のズレ
     height: 75px;
 
-    b{
-      :nth-child(2){
+    b {
+      :nth-child(2) {
         border: 1px solid $light-gray;
         border-bottom: 0;
         border-top: 0;
@@ -123,29 +124,32 @@
     }
   }
 
-  .active-seat-user{
+  .active-seat-user {
     padding: 15px 0;
 
-    .button__typeC{
+    .button__typeC {
       // width: 150px;
       height: 50px;
       margin: 0 auto;
-
     }
-    .btn-exit{
+    .btn-exit {
       background: $vermilion;
-      &:hover{background: darken($vermilion, 20%);}
+      &:hover {
+        background: darken($vermilion, 20%);
+      }
     }
-    .btn-change-seat{
+    .btn-change-seat {
       background: $moss-green;
-      &:hover{background: darken($moss-green, 20%);}
+      &:hover {
+        background: darken($moss-green, 20%);
+      }
     }
 
-    span{
-      pointer-events: none;//クリックした際にidを入手するために必要なので消さないこと
+    span {
+      pointer-events: none; //クリックした際にidを入手するために必要なので消さないこと
     }
 
-    &:not(:last-child){
+    &:not(:last-child) {
       border-bottom: $gray 1px solid;
     }
 
@@ -155,51 +159,50 @@
     // }
   }
 
-  .seat-table-container{
+  .seat-table-container {
     margin-top: 70px;
   }
 
-  .title-nav h2{
+  .title-nav h2 {
     grid-column: 2/5;
   }
 }
 
-.error-modal-container{
+.error-modal-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  
+
   background: $orange;
   width: 1000px;
   padding: 50px;
   border-radius: 20px;
 
-  h2{
+  h2 {
     margin-bottom: 50px;
   }
 
-  .btn{
+  .btn {
     margin-top: 50px;
   }
 }
 
-.news-modal-wrapper{
+.news-modal-wrapper {
   background: white;
   padding: 50px;
-  width: 1152px;  
+  width: 1152px;
   border-radius: 20px;
 
-  .title{
+  .title {
     background: $navy;
     margin: 0 auto;
     color: white;
   }
 
-  .message{
+  .message {
     width: 90%;
     margin: 50px auto;
     text-align: left;
   }
-  
 }

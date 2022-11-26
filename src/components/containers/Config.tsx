@@ -6,7 +6,7 @@ import useExitRecorder from "../../hooks/controllers/useExitRecorder";
 import useStudentsFileReader from "../../hooks/controllers/useStudentsFileReader";
 
 //style import
-import "../styles/modules/Config.scss";
+import "@styles/modules/Config.scss";
 import ConfigView from "../views/ConfigView";
 
 interface ConfigContainerProps {

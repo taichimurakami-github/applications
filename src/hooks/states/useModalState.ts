@@ -28,7 +28,7 @@ const useModalState = () => {
     }
 
     //その他：引数に従ってモーダルを起動
-    if (t.active && t.name !== "" && t.content !== {}) {
+    if (t.active && t.name !== "") {
       setModalState({
         active: true,
         name: t.name,

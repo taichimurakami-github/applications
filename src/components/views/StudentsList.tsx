@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/modules/StudentDataSelector.scss";
+import "@styles/modules/StudentDataSelector.scss";
 
 interface StudentsList {
   onSaveAttendance: (i: string) => void;
@@ -42,6 +42,7 @@ const StudentsList: React.VFC<StudentsList> = (props) => {
       </h3>
       <ul className="students-list">
         {props.studentsList.map((val) => {
+          console.log(val);
           return (
             <li
               id={val.id}
