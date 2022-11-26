@@ -8,9 +8,9 @@ import { ModalRoot } from "./components/containers/MordalRoot";
 import { Config } from "./components/containers/Config";
 
 //styles import
-import "./components/styles/modules/Top.scss";
-import "./components/styles/app.common.scss";
-import { resolve } from "path";
+import "@styles/modules/Top.scss";
+import "@styles/app.common.scss";
+import "@styles/index.scss";
 
 import { AppStateContext } from "./AppContainer";
 import useAutoDataReadChecker from "./hooks/controllers/useAutoDataReadChecker";
@@ -35,8 +35,6 @@ const App: React.VFC = () => {
       ...beforeAppState,
       localConfig: { ...newAppLocalConfig.appConfig },
     }));
-
-    resolve();
   };
 
   //appState, seatStateを変更する

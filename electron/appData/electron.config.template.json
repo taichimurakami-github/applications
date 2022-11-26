@@ -1,0 +1,20 @@
+{
+  "version": "0.9.11",
+  "path":{
+    "studentsList": "",
+    "attendance": "",
+    "seats":""
+  },
+  "appConfig": {
+    "msg": "現在、お知らせは特にありません。体調に気を付けて、今日も一日頑張ってください！",
+    "fn": {
+      "stable": {
+        "eraceAppDataTodayAll": true,
+        "cancelOperation": true,
+        "changeSeatID": true
+      },
+      "nightly": {
+      }
+    }
+  }
+}
