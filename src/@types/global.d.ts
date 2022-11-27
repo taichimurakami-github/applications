@@ -4,6 +4,10 @@ declare global {
   interface Window {
     electron: {
       ipcRenderer: ipcRenderer;
+      ipcRendererOn: any;
+      onListenUpdateProcess: (
+        handler: (events: any, ...args: any) => void
+      ) => void;
     };
   }
 
