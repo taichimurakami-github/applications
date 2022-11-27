@@ -18,6 +18,11 @@ import { app, BrowserWindow } from "electron";
 import { release } from "os";
 import { join, resolve as resolvePath } from "path";
 import { receiveIpcMainEvents } from "./ipcMainEventsReceiver";
+import * as logger from "electron-log";
+
+console.log = logger.log;
+console.error = logger.error;
+console.info = logger.info;
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith("6.1")) app.disableHardwareAcceleration();
@@ -32,15 +37,17 @@ if (!app.requestSingleInstanceLock()) {
 
 let win: BrowserWindow | null = null;
 
-async function createWindow() {
+function createWindow() {
   const preload = join(__dirname, "../preload/index.js");
   const url = process.env.VITE_DEV_SERVER_URL;
   const indexHtml = join(process.env.DIST, "index.html");
 
   win = new BrowserWindow({
     title: "Attendance-management(win-x64)",
+    width: 1920,
+    height: 1080,
     icon: join(process.env.PUBLIC, "favicon.svg"),
-    show: false,
+    // show: true,
     webPreferences: {
       preload,
       // nodeIntegration: true,
