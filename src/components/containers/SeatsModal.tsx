@@ -2,7 +2,7 @@ import { appConfig } from "../../app.config";
 import React, { useContext, useState } from "react";
 import { SeatsTable } from "../views/SeatsTable";
 
-import "../styles/modules/Top.scss";
+import "@styles/modules/Top.scss";
 import closeButtonIcon from "../../images/close-button.svg";
 import { AppStateContext } from "../../AppContainer";
 import useSeatsController from "../../hooks/controllers/useSeatsController";
@@ -23,6 +23,7 @@ const seatsModalState_initialValue: {
     nowSeatID: "",
   },
 };
+
 const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
   const { seatsState, studentsList, handleModalState }: AppStateContext =
     useContext(AppStateContext);
@@ -97,7 +98,7 @@ const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
       seats[key].studentID === "__OTHERS__" && othersList.push(key);
     }
 
-    if (activeSeatList !== [] && activeSeatList[0]) {
+    if (activeSeatList.length > 0 && activeSeatList[0]) {
       //active状態の席一つひとつに対し、
       //その席に登録されている生徒IDからstudentsListを検索し、該当する要素を返す
       //valは席IDの文字列

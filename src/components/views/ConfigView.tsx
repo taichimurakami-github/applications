@@ -80,7 +80,7 @@ const ConfigView = (props: ConfigView) => {
             <span className="toggle"></span>
           </button>
         </div>
-        <div className="toggle-btn-container btn__toggle">
+        {/* <div className="toggle-btn-container btn__toggle">
           <b>アプリ内部データ(1日分)を削除する</b>
           <button
             id="toggle_eraceAppDataTodayAll"
@@ -91,7 +91,7 @@ const ConfigView = (props: ConfigView) => {
           >
             <span className="toggle"></span>
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

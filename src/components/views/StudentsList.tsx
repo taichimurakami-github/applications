@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/modules/StudentDataSelector.scss";
+import "@styles/modules/StudentDataSelector.scss";
 
 interface StudentsList {
   onSaveAttendance: (i: string) => void;
