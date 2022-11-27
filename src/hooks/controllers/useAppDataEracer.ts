@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { appConfig } from "../../app.config";
 import { AppStateContext } from "../../AppContainer";
+import { useIpcEventsSender } from "./useIpcEventsSender";
 
 /**
  * function handleEraceAppData()
@@ -10,10 +11,13 @@ import { AppStateContext } from "../../AppContainer";
  *
  */
 const useAppDataEracer = () => {
+  const { deleteAppLocalData } = useIpcEventsSender();
   const { handleModalState }: AppStateContext = useContext(AppStateContext);
 
   const appDataEracer = async () => {
-    await window.electron.ipcRenderer.invoke("handle_eraceAppLocalData");
+    // await window.electron.ipcRenderer.invoke("handle_eraceAppLocalData");
+    const r = await deleteAppLocalData();
+    console.log("delete app local data result:", r);
     handleModalState({
       active: true,
       name: appConfig.modalCodeList["1001"],

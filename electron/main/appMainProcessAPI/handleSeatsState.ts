@@ -1,35 +1,25 @@
-import {
-  readdirSync,
-  readFileSync,
-  unlinkSync,
-  writeFileSync,
-} from "original-fs";
+import { readdirSync, readFileSync, unlinkSync, writeFileSync } from "fs";
 import { resolve as resolvePath } from "path";
 
 export const readSeatsState = (fileName, fileDirPath, fullFilePath) => {
-  // const now = new Date();
-  // const fileName = `${now.getFullYear()}${
-  //   now.getMonth() + 1
-  // }${now.getDate()}.json`;
-  // const fileDirPath = seatsPath;
-  // const fullFilePath = resolvePath(fileDirPath, fileName);
-
   console.log("ready for reading seatsState...");
   //本日付のバックアップファイルがあるか確認
   const dirFiles = readdirSync(fileDirPath);
-  let existsCheck = false;
+  let bcupFileExists = false;
+
   for (let val of dirFiles) {
-    //定義したファイル名と一致するファイルがあればexistsCheckをtrueに、
+    //定義したファイル名と一致するファイルがあればbcupFileExistsをtrueに、
     //それ以外のファイルは削除する(座席状態のバックアップデータ重複を避けるため)
     val === fileName
-      ? (existsCheck = true)
+      ? (bcupFileExists = true)
       : unlinkSync(resolvePath(fileDirPath, val));
   }
+
   console.log("reading seatsState...");
   //既にseatsStateのバックアップデータがある場合 -> 読み込み
   //既にseatsStateのバックアップデータがない場合 -> falseを返す
   return new Promise((resolve) => {
-    existsCheck
+    bcupFileExists
       ? resolve(JSON.parse(readFileSync(fullFilePath, "utf-8")))
       : resolve(undefined);
   });

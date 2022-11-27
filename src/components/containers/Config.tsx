@@ -12,8 +12,10 @@ import ConfigView from "../views/ConfigView";
 interface ConfigContainerProps {
   onHandleAppState: (d: { [index: string]: any }) => void;
   onHandleChangeAppLocalConfig: (arg: {
-    fn_id?: string;
-    fn_status?: string;
+    fn_id?:
+      | "appConfig_fn_cancelOperation"
+      | "appConfig_fn_eraceAppDataTodayAll";
+    fn_status?: "stable" | "nightly";
     fn_value?: boolean;
     msg?: string;
   }) => Promise<void>;

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { appConfig } from "../../app.config";
+import { useIpcEventsSender } from "../controllers/useIpcEventsSender";
 
 const appState_initialValue: appState = {
   selectedElement: null,
@@ -10,6 +11,7 @@ const appState_initialValue: appState = {
 };
 
 const useAppState = () => {
+  const { readAppLocalConfig } = useIpcEventsSender();
   const [appState, setAppState] = useState<appState>(appState_initialValue);
 
   /**
@@ -62,10 +64,8 @@ const useAppState = () => {
   useEffect(() => {
     (async () => {
       //アプリのローカルファイルからアプリデータを取得
-      const appLocalConfigData = await window.electron.ipcRenderer.invoke(
-        "handle_loadAppLocalConfig",
-        { mode: "read" }
-      );
+      const appLocalConfigData = await readAppLocalConfig();
+
       if (appLocalConfigData) {
         setAppState((beforeAppState) => {
           return {
