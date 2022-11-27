@@ -3,6 +3,8 @@ import { SeatsState } from "./stateManager/SeatsState";
 import { AttendanceState } from "./stateManager/AttendanceState";
 import { StudentsListState } from "./stateManager/StudentsList";
 import { AppConfigState } from "./stateManager/AppConfigState";
+import { autoUpdater } from "electron-updater";
+import * as logger from "electron-log";
 
 export const receiveIpcMainEvents = (appConfigDirPath: string) => {
   /**
@@ -93,5 +95,10 @@ export const receiveIpcMainEvents = (appConfigDirPath: string) => {
     }
 
     return Config.updateData(newData);
+  });
+
+  ipcMain.handle("check_autoUpdater_progress", (event, arg) => {
+    autoUpdater.logger = logger;
+    return autoUpdater.checkForUpdatesAndNotify();
   });
 };

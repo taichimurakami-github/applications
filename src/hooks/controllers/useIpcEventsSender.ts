@@ -62,6 +62,10 @@ export const useIpcEventsSender = () => {
     return await _invoke("delete_appLocalData");
   };
 
+  const checkAppAutoUpdateProgress = async () => {
+    return await _invoke("check_autoUpdater_progress");
+  };
+
   return {
     readAttendanceState,
     writeAttendanceState,
@@ -73,5 +77,6 @@ export const useIpcEventsSender = () => {
     updateTopMessageConfig,
     updateAppFunctionsConfig,
     deleteAppLocalData,
+    checkAppAutoUpdateProgress,
   };
 };

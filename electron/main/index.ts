@@ -18,6 +18,13 @@ import { app, BrowserWindow } from "electron";
 import { release } from "os";
 import { join, resolve as resolvePath } from "path";
 import { receiveIpcMainEvents } from "./ipcMainEventsReceiver";
+import * as logger from "electron-log";
+import { autoUpdater } from "electron-updater";
+import { listenAppAutoUpdateEvent } from "./appUpdateEventsListener";
+
+console.log = logger.log;
+console.error = logger.error;
+console.info = logger.info;
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith("6.1")) app.disableHardwareAcceleration();
@@ -32,15 +39,19 @@ if (!app.requestSingleInstanceLock()) {
 
 let win: BrowserWindow | null = null;
 
-async function createWindow() {
+function createWindow() {
   const preload = join(__dirname, "../preload/index.js");
   const url = process.env.VITE_DEV_SERVER_URL;
-  const indexHtml = join(process.env.DIST, "index.html");
+  const indexHtml = process.env.DIST
+    ? join(process.env.DIST, "index.html")
+    : "";
 
   win = new BrowserWindow({
     title: "Attendance-management(win-x64)",
-    icon: join(process.env.PUBLIC, "favicon.svg"),
-    show: false,
+    width: 1920,
+    height: 1080,
+    icon: process.env.PUBLIC ? join(process.env.PUBLIC, "favicon.svg") : "",
+    // show: true,
     webPreferences: {
       preload,
       // nodeIntegration: true,
@@ -55,7 +66,7 @@ async function createWindow() {
 
   if (process.env.VITE_DEV_SERVER_URL) {
     // electron-vite-vue#298
-    win.loadURL(url);
+    win.loadURL(url as string);
     // Open devTool if the app is not packaged
     win.webContents.openDevTools();
   } else {
@@ -92,4 +103,12 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on("window-all-closed", function () {
   if (process.platform !== "darwin") app.quit();
+});
+
+/**
+ * activate app auto update function (experimental)
+ */
+app.on("ready", function () {
+  // listen app update events
+  listenAppAutoUpdateEvent(win);
 });
