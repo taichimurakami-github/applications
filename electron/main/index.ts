@@ -40,13 +40,15 @@ let win: BrowserWindow | null = null;
 function createWindow() {
   const preload = join(__dirname, "../preload/index.js");
   const url = process.env.VITE_DEV_SERVER_URL;
-  const indexHtml = join(process.env.DIST, "index.html");
+  const indexHtml = process.env.DIST
+    ? join(process.env.DIST, "index.html")
+    : "";
 
   win = new BrowserWindow({
     title: "Attendance-management(win-x64)",
     width: 1920,
     height: 1080,
-    icon: join(process.env.PUBLIC, "favicon.svg"),
+    icon: process.env.PUBLIC ? join(process.env.PUBLIC, "favicon.svg") : "",
     // show: true,
     webPreferences: {
       preload,
@@ -62,7 +64,7 @@ function createWindow() {
 
   if (process.env.VITE_DEV_SERVER_URL) {
     // electron-vite-vue#298
-    win.loadURL(url);
+    win.loadURL(url as string);
     // Open devTool if the app is not packaged
     win.webContents.openDevTools();
   } else {
