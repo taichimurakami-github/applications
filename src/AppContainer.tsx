@@ -37,14 +37,14 @@ const AppContainer: React.VFC = (props) => {
    *    app update status checker (experimental)
    * -----------------------------------------------
    */
-  const { checkAppAutoUpdateProgress } = useIpcEventsSender();
+  // const { checkAppAutoUpdateProgress } = useIpcEventsSender();
 
-  useEffect(() => {
-    setInterval(async () => {
-      const result = await checkAppAutoUpdateProgress();
-      console.log(result);
-    }, 2000);
-  }, []);
+  // useEffect(() => {
+  //   setInterval(async () => {
+  //     const result = await checkAppAutoUpdateProgress();
+  //     console.log(result);
+  //   }, 2000);
+  // }, []);
 
   return (
     <AppStateContext.Provider

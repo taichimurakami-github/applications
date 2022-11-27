@@ -5,16 +5,9 @@ import { BrowserWindow } from "electron";
 /**
  * 上手く動作しないようなので一旦コードのみ残して使用しないことにする
  */
-export const listenAppAutoUpdateEvent = (win: BrowserWindow) => {
+export const listenAppAutoUpdateEvent = (win: BrowserWindow | null) => {
   autoUpdater.logger = logger;
   autoUpdater.checkForUpdatesAndNotify();
-
-  if (win) {
-    win.webContents.send(
-      "app-update-process",
-      "test from listenAppAutoUpdateEvent at main process"
-    );
-  }
 
   autoUpdater.on("checking-for-update", () => {
     logger.log("now checking new github releases...");
@@ -26,7 +19,7 @@ export const listenAppAutoUpdateEvent = (win: BrowserWindow) => {
     }
   });
   autoUpdater.on("update-available", (info) => {
-    logger.log("found available app update release !");
+    logger.log("found available app update release !!");
 
     if (win) {
       win.webContents.send(
@@ -44,21 +37,25 @@ export const listenAppAutoUpdateEvent = (win: BrowserWindow) => {
   autoUpdater.on("download-progress", (progressObj) => {
     logger.log("fetching app update from github releases...");
 
-    // let log_message = "Download speed: " + progressObj.bytesPerSecond;
-    // log_message = log_message + " - Downloaded " + progressObj.percent + "%";
-    // log_message =
-    //   log_message +
-    //   " (" +
-    //   progressObj.transferred +
-    //   "/" +
-    //   progressObj.total +
-    //   ")";
+    let log_message = "Download speed: " + progressObj.bytesPerSecond;
+    log_message = log_message + " - Downloaded " + progressObj.percent + "%";
+    log_message =
+      log_message +
+      " (" +
+      progressObj.transferred +
+      "/" +
+      progressObj.total +
+      ")";
+
+    logger.log(log_message);
   });
   autoUpdater.on("update-downloaded", (info) => {
     logger.log("app update data download completed successfully");
-    win.webContents.send(
-      "app-update-process",
-      "Update data download completed. App will be updated after quitted."
-    );
+    if (win) {
+      win.webContents.send(
+        "app-update-process",
+        "Update data download completed. App will be updated after quitted."
+      );
+    }
   });
 };

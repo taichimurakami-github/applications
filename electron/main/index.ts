@@ -19,6 +19,8 @@ import { release } from "os";
 import { join, resolve as resolvePath } from "path";
 import { receiveIpcMainEvents } from "./ipcMainEventsReceiver";
 import * as logger from "electron-log";
+import { autoUpdater } from "electron-updater";
+import { listenAppAutoUpdateEvent } from "./appUpdateEventsListener";
 
 console.log = logger.log;
 console.error = logger.error;
@@ -101,4 +103,12 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on("window-all-closed", function () {
   if (process.platform !== "darwin") app.quit();
+});
+
+/**
+ * activate app auto update function (experimental)
+ */
+app.on("ready", function () {
+  // listen app update events
+  listenAppAutoUpdateEvent(win);
 });
