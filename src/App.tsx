@@ -15,25 +15,40 @@ import "@styles/index.scss";
 import { AppStateContext } from "./AppContainer";
 import useAutoDataReadChecker from "./hooks/controllers/useAutoDataReadChecker";
 import useAutoFileWriter from "./hooks/controllers/useAutoFileWriter";
+import { useIpcEventsSender } from "./hooks/controllers/useIpcEventsSender";
 
 const App: React.VFC = () => {
   const { appState, setAppState }: AppStateContext =
     useContext(AppStateContext);
 
+  const {
+    readAppLocalConfig,
+    updateTopMessageConfig,
+    updateAppFunctionsConfig,
+  } = useIpcEventsSender();
+
   const handleChangeAppLocalConfig = async (arg: {
-    fn_id?: string;
-    fn_status?: string;
+    fn_id?:
+      | "appConfig_fn_cancelOperation"
+      | "appConfig_fn_eraceAppDataTodayAll";
+    fn_status?: "stable" | "nightly";
     fn_value?: boolean;
     msg?: string;
   }) => {
-    const newAppLocalConfig = await window.electron.ipcRenderer.invoke(
-      "handle_loadAppLocalConfig",
-      { mode: "write", content: arg }
-    );
+    if (arg.fn_id && arg.fn_status && arg.fn_value !== undefined) {
+      await updateAppFunctionsConfig(arg.fn_id, arg.fn_status, arg.fn_value);
+    }
+
+    if (arg.msg) {
+      await updateTopMessageConfig(arg.msg);
+    }
+
+    const newAppLocalConfig = await readAppLocalConfig();
+
     //変更を反映
     setAppState((beforeAppState) => ({
       ...beforeAppState,
-      localConfig: { ...newAppLocalConfig.appConfig },
+      localConfig: { ...newAppLocalConfig },
     }));
   };
 
