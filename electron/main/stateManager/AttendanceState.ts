@@ -1,12 +1,11 @@
 import { unlinkSync } from "fs";
 import { resolve as resolvePath } from "path";
 import { TAttendanceState } from "../../@types/main";
-import { AppConfigState } from "./AppConfigState";
 import { StateManagerBase } from "./StateManagerBase";
 
 export class AttendanceState extends StateManagerBase<TAttendanceState> {
-  constructor(Config: AppConfigState) {
-    super("AttendanceStateManager", Config.getAttendanceDir());
+  constructor(fileDirPath: string) {
+    super("AttendanceStateManager", fileDirPath);
   }
 
   public getFileName() {

@@ -6,14 +6,14 @@ import { AppConfigState } from "./stateManager/AppConfigState";
 import { autoUpdater } from "electron-updater";
 import * as logger from "electron-log";
 
-export const receiveIpcMainEvents = (appConfigDirPath: string) => {
+export const listenIpcMainEvents = (appConfigDirPath: string) => {
   /**
    * Create state manager instance
    */
   const Config = new AppConfigState(appConfigDirPath);
-  const Seats = new SeatsState(Config);
-  const Attendance = new AttendanceState(Config);
-  const StudentsList = new StudentsListState(Config);
+  const Seats = new SeatsState(Config.getSeatsDir());
+  const Attendance = new AttendanceState(Config.getAttendanceDir());
+  const StudentsList = new StudentsListState(Config.getStudentsFilepath());
 
   /**
    * Add event listener sent from ipcRenderer.invoke
