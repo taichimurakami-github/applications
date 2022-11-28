@@ -36,6 +36,11 @@ Create-react-app で作成したアプリのひな型に、electron で windows 
 2. ダウンロードした **.exe** ファイルを起動
    コード署名していないため、セキュリティ警告が出ると思いますが、気にせず「実行する」を押してください。
 3. スクロールして「設定画面」を開き、「設定項目 → 生徒情報ファイルを設定する」より、生徒名簿ファイルを選択してください。
+
+**生徒名簿ファイルのダミーデータは以下のリンク先の google drive よりダウンロードできます。「student-list-dummy.xlsx」というファイルをダウンロードしてください。**
+動作確認時はダウンロードした xlsx ファイルを設定してください。
+[attendance-management google drive](https://drive.google.com/drive/folders/103-NX63jaYSP1RC5ufwuEuIWxsSxFlff?usp=sharing)
+
 4. アプリケーションを再起動するか、ctrl + R でリロードすると生徒情報ファイルが読み込まれます。
 
 なお、アプリのローカルデータは以下のパス内に保存されています。  
