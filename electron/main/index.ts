@@ -17,9 +17,8 @@ process.env.PUBLIC = app.isPackaged
 import { app, BrowserWindow } from "electron";
 import { release } from "os";
 import { join, resolve as resolvePath } from "path";
-import { receiveIpcMainEvents } from "./ipcMainEventsReceiver";
 import * as logger from "electron-log";
-import { autoUpdater } from "electron-updater";
+import { listenIpcMainEvents } from "./ipcMainEventsListener";
 import { listenAppAutoUpdateEvent } from "./appUpdateEventsListener";
 
 console.log = logger.log;
@@ -86,7 +85,7 @@ app.whenReady().then(() => {
     "./appLocalData"
   );
 
-  receiveIpcMainEvents(APP_CONFIG_DIR_PATH);
+  listenIpcMainEvents(APP_CONFIG_DIR_PATH);
 
   //appのwindowを作成
   createWindow();

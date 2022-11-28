@@ -8,10 +8,10 @@ export class StudentsListState extends StateManagerBase<TStudentsList> {
   public readonly SOURCE_FILE_PATH: string;
   public readonly SOURCE_FILE_TARGET_SHEET_ID: number; //生徒情報が格納されているxlsxデータ内のSheetのID（指定したSheetを読み込む）
 
-  constructor(Config: AppConfigState) {
+  constructor(sourceFilePath: string) {
     super("StudentsListManager", "", true);
 
-    this.SOURCE_FILE_PATH = Config.getStudentsFilepath();
+    this.SOURCE_FILE_PATH = sourceFilePath;
     this.SOURCE_FILE_TARGET_SHEET_ID = 0;
   }
 

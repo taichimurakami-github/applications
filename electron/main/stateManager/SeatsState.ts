@@ -1,12 +1,11 @@
 import { readdirSync, unlinkSync } from "fs";
 import { resolve as resolvePath } from "path";
 import { TSeatsState } from "../../@types/main";
-import { AppConfigState } from "./AppConfigState";
 import { StateManagerBase } from "./StateManagerBase";
 
 export class SeatsState extends StateManagerBase<TSeatsState> {
-  constructor(Config: AppConfigState) {
-    super("SeatsStateManager", Config.getSeatsDir());
+  constructor(fileDirPath: string) {
+    super("SeatsStateManager", fileDirPath);
 
     this._deleteOldFiles();
   }
