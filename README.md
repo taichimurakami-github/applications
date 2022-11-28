@@ -39,7 +39,8 @@ Create-react-app で作成したアプリのひな型に、electron で windows 
 
 **生徒名簿ファイルのダミーデータは以下のリンク先の google drive よりダウンロードできます。「student-list-dummy.xlsx」というファイルをダウンロードしてください。**
 動作確認時はダウンロードした xlsx ファイルを設定してください。
-[attendance-management google drive](https://drive.google.com/drive/folders/103-NX63jaYSP1RC5ufwuEuIWxsSxFlff?usp=sharing)
+
+**[→ attendance-management google drive link](https://drive.google.com/drive/folders/103-NX63jaYSP1RC5ufwuEuIWxsSxFlff?usp=sharing)**
 
 4. アプリケーションを再起動するか、ctrl + R でリロードすると生徒情報ファイルが読み込まれます。
 
