@@ -40,6 +40,6 @@ export interface IStateManager<TData> {
   // STAE_ID: string;
   getFilePath: () => string;
   getFileName: () => string;
-  readData: () => TData | undefined;
-  updateData: (newData: TData) => boolean;
+  readData: () => Promise<TData | undefined>;
+  updateData: (newData: TData) => Promise<boolean>;
 }

@@ -1,4 +1,4 @@
-import { readdirSync, unlinkSync } from "fs";
+import { readdir, unlink } from "fs/promises";
 import { resolve as resolvePath } from "path";
 import { TSeatsState } from "../../@types/main";
 import { StateManagerBase } from "./StateManagerBase";
@@ -10,17 +10,27 @@ export class SeatsState extends StateManagerBase<TSeatsState> {
     this._deleteOldFiles();
   }
 
-  private _deleteOldFiles() {
+  private async _deleteOldFiles() {
     //本日付以外のファイルは不要なため削除する
     try {
-      for (const fileName of readdirSync(this.FILE_DIR_PATH)) {
-        if (fileName !== this.getFileName()) {
-          unlinkSync(resolvePath(this.FILE_DIR_PATH, fileName));
+      const fileNameList = await readdir(this.FILE_DIR_PATH).catch(
+        (e): undefined => {
+          this._logError(this._ERR_ID.READ_DIR, e);
+          return undefined;
         }
+      );
+
+      if (!fileNameList || fileNameList.length === 0) {
+        return;
       }
-    } catch (e) {
-      console.error("E_FAILED_TO_DELETE_OLD_SEATS_STATE_FILE");
-    }
+
+      for (const fileName of fileNameList) {
+        if (fileName !== this.getFileName())
+          unlink(resolvePath(this.FILE_DIR_PATH, fileName)).catch((e) =>
+            this._logError(this._ERR_ID.DELETE_FILE, e)
+          );
+      }
+    } catch (e) {}
   }
 
   public getFileName() {
@@ -32,18 +42,16 @@ export class SeatsState extends StateManagerBase<TSeatsState> {
     return resolvePath(this.FILE_DIR_PATH, this.getFileName());
   }
 
-  public deleteData() {
+  public async deleteData() {
     if (!this._fileDirExists) {
       return false;
     }
 
-    try {
-      unlinkSync(this.getFilePath());
-      return true;
-    } catch (e) {
-      console.error("E_FAILED_TO_DELETE_SEAT_STATE_LATEST_FILE");
-      console.log(e);
-      return false;
-    }
+    return await unlink(this.getFilePath())
+      .then((_) => true)
+      .catch((e) => {
+        this._logError(this._ERR_ID.DELETE_FILE, e);
+        return false;
+      });
   }
 }

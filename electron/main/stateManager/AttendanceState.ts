@@ -1,4 +1,4 @@
-import { unlinkSync } from "fs";
+import { unlink } from "fs/promises";
 import { resolve as resolvePath } from "path";
 import { TAttendanceState } from "../../@types/main";
 import { StateManagerBase } from "./StateManagerBase";
@@ -17,18 +17,16 @@ export class AttendanceState extends StateManagerBase<TAttendanceState> {
     return resolvePath(this.FILE_DIR_PATH, this.getFileName());
   }
 
-  public deleteData() {
+  public async deleteData() {
     if (!this._fileDirExists) {
       return false;
     }
 
-    try {
-      unlinkSync(this.getFilePath());
-      return true;
-    } catch (e) {
-      console.error("E_FAILED_TO_DELETE_ATTENDANCE_STATE_LATEST_FILE");
-      console.log(e);
-      return false;
-    }
+    return await unlink(this.getFilePath())
+      .then((_) => true)
+      .catch((e) => {
+        this._logError(this._ERR_ID.DELETE_FILE, e);
+        return false;
+      });
   }
 }
