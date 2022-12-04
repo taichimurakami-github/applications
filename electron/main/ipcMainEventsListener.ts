@@ -45,7 +45,12 @@ export const listenIpcMainEvents = (appConfigDirPath: string) => {
   });
 
   ipcMain.handle("read_appLocalConfig", async (event, arg) => {
-    const configData = Config.readData();
+    const configData = await Config.readData();
+    console.log(configData);
+
+    if (!configData?.appConfig) {
+      return undefined;
+    }
 
     // rendererで必要な項目のみ抽出してreturnする
     return {
