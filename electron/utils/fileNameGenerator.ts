@@ -14,3 +14,7 @@ export const getSeatsStateFilename = () => {
 export const getAppLocalDataBackupFilename = () => {
   return _getDatetimeFilename() + ".json";
 };
+
+export const getLogFileName = () => {
+  return _getDatetimeFilename() + ".log";
+};

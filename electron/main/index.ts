@@ -20,10 +20,19 @@ import { join, resolve as resolvePath } from "path";
 import * as logger from "electron-log";
 import { listenIpcMainEvents } from "./ipcMainEventsListener";
 import { listenAppAutoUpdateEvent } from "./appUpdateEventsListener";
+import { getLogFileName } from "../utils/fileNameGenerator";
+
+const APP_CONFIG_DIR_PATH = resolvePath(
+  app.getPath("userData"),
+  "./appLocalData"
+);
 
 console.log = logger.log;
 console.error = logger.error;
 console.info = logger.info;
+
+logger.transports.file.resolvePath = () =>
+  resolvePath(APP_CONFIG_DIR_PATH, "logs", getLogFileName());
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith("6.1")) app.disableHardwareAcceleration();
@@ -80,11 +89,6 @@ app.on("window-all-closed", () => {
 
 //アプリケーションの起動準備を実行
 app.whenReady().then(() => {
-  const APP_CONFIG_DIR_PATH = resolvePath(
-    app.getPath("userData"),
-    "./appLocalData"
-  );
-
   listenIpcMainEvents(APP_CONFIG_DIR_PATH);
 
   //appのwindowを作成
@@ -111,3 +115,5 @@ app.on("ready", function () {
   // listen app update events
   listenAppAutoUpdateEvent(win);
 });
+
+app.on("quit", function () {});
