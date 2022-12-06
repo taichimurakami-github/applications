@@ -16,12 +16,10 @@ import { AppStateContext } from "./AppContainer";
 import useAutoDataReadChecker from "./hooks/controllers/useAutoDataReadChecker";
 import useAutoFileWriter from "./hooks/controllers/useAutoFileWriter";
 import { useIpcEventsSender } from "./hooks/controllers/useIpcEventsSender";
-import { useIpcEventsReceiver } from "./hooks/controllers/useIpcEventsReceiver";
 
 const App: React.VFC = () => {
   const { appState, setAppState }: AppStateContext =
     useContext(AppStateContext);
-  useIpcEventsReceiver();
 
   const {
     readAppLocalConfig,

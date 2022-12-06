@@ -1,5 +1,6 @@
 import { createContext, useEffect } from "react";
 import App from "./App";
+import { useIpcEventsReceiver } from "./hooks/controllers/useIpcEventsReceiver";
 import { useIpcEventsSender } from "./hooks/controllers/useIpcEventsSender";
 import useAppState from "./hooks/states/useAppState";
 import useAttendanceState from "./hooks/states/useAttendanceState";
@@ -38,6 +39,7 @@ const AppContainer: React.VFC = (props) => {
    * -----------------------------------------------
    */
   // const { checkAppAutoUpdateProgress } = useIpcEventsSender();
+  useIpcEventsReceiver();
 
   // useEffect(() => {
   //   setInterval(async () => {
