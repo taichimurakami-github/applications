@@ -9,25 +9,23 @@ export const listenAppAutoUpdateEvent = (win: BrowserWindow | null) => {
   autoUpdater.logger = logger;
   autoUpdater.checkForUpdatesAndNotify();
 
+  const sendNotificationToIpcRenderer = (message: string) => {
+    if (win) {
+      win.webContents.send("app-update-process", message);
+    }
+  };
+
   autoUpdater.on("checking-for-update", () => {
     logger.log("now checking new github releases...");
-    if (win) {
-      win.webContents.send(
-        "app-update-process",
-        "now checking avairable app update exists..."
-      );
-    }
+    sendNotificationToIpcRenderer(
+      "now checking avairable app update exists..."
+    );
   });
   autoUpdater.on("update-available", (info) => {
     logger.log("found available app update release !!");
 
-    if (win) {
-      win.webContents.send(
-        "app-update-process",
-        "found available app update..."
-      );
-      win.webContents.send("app-update-process", info);
-    }
+    sendNotificationToIpcRenderer("found available app update...");
+    sendNotificationToIpcRenderer(JSON.stringify(info));
   });
   autoUpdater.on("update-not-available", (info) => {});
   autoUpdater.on("error", (err) => {
@@ -51,11 +49,9 @@ export const listenAppAutoUpdateEvent = (win: BrowserWindow | null) => {
   });
   autoUpdater.on("update-downloaded", (info) => {
     logger.log("app update data download completed successfully");
-    if (win) {
-      win.webContents.send(
-        "app-update-process",
-        "Update data download completed. App will be updated after quitted."
-      );
-    }
+
+    sendNotificationToIpcRenderer(
+      "Update data download completed. App will be updated after quitted."
+    );
   });
 };
