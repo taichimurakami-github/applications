@@ -43,3 +43,11 @@ export interface IStateManager<TData> {
   readData: () => TData | undefined;
   updateData: (newData: TData) => boolean;
 }
+
+export type TAppAutoUpdateProcessStatus =
+  | "checking-for-update"
+  | "update-not-available"
+  | "update-available"
+  | "error"
+  | "download-progress"
+  | "update-downloaded";

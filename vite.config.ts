@@ -15,6 +15,7 @@ export default defineConfig({
     alias: {
       "@": path.join(__dirname, "src"),
       "@styles": path.join(__dirname, "src/components/styles"),
+      "~electron": path.join(__dirname, "electron"),
     },
   },
   plugins: [
