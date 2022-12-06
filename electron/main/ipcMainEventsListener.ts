@@ -5,6 +5,7 @@ import { StudentsListState } from "./stateManager/StudentsList";
 import { AppConfigState } from "./stateManager/AppConfigState";
 import { autoUpdater } from "electron-updater";
 import * as logger from "electron-log";
+import { TAppLocalConfig } from "../@types/main";
 
 export const listenIpcMainEvents = (appConfigDirPath: string) => {
   /**
@@ -45,21 +46,17 @@ export const listenIpcMainEvents = (appConfigDirPath: string) => {
   });
 
   ipcMain.handle("read_appLocalConfig", async (event, arg) => {
-    const configData = Config.readData();
-
-    // rendererで必要な項目のみ抽出してreturnする
-    return {
-      fn: configData.appConfig.fn,
-      msg: configData.appConfig.msg,
-    };
+    return Config.readData();
   });
 
   ipcMain.handle(
     "update_appLocalConfig_studentsListPath",
     async (event, arg) => {
       const newData = {
-        ...Config.getData(),
+        //Config.getData()からは必ずTAppLocalConfigが帰ってくる
+        ...(Config.getData() as TAppLocalConfig),
       };
+
       newData.path.studentsList = arg.path;
       console.log("\n\n\npath:", arg.path, "\n\n\n");
 
@@ -69,7 +66,8 @@ export const listenIpcMainEvents = (appConfigDirPath: string) => {
 
   ipcMain.handle("update_appLocalConfig_topMessage", async (event, arg) => {
     const newData = {
-      ...Config.getData(),
+      //Config.getData()からは必ずTAppLocalConfigが帰ってくる
+      ...(Config.getData() as TAppLocalConfig),
     };
     newData.appConfig.msg = arg.message;
 
@@ -78,7 +76,8 @@ export const listenIpcMainEvents = (appConfigDirPath: string) => {
 
   ipcMain.handle("update_appLocalConfig_fnConfig", async (event, arg) => {
     const newData = {
-      ...Config.getData(),
+      //Config.getData()からは必ずTAppLocalConfigが帰ってくる
+      ...(Config.getData() as TAppLocalConfig),
     };
 
     switch (arg.fn_id) {
