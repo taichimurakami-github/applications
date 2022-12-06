@@ -16,24 +16,33 @@ export const listenAppAutoUpdateEvent = (win: BrowserWindow | null) => {
   };
 
   autoUpdater.on("checking-for-update", () => {
-    logger.log("now checking new github releases...");
+    logger.log("Now checking new github releases...");
     sendNotificationToIpcRenderer(
-      "now checking avairable app update exists..."
+      "Now checking avairable app update exists..."
     );
   });
-  autoUpdater.on("update-available", (info) => {
-    logger.log("found available app update release !!");
 
-    sendNotificationToIpcRenderer("found available app update...");
+  autoUpdater.on("update-available", (info) => {
+    logger.log("Found available app update release !! Details are below :");
+    logger.log(info);
+
+    sendNotificationToIpcRenderer("Found available app update...");
     sendNotificationToIpcRenderer(JSON.stringify(info));
   });
-  autoUpdater.on("update-not-available", (info) => {});
-  autoUpdater.on("error", (err) => {
-    logger.error("failed to fetch app update.");
-    logger.error();
+
+  autoUpdater.on("update-not-available", (info) => {
+    logger.log("There is no available app update.");
+    sendNotificationToIpcRenderer("There is no available app update.");
   });
+
+  autoUpdater.on("error", (err) => {
+    logger.error("Failed to fetch app update. The reason is below :");
+    logger.error(err);
+    sendNotificationToIpcRenderer("There is no available app update.");
+  });
+
   autoUpdater.on("download-progress", (progressObj) => {
-    logger.log("fetching app update from github releases...");
+    logger.log("Fetching app update from github releases...");
 
     let log_message = "Download speed: " + progressObj.bytesPerSecond;
     log_message = log_message + " - Downloaded " + progressObj.percent + "%";
@@ -46,9 +55,11 @@ export const listenAppAutoUpdateEvent = (win: BrowserWindow | null) => {
       ")";
 
     logger.log(log_message);
+    sendNotificationToIpcRenderer(log_message);
   });
+
   autoUpdater.on("update-downloaded", (info) => {
-    logger.log("app update data download completed successfully");
+    logger.log("App update data has been downloaded successfully");
 
     sendNotificationToIpcRenderer(
       "Update data download completed. App will be updated after quitted."
