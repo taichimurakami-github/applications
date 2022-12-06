@@ -1,6 +1,6 @@
 import React from "react";
 
-interface ConfigView {
+const ConfigView = (props: {
   onHandleBackToTop: () => void;
   onReadStudentsFile: () => void;
   onEraceAppData: () => void;
@@ -11,9 +11,7 @@ interface ConfigView {
   topMessage: string;
   isEraceAppDataTodayAllEnabled: boolean;
   isCancelOperationEnabled: boolean;
-}
-
-const ConfigView = (props: ConfigView) => {
+}) => {
   return (
     <div className="component-config-wrapper">
       <h1>アプリ設定</h1>

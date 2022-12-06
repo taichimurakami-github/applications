@@ -7,11 +7,6 @@ import closeButtonIcon from "../../images/close-button.svg";
 import { AppStateContext } from "../../AppContainer";
 import useSeatsController from "../../hooks/controllers/useSeatsController";
 
-interface SeatsModalProps {
-  onCloseModal: () => void;
-  onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
 const seatsModalState_initialValue: {
   mode: string;
   content: {
@@ -24,7 +19,10 @@ const seatsModalState_initialValue: {
   },
 };
 
-const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
+const SeatsModal = (props: {
+  onCloseModal: () => void;
+  onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const { seatsState, studentsList, handleModalState }: AppStateContext =
     useContext(AppStateContext);
   const seatsController = useSeatsController();

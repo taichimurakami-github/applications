@@ -10,7 +10,7 @@ import React, { useContext, useState } from "react";
 import "@styles/modal.scss";
 import { AppStateContext } from "../../AppContainer";
 
-export const ModalRoot: React.VFC = (props) => {
+export const ModalRoot = () => {
   const [BackgroundClose, setBackgroundClose] = useState(true);
 
   const { modalState, handleModalState }: AppStateContext =

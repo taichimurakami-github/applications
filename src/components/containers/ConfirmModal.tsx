@@ -6,13 +6,11 @@ import useCancelController from "../../hooks/controllers/useCancelController";
 import useEnterRecorder from "../../hooks/controllers/useEnterRecorder";
 import useExitRecorder from "../../hooks/controllers/useExitRecorder";
 
-interface ConfirmModalProps {
+const ConfirmModal = (props: {
   content: TModalStateContents;
   onCloseModal: () => void;
   onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
+}) => {
   const { seatsState, studentsList, resetAppState }: AppStateContext =
     useContext(AppStateContext);
   const enterRecorder = useEnterRecorder();
@@ -29,7 +27,7 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
       : { id: "__OTHERS__", name: "(関係者その他)" };
   };
 
-  const handleComponent = () => {
+  const getComponent = () => {
     switch (props.content.confirmCode) {
       //入室処理を実行
       case appConfig.confirmCodeList["1001"]:
@@ -311,7 +309,7 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
     }
   };
 
-  return <div className="confirm-modal-wrapper">{handleComponent()}</div>;
+  return <div className="confirm-modal-wrapper">{getComponent()}</div>;
 };
 
 export { ConfirmModal };

@@ -16,7 +16,7 @@ import { AppStateContext } from "./AppContainer";
 import useAutoDataReadChecker from "./hooks/controllers/useAutoDataReadChecker";
 import useAutoFileWriter from "./hooks/controllers/useAutoFileWriter";
 
-const App: React.VFC = () => {
+const App = () => {
   const { appState, setAppState }: AppStateContext =
     useContext(AppStateContext);
 
@@ -54,13 +54,13 @@ const App: React.VFC = () => {
     setAppState((beforeAppState) => ({ ...beforeAppState, ...d }));
 
   /**
-   * function handleComponent()
+   * function getComponent()
    *
    * render()内のReact Componentを、appStateの変更に合わせて動的に返す
    *
    * @returns {void}
    */
-  const handleComponent = () => {
+  const getComponent = () => {
     switch (appState.now) {
       case "TOP":
         return <Top onHandleAppState={handleAppState} />;
@@ -91,7 +91,7 @@ const App: React.VFC = () => {
 
   return (
     <div className="App">
-      {handleComponent()}
+      {getComponent()}
       <ModalRoot />
     </div>
   );

@@ -4,11 +4,9 @@ import { AppStateContext } from "../../AppContainer";
 import { SeatsTable } from "../views/SeatsTable";
 import { TopMessage } from "../views/TopMessage";
 
-interface TopComponentProps {
+export const Top = (props: {
   onHandleAppState: (d: { [index: string]: any }) => void;
-}
-
-export const Top: React.VFC<TopComponentProps> = (props) => {
+}) => {
   const {
     appState,
     studentsList,
@@ -55,7 +53,7 @@ export const Top: React.VFC<TopComponentProps> = (props) => {
     const name =
       appState.appLog.studentId === "__OTHERS__"
         ? "関係者その他"
-        : TStudentsList &&
+        : studentsList &&
           studentsList.filter(
             (val: { [index: string]: string }) =>
               val.id == appState.appLog.studentId

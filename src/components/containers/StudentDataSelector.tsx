@@ -8,14 +8,7 @@ import StudentCategorySelector from "../views/StudentCategorySelector";
 //style imports
 import "@styles/modules/StudentDataSelector.scss";
 
-interface StudentDataSelectorStates {
-  seat: string;
-  school: string;
-  grade: string;
-  nav: boolean;
-}
-
-export const StudentDataSelector: React.VFC = (props) => {
+export const StudentDataSelector = () => {
   const categorySelectorContainer = useRef<HTMLDivElement>(null);
   const navigation = useRef<HTMLDivElement>(null);
 
@@ -29,7 +22,7 @@ export const StudentDataSelector: React.VFC = (props) => {
 
   const enterRecorder = useEnterRecorder();
 
-  const [state, setState] = useState<StudentDataSelectorStates>({
+  const [state, setState] = useState({
     seat: appState.selectedSeat,
     school: "",
     grade: "",

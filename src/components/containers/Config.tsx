@@ -9,7 +9,7 @@ import useStudentsFileReader from "../../hooks/controllers/useStudentsFileReader
 import "@styles/modules/Config.scss";
 import ConfigView from "../views/ConfigView";
 
-interface ConfigContainerProps {
+const Config = (props: {
   onHandleAppState: (d: { [index: string]: any }) => void;
   onHandleChangeAppLocalConfig: (arg: {
     fn_id?:
@@ -19,10 +19,7 @@ interface ConfigContainerProps {
     fn_value?: boolean;
     msg?: string;
   }) => Promise<void>;
-  // appState: TAppState;
-}
-
-const Config: React.VFC<ConfigContainerProps> = (props) => {
+}) => {
   const { appState, seatsState, handleModalState }: AppStateContext =
     useContext(AppStateContext);
 

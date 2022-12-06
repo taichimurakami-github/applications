@@ -1,7 +1,7 @@
 import React from "react";
 import "@styles/modules/StudentDataSelector.scss";
 
-interface StudentsList {
+const StudentsList = (props: {
   onSaveAttendance: (i: string) => void;
   onHandleModalState: (t: TModalState) => void;
   onHandleScrollNavigation: () => void;
@@ -11,9 +11,7 @@ interface StudentsList {
   seatID: string;
   studentsList: { [index: string]: string }[];
   seatsState: TSeatsState;
-}
-
-const StudentsList: React.VFC<TStudentsList> = (props) => {
+}) => {
   const school_ja = [];
 
   switch (props.school) {

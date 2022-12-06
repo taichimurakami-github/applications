@@ -1,11 +1,7 @@
 import React, { useContext } from "react";
 import { AppStateContext } from "../../AppContainer";
 
-interface NewsModalProps {
-  onCloseModal: () => void;
-}
-
-const NewsModal: React.VFC<NewsModalProps> = (props) => {
+const NewsModal = (props: { onCloseModal: () => void }) => {
   const { appState } = useContext(AppStateContext);
 
   return (
