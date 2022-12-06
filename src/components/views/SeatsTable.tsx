@@ -10,7 +10,7 @@
  * @returns
  */
 interface SeatsTable {
-  seatsState: seatsState | null;
+  seatsState: TSeatsState | null;
   onClickFunction: (e: any) => void;
 }
 const SeatsTable: React.VFC<SeatsTable> = (props) => {

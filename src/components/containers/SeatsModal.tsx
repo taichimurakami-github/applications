@@ -95,7 +95,7 @@ const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
       seats[key].active && activeSeatList.push(key);
 
       //関係者がいたら別配列でも監視
-      seats[key].studentID === "__OTHERS__" && othersList.push(key);
+      seats[key].studentId === "__OTHERS__" && othersList.push(key);
     }
 
     if (activeSeatList.length > 0 && activeSeatList[0]) {
@@ -103,10 +103,10 @@ const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
       //その席に登録されている生徒IDからstudentsListを検索し、該当する要素を返す
       //valは席IDの文字列
       return activeSeatList.map((val) => {
-        let result: { [key: string]: string }[];
+        let result: TStudentsList;
 
         //関係者が座っている席の場合
-        if (seats[val].studentID === "__OTHERS__") {
+        if (seats[val].studentId === "__OTHERS__") {
           result = [
             {
               id: "__OTHERS__",
@@ -119,7 +119,7 @@ const SeatsModal: React.VFC<SeatsModalProps> = (props) => {
         } else {
           //生徒IDが一致する生徒情報をデータシートのデータより取得
           result = studentsList.filter((elem) => {
-            return elem.id == seats[val].studentID;
+            return elem.id == seats[val].studentId;
           });
         }
 

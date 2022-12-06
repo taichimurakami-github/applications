@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react";
-import { useIpcEventsSender } from "../controllers/useIpcEventsSender";
 
 export const studentsList_initialValue: [] = [];
 
 const useStudentsListState = () => {
-  const { readStudentsList } = useIpcEventsSender();
-
   //エクセルから取得した生徒情報(生徒名簿リストデータ)を格納しておく変数
-  const [studentsList, setStudentsList] = useState<studentsList>(
+  const [studentsList, setStudentsList] = useState<TStudentsList>(
     studentsList_initialValue
   );
 
@@ -17,8 +14,8 @@ const useStudentsListState = () => {
     (async () => {
       //生徒情報ファイルが存在していれば自動読み込み
       //grade, idが整数値で取得されるので、文字列型に変換しておく
-      const studentsList_autoloadedData: studentsList | undefined =
-        await readStudentsList();
+      const studentsList_autoloadedData =
+        await window.electron.readStudentsList();
 
       console.log(studentsList_autoloadedData);
       if (studentsList_autoloadedData) {

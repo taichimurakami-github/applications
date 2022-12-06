@@ -31,7 +31,7 @@ export type TAttendanceState = {
 export type TStudentsList = {
   id: string;
   name: string;
-  school: "high" | "middle" | "elementary";
+  school: "high" | "middle" | "elementary" | "";
   grade: string;
   belongs: string;
 }[];

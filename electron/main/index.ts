@@ -53,7 +53,7 @@ function createWindow() {
     // show: true,
     webPreferences: {
       preload,
-      // nodeIntegration: true,
+      nodeIntegration: true,
       contextIsolation: true,
     },
   });

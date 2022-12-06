@@ -53,12 +53,12 @@ export const Top: React.VFC<TopComponentProps> = (props) => {
 
   const showCancelOperationModal = () => {
     const name =
-      appState.appLog.studentID === "__OTHERS__"
+      appState.appLog.studentId === "__OTHERS__"
         ? "関係者その他"
-        : studentsList &&
+        : TStudentsList &&
           studentsList.filter(
             (val: { [index: string]: string }) =>
-              val.id == appState.appLog.studentID
+              val.id == appState.appLog.studentId
           )[0].name;
     const operation = appState.appLog.operation === "enter" ? "入室" : "退室";
 

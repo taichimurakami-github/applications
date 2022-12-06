@@ -3,17 +3,17 @@ import "@styles/modules/StudentDataSelector.scss";
 
 interface StudentsList {
   onSaveAttendance: (i: string) => void;
-  onHandleModalState: (t: modalState) => void;
+  onHandleModalState: (t: TModalState) => void;
   onHandleScrollNavigation: () => void;
   activateConfirmModal: (e: React.MouseEvent) => void;
   school: string;
   grade: string;
   seatID: string;
   studentsList: { [index: string]: string }[];
-  seatsState: seatsState;
+  seatsState: TSeatsState;
 }
 
-const StudentsList: React.VFC<StudentsList> = (props) => {
+const StudentsList: React.VFC<TStudentsList> = (props) => {
   const school_ja = [];
 
   switch (props.school) {

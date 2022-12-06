@@ -94,7 +94,7 @@ export const StudentDataSelector: React.VFC = (props) => {
     //選ばれた生徒は既に着席しているか？（退席していないか？）
     let isAlreadySeated = false;
     for (let key of Object.keys(seatsState)) {
-      seatsState[key].studentID === selected_student_data.id &&
+      seatsState[key].studentId === selected_student_data.id &&
         !isAlreadySeated &&
         (isAlreadySeated = true);
     }

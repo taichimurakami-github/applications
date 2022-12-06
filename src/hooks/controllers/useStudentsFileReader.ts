@@ -1,11 +1,8 @@
 import { useCallback, useContext } from "react";
 import { appConfig } from "../../app.config";
 import { AppStateContext } from "../../AppContainer";
-import { useIpcEventsSender } from "./useIpcEventsSender";
 
 const useStudentsFileReader = () => {
-  const { readStudentsList, updateStudentsListPathConfig } =
-    useIpcEventsSender();
   const { setStudentsList, handleModalState }: AppStateContext =
     useContext(AppStateContext);
 
@@ -18,14 +15,18 @@ const useStudentsFileReader = () => {
     debugInput.addEventListener("change", async (e) => {
       const input = e.target as HTMLInputElement;
 
-      const studentsList_loadedData = await readStudentsList();
+      const studentsList_loadedData = await window.electron.readStudentsList();
       console.log("useStudnetsFileReader read result:");
       console.log(studentsList_loadedData);
       studentsList_loadedData && setStudentsList(studentsList_loadedData);
 
-      const pathConfigUpdateResult = await updateStudentsListPathConfig(
-        input.files === null ? "" : input.files[0].path
-      );
+      /**
+       * TODO：そもそもinvalidなpathが渡されたら処理を実行せずにエラーモーダルを出すようにする
+       */
+      const pathConfigUpdateResult =
+        await window.electron.updateStudentsListPathConfig(
+          input.files === null ? "" : input.files[0].path
+        );
       console.log(pathConfigUpdateResult);
       pathConfigUpdateResult
         ? handleModalState({

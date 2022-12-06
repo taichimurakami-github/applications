@@ -1,17 +1,15 @@
 import { useState, useEffect } from "react";
-import { useIpcEventsSender } from "../controllers/useIpcEventsSender";
 
 export const attendanceState_initialValue: {} = {};
 
 const useAttendanceState = () => {
-  const { readAttendanceState } = useIpcEventsSender();
-  const [attendanceState, setAttendanceState] = useState<attendanceState>(
+  const [attendanceState, setAttendanceState] = useState<TAttendanceState>(
     attendanceState_initialValue
   );
 
   useEffect(() => {
     (async () => {
-      const attendanceState_bcup: attendanceState = await readAttendanceState();
+      const attendanceState_bcup = await window.electron.readAttendanceState();
       console.log("attendanceState_bcup_result", attendanceState_bcup);
 
       setAttendanceState(

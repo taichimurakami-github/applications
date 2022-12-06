@@ -19,7 +19,7 @@ interface ConfigContainerProps {
     fn_value?: boolean;
     msg?: string;
   }) => Promise<void>;
-  // appState: appState;
+  // appState: TAppState;
 }
 
 const Config: React.VFC<ConfigContainerProps> = (props) => {

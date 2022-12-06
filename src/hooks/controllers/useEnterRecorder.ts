@@ -71,12 +71,12 @@ const useEnterRecorder = () => {
         ? {
             active: true,
             enterTime: nowDate.HMS,
-            studentID: "__OTHERS__",
+            studentId: "__OTHERS__",
           }
         : {
             active: true,
             enterTime: nowDate.HMS,
-            studentID: i,
+            studentId: i,
           };
 
     //seatsStateを更新
@@ -102,7 +102,7 @@ const useEnterRecorder = () => {
     handleAppState({
       now: "TOP",
       appLog: {
-        studentID: i,
+        studentId: i,
         enterTime: insertObjectForSeatsState[appState.selectedSeat].enterTime,
         seatID: appState.selectedSeat,
         operation: "enter",
