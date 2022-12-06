@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export const useIpcEventsReceiver = () => {
+export const useIpcEventsListener = () => {
   useEffect(() => {
     window.electron.onListenUpdateProcess((content: any) => {
       console.log("content:", content);
