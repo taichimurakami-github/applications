@@ -4,13 +4,10 @@ import { ipcRenderer, contextBridge } from "electron";
 contextBridge.exposeInMainWorld("electron", {
   ipcRenderer: ipcRenderer, //ipcRendererも渡せるのでやり取りできる
 
-  onListenUpdateProcess: (handler) =>
+  onListenUpdateProcess: (callback) =>
     ipcRenderer.on("app-update-process", (events, args) => {
       console.log("\n\n\napp-update-process!!!");
-      handler(args);
+      console.log("events:", events);
+      callback(args);
     }),
-
-  ipcRendererOn: ipcRenderer.on,
-
-  onUpdateCounter: (callback) => ipcRenderer.on("update-counter", callback),
 });
