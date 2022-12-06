@@ -13,7 +13,7 @@ rmSync(path.join(__dirname, "dist-electron"), { recursive: true, force: true });
 export default defineConfig({
   resolve: {
     alias: {
-      "@": path.join(__dirname, "src"),
+      "~": path.join(__dirname, "src"),
       "~styles": path.join(__dirname, "src/components/styles"),
       "~electron": path.join(__dirname, "electron"),
     },
