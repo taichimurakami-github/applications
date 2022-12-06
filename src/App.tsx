@@ -45,7 +45,7 @@ const App: React.VFC = () => {
     //変更を反映
     setAppState((beforeAppState) => ({
       ...beforeAppState,
-      localConfig: { ...newAppLocalConfig },
+      localConfig: { ...newAppLocalConfig?.appConfig },
     }));
   };
 

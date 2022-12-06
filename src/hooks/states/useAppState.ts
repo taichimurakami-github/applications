@@ -69,7 +69,7 @@ const useAppState = () => {
         setAppState((beforeAppState) => {
           return {
             ...beforeAppState,
-            localConfig: appLocalConfigData,
+            localConfig: appLocalConfigData.appConfig,
           };
         });
       }
