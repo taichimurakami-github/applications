@@ -9,6 +9,7 @@ const ConfigView = (props: {
   onChangeTopMessage: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   topMessage: string;
+  appUpdateStatusMessage: string;
   isEraceAppDataTodayAllEnabled: boolean;
   isCancelOperationEnabled: boolean;
 }) => {
@@ -22,6 +23,11 @@ const ConfigView = (props: {
       >
         トップページに戻る
       </button>
+
+      <div className="item-wrapper">
+        <p>test: app update process rendering</p>
+        <p>{props.appUpdateStatusMessage}</p>
+      </div>
 
       <div className="item-wrapper">
         <h2>TOP画面メッセージ編集</h2>

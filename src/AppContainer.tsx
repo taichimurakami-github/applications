@@ -1,6 +1,5 @@
 import { createContext, useEffect } from "react";
 import App from "./App";
-import { useIpcEventsListener } from "~/hooks/controllers/useIpcEventsListener";
 import useAppState from "~/hooks/states/useAppState";
 import useAttendanceState from "~/hooks/states/useAttendanceState";
 import useModalState from "~/hooks/states/useModalState";
@@ -10,13 +9,6 @@ import useStudentsListState from "~/hooks/states/useStudentsListState";
 export const AppStateContext = createContext<any>(null);
 
 const AppContainer: React.VFC = (props) => {
-  /**
-   * -----------------------------------------------
-   *    app update status listener (experimental)
-   * -----------------------------------------------
-   */
-  useIpcEventsListener();
-
   /**
    * -------------------------------
    *    React Hooks declearation

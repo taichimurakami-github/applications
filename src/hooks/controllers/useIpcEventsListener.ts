@@ -6,4 +6,6 @@ export const useIpcEventsListener = () => {
   ) => {
     window.electron.onListenUpdateProcess(callback);
   };
+
+  return { listenAppAutoUpdateProcess };
 };

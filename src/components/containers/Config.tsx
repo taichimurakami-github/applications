@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { appConfig } from "~/app.config";
 import { AppStateContext } from "~/AppContainer";
 import useAppDataEracer from "~/hooks/controllers/useAppDataEracer";
@@ -8,6 +8,7 @@ import useStudentsFileReader from "~/hooks/controllers/useStudentsFileReader";
 //style import
 import "~styles/modules/Config.scss";
 import ConfigView from "~/components/views/ConfigView";
+import { useIpcEventsListener } from "~/hooks/controllers/useIpcEventsListener";
 
 const Config = (props: {
   onHandleAppState: (d: { [index: string]: any }) => void;
@@ -22,6 +23,7 @@ const Config = (props: {
 }) => {
   const { appState, seatsState, handleModalState }: AppStateContext =
     useContext(AppStateContext);
+  const { listenAppAutoUpdateProcess } = useIpcEventsListener();
 
   const studentsFileReader = useStudentsFileReader();
   const exitRecorder = useExitRecorder();
@@ -30,6 +32,7 @@ const Config = (props: {
   const [topMessage, setTopMessage] = useState<string>(
     appState.localConfig.msg
   );
+  const [appUpdateStateMessage, setAppUpdateStateMessage] = useState("");
 
   const localConfig_fn = appState.localConfig.fn;
 
@@ -155,6 +158,12 @@ const Config = (props: {
     });
   };
 
+  useEffect(() => {
+    listenAppAutoUpdateProcess((content) => {
+      setAppUpdateStateMessage(content.message);
+    });
+  }, []);
+
   return (
     <ConfigView
       onHandleBackToTop={backToTop}
@@ -165,6 +174,7 @@ const Config = (props: {
       onChangeTopMessage={changeTopMessage}
       onSubmit={submit}
       topMessage={topMessage}
+      appUpdateStatusMessage={appUpdateStateMessage}
       isEraceAppDataTodayAllEnabled={localConfig_fn.stable.eraceAppDataTodayAll}
       isCancelOperationEnabled={localConfig_fn.stable.cancelOperation}
     />
