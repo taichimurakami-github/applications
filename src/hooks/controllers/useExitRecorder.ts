@@ -1,8 +1,8 @@
 import { useCallback, useContext } from "react";
-import { appConfig } from "../../app.config";
-import { AppStateContext } from "../../AppContainer";
-import { calculateTimeDiff } from "../../utils/calculateTimeDiff";
-import { getFormattedDate } from "../../utils/getFormattedDate";
+import { appConfig } from "~/app.config";
+import { AppStateContext } from "~/AppContainer";
+import { calculateTimeDiff } from "~/utils/calculateTimeDiff";
+import { getFormattedDate } from "~/utils/getFormattedDate";
 
 const useExitRecorder = () => {
   const {

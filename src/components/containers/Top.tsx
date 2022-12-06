@@ -1,8 +1,8 @@
 import React, { useContext, useRef } from "react";
-import { appConfig } from "../../app.config";
-import { AppStateContext } from "../../AppContainer";
-import { SeatsTable } from "../views/SeatsTable";
-import { TopMessage } from "../views/TopMessage";
+import { appConfig } from "~/app.config";
+import { AppStateContext } from "~/AppContainer";
+import { SeatsTable } from "~/components/views/SeatsTable";
+import { TopMessage } from "~/components/views/TopMessage";
 
 export const Top = (props: {
   onHandleAppState: (d: { [index: string]: any }) => void;

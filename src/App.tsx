@@ -2,19 +2,19 @@
 import React, { useContext } from "react";
 
 //React components import
-import { Top } from "./components/containers/Top";
-import { StudentDataSelector } from "./components/containers/StudentDataSelector";
-import { ModalRoot } from "./components/containers/MordalRoot";
-import { Config } from "./components/containers/Config";
+import { Top } from "~/components/containers/Top";
+import { StudentDataSelector } from "~/components/containers/StudentDataSelector";
+import { ModalRoot } from "~/components/containers/MordalRoot";
+import { Config } from "~/components/containers/Config";
 
 //styles import
 import "~styles/modules/Top.scss";
 import "~styles/app.common.scss";
 import "~styles/index.scss";
 
-import { AppStateContext } from "./AppContainer";
-import useAutoDataReadChecker from "./hooks/controllers/useAutoDataReadChecker";
-import useAutoFileWriter from "./hooks/controllers/useAutoFileWriter";
+import { AppStateContext } from "~/AppContainer";
+import useAutoDataReadChecker from "~/hooks/controllers/useAutoDataReadChecker";
+import useAutoFileWriter from "~/hooks/controllers/useAutoFileWriter";
 
 const App = () => {
   const { appState, setAppState }: AppStateContext =

@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
-import { AppStateContext } from "../../AppContainer";
-import { isObjectNotEmpty } from "../../utils/isObjectNotEmpty";
+import { AppStateContext } from "~/AppContainer";
+import { objectNotEmpty } from "~/utils/objectNotEmpty";
 
 const useAutoFileWriter = (): void => {
   const { attendanceState, seatsState }: AppStateContext =
@@ -19,7 +19,7 @@ const useAutoFileWriter = (): void => {
   useEffect(() => {
     (async () => {
       //attendanceStateが初期値{}でなければ書き出し
-      isObjectNotEmpty(attendanceState) &&
+      objectNotEmpty(attendanceState) &&
         (await window.electron.writeAttendanceState(attendanceState));
 
       //  window.electron.ipcRenderer.invoke("handle_attendanceState", {
@@ -32,7 +32,7 @@ const useAutoFileWriter = (): void => {
   useEffect(() => {
     (async () => {
       //seatsState書き出し
-      // isObjectNotEmpty(seatsState) &&
+      // objectNotEmpty(seatsState) &&
       !isSeatsStateInitialized() &&
         (await window.electron.writeSeatsState(seatsState));
       // (await window.electron.ipcRenderer.invoke("handle_seatsState", {

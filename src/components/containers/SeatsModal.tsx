@@ -1,11 +1,11 @@
-import { appConfig } from "../../app.config";
+import { appConfig } from "~/app.config";
 import React, { useContext, useState } from "react";
-import { SeatsTable } from "../views/SeatsTable";
+import { SeatsTable } from "~/components/views/SeatsTable";
 
 import "~styles/modules/Top.scss";
-import closeButtonIcon from "../../images/close-button.svg";
-import { AppStateContext } from "../../AppContainer";
-import useSeatsController from "../../hooks/controllers/useSeatsController";
+import closeButtonIcon from "~/images/close-button.svg";
+import { AppStateContext } from "~/AppContainer";
+import useSeatsController from "~/hooks/controllers/useSeatsController";
 
 const seatsModalState_initialValue: {
   mode: string;

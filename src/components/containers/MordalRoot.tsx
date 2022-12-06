@@ -3,12 +3,12 @@ import { ErrorModal } from "./ErrorModal";
 import { SeatsModal } from "./SeatsModal";
 import { ConfirmModal } from "./ConfirmModal";
 import { NewsModal } from "./NewsModal";
-import { appConfig } from "../../app.config";
+import { appConfig } from "~/app.config";
 import React, { useContext, useState } from "react";
 
 //import styles
 import "~styles/modal.scss";
-import { AppStateContext } from "../../AppContainer";
+import { AppStateContext } from "~/AppContainer";
 
 export const ModalRoot = () => {
   const [BackgroundClose, setBackgroundClose] = useState(true);

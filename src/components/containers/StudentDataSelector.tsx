@@ -1,9 +1,9 @@
 import React, { useState, useRef, useContext } from "react";
-import { StudentsList } from "../views/StudentsList";
-import { appConfig } from "../../app.config";
-import { AppStateContext } from "../../AppContainer";
-import useEnterRecorder from "../../hooks/controllers/useEnterRecorder";
-import StudentCategorySelector from "../views/StudentCategorySelector";
+import { StudentsList } from "~/components/views/StudentsList";
+import { appConfig } from "~/app.config";
+import { AppStateContext } from "~/AppContainer";
+import useEnterRecorder from "~/hooks/controllers/useEnterRecorder";
+import StudentCategorySelector from "~/components/views/StudentCategorySelector";
 
 //style imports
 import "~styles/modules/StudentDataSelector.scss";

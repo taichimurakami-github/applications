@@ -1,6 +1,6 @@
 import { useCallback, useContext } from "react";
-import { appConfig } from "../../app.config";
-import { AppStateContext } from "../../AppContainer";
+import { appConfig } from "~/app.config";
+import { AppStateContext } from "~/AppContainer";
 import { seatsState_initialValue } from "../states/useSeatsState";
 
 const useSeatsController = () => {

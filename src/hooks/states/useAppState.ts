@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { appConfig } from "../../app.config";
+import { appConfig } from "~/app.config";
 
 const appState_initialValue: TAppState = {
   selectedElement: null,

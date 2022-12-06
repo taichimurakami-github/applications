@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { AppStateContext } from "../../AppContainer";
+import { AppStateContext } from "~/AppContainer";
 
 const NewsModal = (props: { onCloseModal: () => void }) => {
   const { appState } = useContext(AppStateContext);

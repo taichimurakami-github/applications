@@ -1,7 +1,7 @@
 import { useCallback, useContext } from "react";
-import { appConfig } from "../../app.config";
-import { AppStateContext } from "../../AppContainer";
-import { getFormattedDate } from "../../utils/getFormattedDate";
+import { appConfig } from "~/app.config";
+import { AppStateContext } from "~/AppContainer";
+import { getFormattedDate } from "~/utils/getFormattedDate";
 
 /**
  * function handleSaveAttendanceForEnter()

@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { appConfig } from "../../app.config";
-import { AppStateContext } from "../../AppContainer";
+import { appConfig } from "~/app.config";
+import { AppStateContext } from "~/AppContainer";
 
 const ErrorModal = (props: {
   onCloseModal: () => void;
@@ -16,7 +16,7 @@ const ErrorModal = (props: {
 
   const closeModal = () => props.onCloseModal();
 
-  const getComponent = () => {
+  const getContentFromErrorCode = () => {
     switch (props.content.errorCode) {
       //エラー：生徒情報が表示されていない
       case appConfig.errorCodeList["1001"]:
@@ -75,7 +75,7 @@ const ErrorModal = (props: {
 
   return (
     <>
-      <div className="error-modal-container">{getComponent()}</div>
+      <div className="error-modal-container">{getContentFromErrorCode()}</div>
     </>
   );
 };

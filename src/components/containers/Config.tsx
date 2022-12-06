@@ -1,13 +1,13 @@
 import React, { useContext, useState } from "react";
-import { appConfig } from "../../app.config";
-import { AppStateContext } from "../../AppContainer";
-import useAppDataEracer from "../../hooks/controllers/useAppDataEracer";
-import useExitRecorder from "../../hooks/controllers/useExitRecorder";
-import useStudentsFileReader from "../../hooks/controllers/useStudentsFileReader";
+import { appConfig } from "~/app.config";
+import { AppStateContext } from "~/AppContainer";
+import useAppDataEracer from "~/hooks/controllers/useAppDataEracer";
+import useExitRecorder from "~/hooks/controllers/useExitRecorder";
+import useStudentsFileReader from "~/hooks/controllers/useStudentsFileReader";
 
 //style import
 import "~styles/modules/Config.scss";
-import ConfigView from "../views/ConfigView";
+import ConfigView from "~/components/views/ConfigView";
 
 const Config = (props: {
   onHandleAppState: (d: { [index: string]: any }) => void;

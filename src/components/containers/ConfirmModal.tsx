@@ -1,10 +1,10 @@
 import { useContext } from "react";
-import { appConfig } from "../../app.config";
-import { AppStateContext } from "../../AppContainer";
-import useAppDataEracer from "../../hooks/controllers/useAppDataEracer";
-import useCancelController from "../../hooks/controllers/useCancelController";
-import useEnterRecorder from "../../hooks/controllers/useEnterRecorder";
-import useExitRecorder from "../../hooks/controllers/useExitRecorder";
+import { appConfig } from "~/app.config";
+import { AppStateContext } from "~/AppContainer";
+import useAppDataEracer from "~/hooks/controllers/useAppDataEracer";
+import useCancelController from "~/hooks/controllers/useCancelController";
+import useEnterRecorder from "~/hooks/controllers/useEnterRecorder";
+import useExitRecorder from "~/hooks/controllers/useExitRecorder";
 
 const ConfirmModal = (props: {
   content: TModalStateContents;
