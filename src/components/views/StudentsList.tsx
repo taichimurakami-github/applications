@@ -1,5 +1,5 @@
 import React from "react";
-import "@styles/modules/StudentDataSelector.scss";
+import "~styles/modules/StudentDataSelector.scss";
 
 const StudentsList = (props: {
   onSaveAttendance: (i: string) => void;

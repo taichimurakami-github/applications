@@ -7,7 +7,7 @@ import { appConfig } from "../../app.config";
 import React, { useContext, useState } from "react";
 
 //import styles
-import "@styles/modal.scss";
+import "~styles/modal.scss";
 import { AppStateContext } from "../../AppContainer";
 
 export const ModalRoot = () => {

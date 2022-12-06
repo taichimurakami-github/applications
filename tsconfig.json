@@ -6,7 +6,7 @@
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "paths": {
       "@/*": ["src/*"],
-      "@styles/*": ["src/assets/styles/*"],
+      "~styles/*": ["src/assets/styles/*"],
       "~electron/*": ["electron/*"]
     },
     "allowJs": false,

@@ -6,7 +6,7 @@ import useEnterRecorder from "../../hooks/controllers/useEnterRecorder";
 import StudentCategorySelector from "../views/StudentCategorySelector";
 
 //style imports
-import "@styles/modules/StudentDataSelector.scss";
+import "~styles/modules/StudentDataSelector.scss";
 
 export const StudentDataSelector = () => {
   const categorySelectorContainer = useRef<HTMLDivElement>(null);

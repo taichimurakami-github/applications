@@ -8,9 +8,9 @@ import { ModalRoot } from "./components/containers/MordalRoot";
 import { Config } from "./components/containers/Config";
 
 //styles import
-import "@styles/modules/Top.scss";
-import "@styles/app.common.scss";
-import "@styles/index.scss";
+import "~styles/modules/Top.scss";
+import "~styles/app.common.scss";
+import "~styles/index.scss";
 
 import { AppStateContext } from "./AppContainer";
 import useAutoDataReadChecker from "./hooks/controllers/useAutoDataReadChecker";
