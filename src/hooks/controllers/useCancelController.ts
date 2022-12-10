@@ -1,6 +1,6 @@
 import { useCallback, useContext } from "react";
-import { appConfig } from "../../app.config";
-import { AppStateContext } from "../../AppContainer";
+import { appConfig } from "~/app.config";
+import { AppStateContext } from "~/AppContainer";
 
 /**
  * function handleCancelOparation()
@@ -39,7 +39,7 @@ const useCancelController = () => {
   };
 
   const cancelEnterOperation = (
-    insertObjectForAttendanceState: attendanceState,
+    insertObjectForAttendanceState: TAttendanceState,
     insertObjectForSeatsState: { [index: string]: any }
   ) => {
     /**
@@ -50,17 +50,17 @@ const useCancelController = () => {
      */
 
     //関係者その他ではない場合、attendanceStateのキャンセル処理を追加
-    if (appState.appLog.studentID === "__OTHERS__") {
+    if (appState.appLog.studentId === "__OTHERS__") {
       return;
     }
 
     //attendanceStateのenterの記録を削除
     //attendanceState上にはkeyとvalueが必ず存在しているので、値の存在を確認せずに直接値を参照する
-    attendanceState[appState.appLog.studentID].length === 1
+    attendanceState[appState.appLog.studentId].length === 1
       ? //attendanceStateのvalue内の要素が1つしかない場合、keyごと削除
-        delete insertObjectForAttendanceState[appState.appLog.studentID]
+        delete insertObjectForAttendanceState[appState.appLog.studentId]
       : //要素が2つ以上の場合、最後の要素 = 新しくenterで生成された要素を削除
-        insertObjectForAttendanceState[appState.appLog.studentID].pop();
+        insertObjectForAttendanceState[appState.appLog.studentId].pop();
 
     setAttendanceState((beforeAttendanceState) => ({
       ...beforeAttendanceState,
@@ -71,7 +71,7 @@ const useCancelController = () => {
     insertObjectForSeatsState[appState.appLog.seatID] = {
       active: false,
       enterTime: "",
-      studentID: "",
+      studentId: "",
     };
     setSeatsState((beforeSeatsState) => ({
       ...beforeSeatsState,
@@ -80,7 +80,7 @@ const useCancelController = () => {
   };
 
   const cancelExitOperation = (
-    insertObjectForAttendanceState: attendanceState,
+    insertObjectForAttendanceState: TAttendanceState,
     insertObjectForSeatsState: { [index: string]: any }
   ) => {
     /**
@@ -90,12 +90,12 @@ const useCancelController = () => {
      * ・appLogをリセット
      */
 
-    if (appState.appLog.studentID === "__OTHERS__") {
+    if (appState.appLog.studentId === "__OTHERS__") {
       console.log("others exit");
       insertObjectForSeatsState[appState.appLog.seatID] = {
         active: true,
         enterTime: appState.appLog.enterTime,
-        studentID: "__OTHERS__",
+        studentId: "__OTHERS__",
       };
 
       setSeatsState((beforeSeatsState) => ({
@@ -109,7 +109,7 @@ const useCancelController = () => {
     insertObjectForSeatsState[appState.appLog.seatID] = {
       active: true,
       enterTime: appState.appLog.enterTime,
-      studentID: appState.appLog.studentID,
+      studentId: appState.appLog.studentId,
     };
     setSeatsState((beforeSeatsState) => ({
       ...beforeSeatsState,
@@ -120,12 +120,12 @@ const useCancelController = () => {
 
     //配列の最後の要素を取得し、exitプロパティを削除
     const lastElem =
-      insertObjectForAttendanceState[appState.appLog.studentID].slice(-1)[0];
+      insertObjectForAttendanceState[appState.appLog.studentId].slice(-1)[0];
     delete lastElem.exit;
 
     //配列の最後の要素を削除し、先程いじったexitなしオブジェクトを挿入
-    insertObjectForAttendanceState[appState.appLog.studentID].pop();
-    insertObjectForAttendanceState[appState.appLog.studentID].push(lastElem);
+    insertObjectForAttendanceState[appState.appLog.studentId].pop();
+    insertObjectForAttendanceState[appState.appLog.studentId].push(lastElem);
 
     setAttendanceState((beforeAttendanceState) => ({
       ...beforeAttendanceState,
@@ -142,7 +142,7 @@ const useCancelController = () => {
     }
 
     // //デバッグ用コンソール
-    // console.log(attendanceState[appState.appLog.studentID]);
+    // console.log(attendanceState[appState.appLog.studentId]);
     // console.log(appState.appLog);
 
     const insertObjectForAttendanceState = { ...attendanceState };

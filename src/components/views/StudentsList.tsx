@@ -1,19 +1,17 @@
 import React from "react";
-import "@styles/modules/StudentDataSelector.scss";
+import "~styles/modules/StudentDataSelector.scss";
 
-interface StudentsList {
+const StudentsList = (props: {
   onSaveAttendance: (i: string) => void;
-  onHandleModalState: (t: modalState) => void;
+  onHandleModalState: (t: TModalState) => void;
   onHandleScrollNavigation: () => void;
   activateConfirmModal: (e: React.MouseEvent) => void;
   school: string;
   grade: string;
   seatID: string;
   studentsList: { [index: string]: string }[];
-  seatsState: seatsState;
-}
-
-const StudentsList: React.VFC<StudentsList> = (props) => {
+  seatsState: TSeatsState;
+}) => {
   const school_ja = [];
 
   switch (props.school) {

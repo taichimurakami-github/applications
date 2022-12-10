@@ -1,11 +1,10 @@
 import { createContext, useEffect } from "react";
 import App from "./App";
-import { useIpcEventsSender } from "./hooks/controllers/useIpcEventsSender";
-import useAppState from "./hooks/states/useAppState";
-import useAttendanceState from "./hooks/states/useAttendanceState";
-import useModalState from "./hooks/states/useModalState";
-import useSeatsState from "./hooks/states/useSeatsState";
-import useStudentsListState from "./hooks/states/useStudentsListState";
+import useAppState from "~/hooks/states/useAppState";
+import useAttendanceState from "~/hooks/states/useAttendanceState";
+import useModalState from "~/hooks/states/useModalState";
+import useSeatsState from "~/hooks/states/useSeatsState";
+import useStudentsListState from "~/hooks/states/useStudentsListState";
 
 export const AppStateContext = createContext<any>(null);
 
@@ -31,20 +30,6 @@ const AppContainer: React.VFC = (props) => {
 
   //モーダル管理変数
   const { modalState, setModalState, handleModalState } = useModalState();
-
-  /**
-   * -----------------------------------------------
-   *    app update status checker (experimental)
-   * -----------------------------------------------
-   */
-  // const { checkAppAutoUpdateProgress } = useIpcEventsSender();
-
-  // useEffect(() => {
-  //   setInterval(async () => {
-  //     const result = await checkAppAutoUpdateProgress();
-  //     console.log(result);
-  //   }, 2000);
-  // }, []);
 
   return (
     <AppStateContext.Provider

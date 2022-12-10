@@ -1,14 +1,12 @@
 import { useContext } from "react";
-import { appConfig } from "../../app.config";
-import { AppStateContext } from "../../AppContainer";
+import { appConfig } from "~/app.config";
+import { AppStateContext } from "~/AppContainer";
 
-interface ErrorModalProps {
+const ErrorModal = (props: {
   onCloseModal: () => void;
   onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>;
-  content: modalStateContents;
-}
-
-const ErrorModal: React.VFC<ErrorModalProps> = (props) => {
+  content: TModalStateContents;
+}) => {
   const { handleAppState } = useContext(AppStateContext);
 
   const activateConfig = () => {
@@ -18,7 +16,7 @@ const ErrorModal: React.VFC<ErrorModalProps> = (props) => {
 
   const closeModal = () => props.onCloseModal();
 
-  const handleComponent = () => {
+  const getContentFromErrorCode = () => {
     switch (props.content.errorCode) {
       //エラー：生徒情報が表示されていない
       case appConfig.errorCodeList["1001"]:
@@ -77,7 +75,7 @@ const ErrorModal: React.VFC<ErrorModalProps> = (props) => {
 
   return (
     <>
-      <div className="error-modal-container">{handleComponent()}</div>
+      <div className="error-modal-container">{getContentFromErrorCode()}</div>
     </>
   );
 };

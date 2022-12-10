@@ -1,6 +1,6 @@
 import React from "react";
 
-interface ConfigView {
+const ConfigView = (props: {
   onHandleBackToTop: () => void;
   onReadStudentsFile: () => void;
   onEraceAppData: () => void;
@@ -9,11 +9,10 @@ interface ConfigView {
   onChangeTopMessage: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   topMessage: string;
+  appUpdateStatusMessage: string;
   isEraceAppDataTodayAllEnabled: boolean;
   isCancelOperationEnabled: boolean;
-}
-
-const ConfigView = (props: ConfigView) => {
+}) => {
   return (
     <div className="component-config-wrapper">
       <h1>アプリ設定</h1>
@@ -24,6 +23,11 @@ const ConfigView = (props: ConfigView) => {
       >
         トップページに戻る
       </button>
+
+      <div className="item-wrapper">
+        <p>test: app update process rendering</p>
+        <p>{props.appUpdateStatusMessage}</p>
+      </div>
 
       <div className="item-wrapper">
         <h2>TOP画面メッセージ編集</h2>

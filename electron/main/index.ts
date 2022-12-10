@@ -53,7 +53,7 @@ function createWindow() {
     // show: true,
     webPreferences: {
       preload,
-      // nodeIntegration: true,
+      nodeIntegration: true,
       contextIsolation: true,
     },
   });
@@ -64,13 +64,25 @@ function createWindow() {
   win.focus();
 
   if (process.env.VITE_DEV_SERVER_URL) {
+    console.log("\n\n\n");
+    console.log(process.env.VITE_DEV_SERVER_URL);
+    console.log("\n\n\n");
     // electron-vite-vue#298
     win.loadURL(url as string);
-    // Open devTool if the app is not packaged
-    win.webContents.openDevTools();
   } else {
     win.loadFile(indexHtml);
   }
+
+  // ・ipcMain -> ipcRenderer方向の通信
+  // ・BrowserWindow上でのdevToolsの起動
+  // に関しては、Renderer側の読み込みが終わっていないとmessageを送れないためここで定義
+  win.webContents.on("did-finish-load", () => {
+    if (process.env.VITE_DEV_SERVER_URL) {
+      // Open devTool if the app is not packaged
+      win?.webContents.openDevTools();
+    }
+    listenAppAutoUpdateEvent(win);
+  });
 }
 
 app.on("window-all-closed", () => {
@@ -102,12 +114,4 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on("window-all-closed", function () {
   if (process.platform !== "darwin") app.quit();
-});
-
-/**
- * activate app auto update function (experimental)
- */
-app.on("ready", function () {
-  // listen app update events
-  listenAppAutoUpdateEvent(win);
 });

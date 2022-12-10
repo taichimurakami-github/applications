@@ -2,32 +2,23 @@
 import React, { useContext } from "react";
 
 //React components import
-import { Top } from "./components/containers/Top";
-import { StudentDataSelector } from "./components/containers/StudentDataSelector";
-import { ModalRoot } from "./components/containers/MordalRoot";
-import { Config } from "./components/containers/Config";
+import { Top } from "~/components/containers/Top";
+import { StudentDataSelector } from "~/components/containers/StudentDataSelector";
+import { ModalRoot } from "~/components/containers/MordalRoot";
+import { Config } from "~/components/containers/Config";
 
 //styles import
-import "@styles/modules/Top.scss";
-import "@styles/app.common.scss";
-import "@styles/index.scss";
+import "~styles/modules/Top.scss";
+import "~styles/app.common.scss";
+import "~styles/index.scss";
 
-import { AppStateContext } from "./AppContainer";
-import useAutoDataReadChecker from "./hooks/controllers/useAutoDataReadChecker";
-import useAutoFileWriter from "./hooks/controllers/useAutoFileWriter";
-import { useIpcEventsSender } from "./hooks/controllers/useIpcEventsSender";
-import { useIpcEventsReceiver } from "./hooks/controllers/useIpcEventsReceiver";
+import { AppStateContext } from "~/AppContainer";
+import useAutoDataReadChecker from "~/hooks/controllers/useAutoDataReadChecker";
+import useAutoFileWriter from "~/hooks/controllers/useAutoFileWriter";
 
-const App: React.VFC = () => {
+const App = () => {
   const { appState, setAppState }: AppStateContext =
     useContext(AppStateContext);
-  useIpcEventsReceiver();
-
-  const {
-    readAppLocalConfig,
-    updateTopMessageConfig,
-    updateAppFunctionsConfig,
-  } = useIpcEventsSender();
 
   const handleChangeAppLocalConfig = async (arg: {
     fn_id?:
@@ -38,19 +29,23 @@ const App: React.VFC = () => {
     msg?: string;
   }) => {
     if (arg.fn_id && arg.fn_status && arg.fn_value !== undefined) {
-      await updateAppFunctionsConfig(arg.fn_id, arg.fn_status, arg.fn_value);
+      await window.electron.updateAppFunctionsConfig(
+        arg.fn_id,
+        arg.fn_status,
+        arg.fn_value
+      );
     }
 
     if (arg.msg) {
-      await updateTopMessageConfig(arg.msg);
+      await window.electron.updateTopMessageConfig(arg.msg);
     }
 
-    const newAppLocalConfig = await readAppLocalConfig();
+    const newAppLocalConfig = await window.electron.readAppLocalConfig();
 
     //変更を反映
     setAppState((beforeAppState) => ({
       ...beforeAppState,
-      localConfig: { ...newAppLocalConfig },
+      localConfig: { ...newAppLocalConfig?.appConfig },
     }));
   };
 
@@ -59,13 +54,13 @@ const App: React.VFC = () => {
     setAppState((beforeAppState) => ({ ...beforeAppState, ...d }));
 
   /**
-   * function handleComponent()
+   * function getComponent()
    *
    * render()内のReact Componentを、appStateの変更に合わせて動的に返す
    *
    * @returns {void}
    */
-  const handleComponent = () => {
+  const getComponent = () => {
     switch (appState.now) {
       case "TOP":
         return <Top onHandleAppState={handleAppState} />;
@@ -96,7 +91,7 @@ const App: React.VFC = () => {
 
   return (
     <div className="App">
-      {handleComponent()}
+      {getComponent()}
       <ModalRoot />
     </div>
   );

@@ -1,45 +1,42 @@
 import { ipcRenderer } from "electron";
+import { TContextBridgeAPI } from "~electron/@types/contextBridge";
+import {
+  TAttendanceState as _TAttendanceState,
+  TSeatsState as _TSeatsState,
+  TStudentsList as _TStudentsList,
+} from "~electron/@types/main";
 
 declare global {
   interface Window {
-    electron: {
-      ipcRenderer: ipcRenderer;
-      ipcRendererOn: any;
-      onListenUpdateProcess: (
-        handler: (events: any, ...args: any) => void
-      ) => void;
-    };
+    electron: TContextBridgeAPI;
   }
 
-  interface appState {
+  type TAppState = {
     selectedElement: null | HTMLElement;
     selectedSeat: string;
     now: string;
     localConfig: any;
     appLog: any;
-  }
+  };
 
-  /**
-   * ???どういう型定義???
-   * studentsListのデータ型を考えておく必要がある
-   */
-  // interface studentsList {
-  //   [index: string]: array[{ [index: string]: string }]
-  // }
+  type TStudentsList = _TStudentsList;
 
-  //interfaceではなく型エイリアスで宣言
-  type studentsList = { [index: string]: string }[];
+  type TOtherStudentData = {
+    id: "__OTHERS__";
+    name: "関係者等(記録されません)";
+    grade: "";
+    school: "";
+    belongs: "";
+  };
 
-  interface attendanceState {
-    [index: string]: array[{ [index: string]: string }];
-  }
+  type TAttendanceState = _TAttendanceState;
 
-  interface modalStateContents {
+  type TModalStateContents = {
     confirmCode?: string;
     errorCode?: string;
 
     // //App.tsx
-    studentID?: string;
+    studentId?: string;
     nextSeatID?: string;
     timeLength?: number[];
     exitTime?: string;
@@ -60,21 +57,15 @@ declare global {
     studentData?: { [key: string]: string };
     targetID?: string;
     targetData?: { [key: string]: string };
-  }
+  };
 
-  interface modalState {
+  type TModalState = {
     active: boolean;
     name: string;
-    content: modalStateContents;
-  }
+    content: TModalStateContents;
+  };
 
-  interface seatsState {
-    [index: string]: {
-      active: boolean;
-      enterTime: string;
-      studentID: string;
-    };
-  }
+  type TSeatsState = _TSeatsState;
 
   interface appConfig {
     localConfigTemplate: {
@@ -108,18 +99,18 @@ declare global {
   }
 
   type AppStateContext = {
-    appState: appState;
-    seatsState: seatsState;
-    attendanceState: attendanceState;
-    studentsList: studentsList;
-    modalState: modalState;
+    appState: TAppState;
+    seatsState: TSeatsState;
+    attendanceState: TAttendanceState;
+    studentsList: TStudentsList;
+    modalState: TModalState;
     resetAppState: (arg: { mode: "APPLOG" | "DEFAULT"; content?: any }) => void;
     handleAppState: (d: { [index: string]: any }) => void;
-    setAppState: React.Dispatch<React.SetStateAction<appState>>;
-    setSeatsState: React.Dispatch<React.SetStateAction<seatsState>>;
-    setStudentsList: React.Dispatch<React.SetStateAction<studentsList>>;
-    setModalState: React.Dispatch<React.SetStateAction<modalState>>;
-    setAttendanceState: React.Dispatch<React.SetStateAction<attendanceState>>;
-    handleModalState: (t: modalState) => void;
+    setAppState: React.Dispatch<React.SetStateAction<TAppState>>;
+    setSeatsState: React.Dispatch<React.SetStateAction<TSeatsState>>;
+    setStudentsList: React.Dispatch<React.SetStateAction<TStudentsList>>;
+    setModalState: React.Dispatch<React.SetStateAction<TModalState>>;
+    setAttendanceState: React.Dispatch<React.SetStateAction<TAttendanceState>>;
+    handleModalState: (t: TModalState) => void;
   };
 }
