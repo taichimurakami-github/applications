@@ -4,7 +4,7 @@ import { TAppLocalConfig } from "../../@types/main";
 import { StateManagerBase } from "./StateManagerBase";
 
 export class AppConfigState extends StateManagerBase<TAppLocalConfig> {
-  private defaultAppLocalConfig: TAppLocalConfig;
+  public readonly defaultAppLocalConfig: TAppLocalConfig;
 
   constructor(appConfigDirPath: string) {
     super("AppLocalConfigManager", appConfigDirPath);
