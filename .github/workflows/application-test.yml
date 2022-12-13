@@ -1,15 +1,15 @@
-name: Github actions test
-run-name: Github Actions test by ${{ github.actor }}
+name: Attendance-management unit test
+run-name: Github Actions application unit test by ${{ github.actor }}
 on: [push, pull_request]
 jobs:
-  Do-Application-test:
+  do-unit-test:
     runs-on: windows-latest
     strategy:
       matrix:
         node-version: [16.x]
     steps:
       - run: echo "This job was automatically triggered by a ${{ github.event_name }}"
-      - run: echo "This test is running on a ${{ runner.os }."
+      - run: echo "This test is running on a ${{ runner.os }}."
       - run: echo "Now testing ${{ github.repository }}/${{ github.ref }}"
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
