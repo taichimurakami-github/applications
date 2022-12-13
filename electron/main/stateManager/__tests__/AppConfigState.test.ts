@@ -2,6 +2,10 @@ import { AppConfigState } from "../AppConfigState";
 import { readFile, writeFile, rmdir } from "fs/promises";
 import { resolve as resolvePath } from "path";
 
+/**
+ * test utils
+ */
+
 const TEST_DIR_PATH = resolvePath("./", ".TEST_LOCAL_DIR");
 
 const dummyconfig = new AppConfigState(
@@ -11,6 +15,12 @@ const APP_LOCAL_CONFIG_FILE_PATH = resolvePath(
   TEST_DIR_PATH,
   dummyconfig.getFileName()
 );
+
+const date = new Date();
+
+/**
+ * tests
+ */
 
 describe("AppConfigState(state manager)", () => {
   test("config.jsonファイルがローカルに存在しない場合は新たにファイル作成を行い，作成されたファイルのデータがテンプレートデータである", async () => {
@@ -52,5 +62,27 @@ describe("AppConfigState(state manager)", () => {
       true
     );
     expect(JSON.parse(data02).path.studentsList).toBeTruthy(); //読み込んだjsonファイルの中のpath.studentsListが引き継がれている
+  });
+
+  test("新しいデータをupdateメソッドに渡すと、ローカルファイルにデータを書き込んで更新できる", async () => {
+    const config = new AppConfigState(TEST_DIR_PATH);
+    const oldDataInLocalConfigFile = config.getData();
+    const newData = {
+      ...config.getData(),
+      path: {
+        attendance: date.toLocaleString() + "_attendance",
+        seats: date.toLocaleString() + "_seats",
+        studentsList: date.toLocaleString() + "_studentsList",
+      },
+    };
+
+    await writeFile(APP_LOCAL_CONFIG_FILE_PATH, JSON.stringify(newData));
+    const newDataInLocalConfigFile = config.readData();
+
+    expect(newDataInLocalConfigFile).toBeTruthy();
+    expect(
+      JSON.stringify(oldDataInLocalConfigFile) ===
+        JSON.stringify(newDataInLocalConfigFile)
+    ).toBe(false);
   });
 });
