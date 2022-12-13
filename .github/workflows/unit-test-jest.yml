@@ -20,7 +20,7 @@ jobs:
   Do-simple-test:
     runs-on: windows-latest
     needs: Explore-Github-Actions
-    storategy:
+    strategy:
       matrix:
         node-version: [16.x]
     steps:
