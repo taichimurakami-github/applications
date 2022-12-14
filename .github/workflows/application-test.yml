@@ -1,5 +1,5 @@
 name: Attendance-management test
-run-name: Github Actions application for Attendance-Management app by ${{ github.actor }}
+run-name: Github Actions for Attendance-Management app by ${{ github.actor }}
 on:
   pull_request:
     branches:

@@ -1,7 +1,7 @@
 name: Attendance-management publication
-run-name: Github Actions application for Attendance-Management app by ${{ github.actor }}
+run-name: Github Actions for Attendance-Management app by ${{ github.actor }}
 on:
-  push:
+  pull_request:
     branches:
       - "releases/**"
   push:
