@@ -1,5 +1,5 @@
 name: Attendance-management test
-run-name: Github Actions for Attendance-Management app by ${{ github.actor }}
+run-name: Github Actions for Attendance-Management test by ${{ github.actor }}
 on:
   pull_request:
     branches:
@@ -16,7 +16,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [18.x]
     steps:
       - run: echo "This job was automatically triggered by a ${{ github.event_name }}"
       - run: echo "This test is running on a ${{ runner.os }}."
