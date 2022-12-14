@@ -1,4 +1,4 @@
-import { calculateTimeDiff } from "~/utils/calculateTimeDiff";
+import { calculateTimeDiff } from "../calculateTimeDiff";
 
 describe("calculateTimeDiff", (): void => {
   test("enter: 8:00:10, exit: 12:10:10 の返り値は [2,10,0] でなければならない", (): void => {

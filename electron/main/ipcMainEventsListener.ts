@@ -14,7 +14,7 @@ export const listenIpcMainEvents = (appConfigDirPath: string) => {
   const Config = new AppConfigState(appConfigDirPath);
   const Seats = new SeatsState(Config.getSeatsDir());
   const Attendance = new AttendanceState(Config.getAttendanceDir());
-  const StudentsList = new StudentsListState(Config.getStudentsFilepath());
+  const StudentsList = new StudentsListState(Config);
 
   /**
    * Add event listener sent from ipcRenderer.invoke
