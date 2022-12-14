@@ -1,18 +1,15 @@
-name: Attendance-management test
+name: Attendance-management publication
 run-name: Github Actions application for Attendance-Management app by ${{ github.actor }}
 on:
-  pull_request:
-    branches:
-      - main
-      - develop
-
   push:
     branches:
-      - main
-      - develop
+      - "releases/**"
+  push:
+    branches:
+      - "releases/**"
 
 jobs:
-  do-application-test:
+  do-application-test-and-publish:
     runs-on: windows-latest
     strategy:
       matrix:
@@ -29,6 +26,5 @@ jobs:
           cache: "yarn"
       - name: Install dependencies
         run: yarn
-      - name: Execute test
-        run: yarn run test
-      - run: echo "Application test status is ${{ job.status }}."
+      - name: Publish app
+        run: yarn run publish
