@@ -82,6 +82,11 @@ export class AppConfigState extends StateManagerBase<TAppLocalConfig> {
   }
 
   public getStudentsFilepath() {
-    return this.getData()?.path.studentsList || "";
+    const data = this.getData();
+    if (!data) {
+      return "";
+    }
+
+    return data.path?.studentsList || "";
   }
 }
