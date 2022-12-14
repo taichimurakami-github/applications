@@ -1,6 +1,17 @@
-name: Attendance-management unit test
+name: Attendance-management test
 run-name: Github Actions application unit test by ${{ github.actor }}
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - "releases/**"
+  push:
+    branches:
+      - main
+      - develop
+      - "releases/**"
+
 jobs:
   do-unit-test:
     runs-on: windows-latest
@@ -22,3 +33,7 @@ jobs:
       - name: Execute test
         run: yarn run test
       - run: echo "Application test status is ${{ job.status }}."
+
+  do-publish:
+    runs-on: windows-latest
+    needs: do-unit-test
