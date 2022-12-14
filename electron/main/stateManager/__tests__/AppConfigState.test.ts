@@ -23,7 +23,7 @@ const date = new Date();
  */
 
 describe("AppConfigState(state manager)", () => {
-  test("config.jsonファイルがローカルに存在しない場合は新たにファイル作成を行い，作成されたファイルのデータがテンプレートデータである", async () => {
+  test("config.jsonファイルがローカルに存在しない場合は新たにファイル作成を行い、作成されたファイルのデータがテンプレートデータである", async () => {
     await rmdir(TEST_DIR_PATH, { recursive: true }).catch((e) =>
       console.log(e)
     );
@@ -33,35 +33,46 @@ describe("AppConfigState(state manager)", () => {
     expect(data === JSON.stringify(config.defaultAppLocalConfig)).toBe(true);
   });
 
-  test("既存のconfig.jsonのデータが古い場合，新たなバージョンのconfig.jsonのデータに上書きしたうえ，互換性のある情報を自動で引き継ぐ", async () => {
-    // versionプロパティが存在しない場合
-    const oldDataDummy01 = {
+  test("既存のconfig.jsonのデータが古く、versionプロパティが存在しない場合、新たなバージョンのconfig.jsonのデータに上書きしたうえ、互換性のある情報を自動で引き継ぐ", async () => {
+    const oldDataDummy = {
       path: {
         studentsList: "TEST_DUMMY_STUDENTLIST_PATH",
       },
     };
-    await writeFile(APP_LOCAL_CONFIG_FILE_PATH, JSON.stringify(oldDataDummy01));
-    const config01 = new AppConfigState(TEST_DIR_PATH);
-    const data01 = await readFile(APP_LOCAL_CONFIG_FILE_PATH, "utf-8");
-    expect(data01 === JSON.stringify(config01.defaultAppLocalConfig)).toBe(
-      true
-    );
-    expect(JSON.parse(data01).path.studentsList).toBeTruthy(); //読み込んだjsonファイルの中のpath.studentsListが引き継がれている
+    await writeFile(APP_LOCAL_CONFIG_FILE_PATH, JSON.stringify(oldDataDummy));
+    const config = new AppConfigState(TEST_DIR_PATH);
+    const data = config.readData();
+    if (!data) {
+      throw new Error("dataの書き込みに失敗しました");
+    }
 
+    expect(
+      JSON.stringify(data) === JSON.stringify(config.defaultAppLocalConfig)
+    ).toBe(true);
+    expect(data.path.studentsList === oldDataDummy.path.studentsList).toBe(
+      true
+    );
+  });
+
+  test("既存のconfig.jsonのデータが古く、versionプロパティがテンプレートのものと一致しない場合、新たなバージョンのconfig.jsonのデータに上書きしたうえ、互換性のある情報を自動で引き継ぐ", async () => {
     //単純にデータが最新版ではない場合
-    const oldDataDummy02 = {
-      version: {},
+    const oldDataDummy = {
+      version: "falhewfds9oahnusidanf",
       path: {
         studentsList: "TEST_DUMMY_STUDENTLIST_PATH",
       },
     };
-    await writeFile(APP_LOCAL_CONFIG_FILE_PATH, JSON.stringify(oldDataDummy01));
-    const config02 = new AppConfigState(TEST_DIR_PATH);
-    const data02 = await readFile(APP_LOCAL_CONFIG_FILE_PATH, "utf-8");
-    expect(data02 === JSON.stringify(config02.defaultAppLocalConfig)).toBe(
+    await writeFile(APP_LOCAL_CONFIG_FILE_PATH, JSON.stringify(oldDataDummy));
+    const config = new AppConfigState(TEST_DIR_PATH);
+    const data = config.readData();
+    if (!data) {
+      throw new Error("dataの書き込みに失敗しました");
+    }
+
+    expect(data.version === config.defaultAppLocalConfig.version).toBe(true); //読み込んだjsonファイルのversion情報が細心になっている
+    expect(data.path.studentsList === oldDataDummy.path.studentsList).toBe(
       true
     );
-    expect(JSON.parse(data02).path.studentsList).toBeTruthy(); //読み込んだjsonファイルの中のpath.studentsListが引き継がれている
   });
 
   test("新しいデータをupdateメソッドに渡すと、ローカルファイルにデータを書き込んで更新できる", async () => {
@@ -77,12 +88,11 @@ describe("AppConfigState(state manager)", () => {
     };
 
     await writeFile(APP_LOCAL_CONFIG_FILE_PATH, JSON.stringify(newData));
-    const newDataInLocalConfigFile = config.readData();
+    const data = config.readData();
 
-    expect(newDataInLocalConfigFile).toBeTruthy();
+    expect(data).toBeTruthy();
     expect(
-      JSON.stringify(oldDataInLocalConfigFile) ===
-        JSON.stringify(newDataInLocalConfigFile)
+      JSON.stringify(oldDataInLocalConfigFile) === JSON.stringify(data)
     ).toBe(false);
   });
 });
