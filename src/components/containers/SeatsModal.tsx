@@ -1,11 +1,14 @@
 import { appConfig } from "~/app.config";
-import React, { useContext, useState } from "react";
-import { SeatsTable } from "~/components/views/SeatsTable";
-
-import "~styles/modules/Top.scss";
-import closeButtonIcon from "~/images/close-button.svg";
-import { AppStateContext } from "~/AppContainer";
+import React, { useState } from "react";
 import useSeatsController from "~/hooks/controllers/useSeatsController";
+import {
+  useAppSetStateCtx,
+  useSeatsStateCtx,
+  useStudentsListCtx,
+} from "~/hooks/states/useAppContext";
+import { SeatsTable } from "~/components/views/SeatsTable";
+import closeButtonIcon from "~/images/close-button.svg";
+import "~styles/modules/Top.scss";
 
 const seatsModalState_initialValue: {
   mode: string;
@@ -23,8 +26,9 @@ const SeatsModal = (props: {
   onCloseModal: () => void;
   onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { seatsState, studentsList, handleModalState }: AppStateContext =
-    useContext(AppStateContext);
+  const { handleModalState } = useAppSetStateCtx();
+  const seatsState = useSeatsStateCtx();
+  const studentsList = useStudentsListCtx();
   const seatsController = useSeatsController();
 
   const [seatsModalState, setSeatsModalState] = useState(
@@ -73,15 +77,6 @@ const SeatsModal = (props: {
     });
   };
 
-  /**
-   *
-   * //////////////////////////////
-   *
-   * !!! getAttendedStudentsList() 関数にissue#6のバグの原因ありそう !!!
-   *
-   * //////////////////////////////
-   *
-   */
   const getAttendedStudentsList = () => {
     const seats = seatsState;
     const activeSeatList = [];

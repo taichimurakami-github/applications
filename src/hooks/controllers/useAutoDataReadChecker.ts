@@ -1,10 +1,15 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { appConfig } from "~/app.config";
-import { AppStateContext } from "~/AppContainer";
+import {
+  useAppSetStateCtx,
+  useModalStateCtx,
+  useStudentsListCtx,
+} from "../states/useAppContext";
 
 const useAutoDataReadChecker = (): void => {
-  const { studentsList, modalState, setModalState }: AppStateContext =
-    useContext(AppStateContext);
+  const modalState = useModalStateCtx();
+  const studentsList = useStudentsListCtx();
+  const { setModalState } = useAppSetStateCtx();
 
   //生徒情報ファイルが読み込まれていない時は、エラーモーダルを最初に表示
   useEffect(() => {

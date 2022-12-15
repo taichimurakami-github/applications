@@ -1,16 +1,17 @@
-import { useCallback, useContext } from "react";
+import { useCallback } from "react";
 import { appConfig } from "~/app.config";
-import { AppStateContext } from "~/AppContainer";
+import {
+  useAppSetStateCtx,
+  useAttendanceStateCtx,
+  useSeatsStateCtx,
+} from "../states/useAppContext";
 import { seatsState_initialValue } from "../states/useSeatsState";
 
 const useSeatsController = () => {
-  const {
-    seatsState,
-    attendanceState,
-    setSeatsState,
-    setModalState,
-    setAttendanceState,
-  }: AppStateContext = useContext(AppStateContext);
+  const attendanceState = useAttendanceStateCtx();
+  const seatsState = useSeatsStateCtx();
+  const { setSeatsState, setModalState, setAttendanceState } =
+    useAppSetStateCtx();
 
   /**
    * function handleSeatOperation()

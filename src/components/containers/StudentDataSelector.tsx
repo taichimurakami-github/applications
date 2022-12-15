@@ -1,26 +1,24 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef } from "react";
 import { StudentsList } from "~/components/views/StudentsList";
 import { appConfig } from "~/app.config";
-import { AppStateContext } from "~/AppContainer";
 import useEnterRecorder from "~/hooks/controllers/useEnterRecorder";
 import StudentCategorySelector from "~/components/views/StudentCategorySelector";
 
 //style imports
 import "~styles/modules/StudentDataSelector.scss";
 import { ScrollAnimation } from "../views/ScrollAnimation";
+import {
+  useAppSetStateCtx,
+  useAppStateCtx,
+  useSeatsStateCtx,
+  useStudentsListCtx,
+} from "~/hooks/states/useAppContext";
 
 export const StudentDataSelector = () => {
-  const categorySelectorContainer = useRef<HTMLDivElement>(null);
-  const navigationRef = useRef<HTMLDivElement>(null);
-
-  const {
-    appState,
-    seatsState,
-    studentsList,
-    resetAppState,
-    handleModalState,
-  }: AppStateContext = useContext(AppStateContext);
-
+  const appState = useAppStateCtx();
+  const seatsState = useSeatsStateCtx();
+  const studentsList = useStudentsListCtx();
+  const { resetAppState, handleModalState } = useAppSetStateCtx();
   const enterRecorder = useEnterRecorder();
 
   const [state, setState] = useState({
@@ -29,6 +27,8 @@ export const StudentDataSelector = () => {
     grade: "",
     nav: false,
   });
+  const categorySelectorContainer = useRef<HTMLDivElement>(null);
+  const navigationRef = useRef<HTMLDivElement>(null);
 
   //現在の SelectData stateに基づいて、適当な生徒をStudentsListから取り出して配列として返す
   const getStudentsList = (): { [index: string]: string }[] => {

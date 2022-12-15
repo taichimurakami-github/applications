@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { appConfig } from "~/app.config";
-import { AppStateContext } from "~/AppContainer";
 import useAppDataEracer from "~/hooks/controllers/useAppDataEracer";
 import useExitRecorder from "~/hooks/controllers/useExitRecorder";
 import useStudentsFileReader from "~/hooks/controllers/useStudentsFileReader";
@@ -9,6 +8,11 @@ import useStudentsFileReader from "~/hooks/controllers/useStudentsFileReader";
 import "~styles/modules/Config.scss";
 import ConfigView from "~/components/views/ConfigView";
 import { useIpcEventsListener } from "~/hooks/controllers/useIpcEventsListener";
+import {
+  useAppSetStateCtx,
+  useAppStateCtx,
+  useSeatsStateCtx,
+} from "~/hooks/states/useAppContext";
 
 const Config = (props: {
   onHandleAppState: (d: { [index: string]: any }) => void;
@@ -21,10 +25,10 @@ const Config = (props: {
     msg?: string;
   }) => Promise<void>;
 }) => {
-  const { appState, seatsState, handleModalState }: AppStateContext =
-    useContext(AppStateContext);
+  const { handleModalState } = useAppSetStateCtx();
+  const appState = useAppStateCtx();
+  const seatsState = useSeatsStateCtx();
   const { listenAppAutoUpdateProcess } = useIpcEventsListener();
-
   const studentsFileReader = useStudentsFileReader();
   const exitRecorder = useExitRecorder();
   const appDataEracer = useAppDataEracer();

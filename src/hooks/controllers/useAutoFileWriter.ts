@@ -1,10 +1,13 @@
-import { useContext, useEffect } from "react";
-import { AppStateContext } from "~/AppContainer";
+import { useEffect } from "react";
 import { objectNotEmpty } from "~/utils/objectNotEmpty";
+import {
+  useAttendanceStateCtx,
+  useSeatsStateCtx,
+} from "../states/useAppContext";
 
 const useAutoFileWriter = (): void => {
-  const { attendanceState, seatsState }: AppStateContext =
-    useContext(AppStateContext);
+  const attendanceState = useAttendanceStateCtx();
+  const seatsState = useSeatsStateCtx();
 
   //seatsStateの全てのactiveプロパティがfalseだったら初期化されている状態とみなす
   const isSeatsStateInitialized = () => {
@@ -21,24 +24,14 @@ const useAutoFileWriter = (): void => {
       //attendanceStateが初期値{}でなければ書き出し
       objectNotEmpty(attendanceState) &&
         (await window.electron.writeAttendanceState(attendanceState));
-
-      //  window.electron.ipcRenderer.invoke("handle_attendanceState", {
-      //   mode: "write",
-      //   data: JSON.stringify(attendanceState),
-      // }));
     })();
   }, [attendanceState, seatsState]);
 
   useEffect(() => {
     (async () => {
       //seatsState書き出し
-      // objectNotEmpty(seatsState) &&
       !isSeatsStateInitialized() &&
         (await window.electron.writeSeatsState(seatsState));
-      // (await window.electron.ipcRenderer.invoke("handle_seatsState", {
-      //   mode: "write",
-      //   data: JSON.stringify(seatsState),
-      // }));
     })();
   }, [seatsState]);
 };

@@ -1,18 +1,22 @@
-import { useContext } from "react";
 import { appConfig } from "~/app.config";
-import { AppStateContext } from "~/AppContainer";
 import useAppDataEracer from "~/hooks/controllers/useAppDataEracer";
 import useCancelController from "~/hooks/controllers/useCancelController";
 import useEnterRecorder from "~/hooks/controllers/useEnterRecorder";
 import useExitRecorder from "~/hooks/controllers/useExitRecorder";
+import {
+  useAppSetStateCtx,
+  useSeatsStateCtx,
+  useStudentsListCtx,
+} from "~/hooks/states/useAppContext";
 
 const ConfirmModal = (props: {
   content: TModalStateContents;
   onCloseModal: () => void;
   onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { seatsState, studentsList, resetAppState }: AppStateContext =
-    useContext(AppStateContext);
+  const { resetAppState } = useAppSetStateCtx();
+  const seatsState = useSeatsStateCtx();
+  const studentsList = useStudentsListCtx();
   const enterRecorder = useEnterRecorder();
   const exitRecorder = useExitRecorder();
   const cancelController = useCancelController();

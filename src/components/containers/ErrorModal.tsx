@@ -1,13 +1,12 @@
-import { useContext } from "react";
 import { appConfig } from "~/app.config";
-import { AppStateContext } from "~/AppContainer";
+import { useAppSetStateCtx } from "~/hooks/states/useAppContext";
 
 const ErrorModal = (props: {
   onCloseModal: () => void;
   onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>;
   content: TModalStateContents;
 }) => {
-  const { handleAppState } = useContext(AppStateContext);
+  const { handleAppState } = useAppSetStateCtx();
 
   const activateConfig = () => {
     handleAppState({ now: "CONFIG" });

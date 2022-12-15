@@ -1,6 +1,5 @@
-import { useContext } from "react";
 import { appConfig } from "~/app.config";
-import { AppStateContext } from "~/AppContainer";
+import { useAppSetStateCtx } from "../states/useAppContext";
 
 /**
  * function handleEraceAppData()
@@ -10,7 +9,7 @@ import { AppStateContext } from "~/AppContainer";
  *
  */
 const useAppDataEracer = () => {
-  const { handleModalState }: AppStateContext = useContext(AppStateContext);
+  const { handleModalState } = useAppSetStateCtx();
 
   const appDataEracer = async () => {
     // await window.electron.ipcRenderer.invoke("handle_eraceAppLocalData");

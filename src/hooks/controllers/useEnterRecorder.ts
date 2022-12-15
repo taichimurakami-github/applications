@@ -1,7 +1,11 @@
-import { useCallback, useContext } from "react";
+import { useCallback } from "react";
 import { appConfig } from "~/app.config";
-import { AppStateContext } from "~/AppContainer";
 import { getFormattedDate } from "~/utils/getFormattedDate";
+import {
+  useAppSetStateCtx,
+  useAppStateCtx,
+  useAttendanceStateCtx,
+} from "../states/useAppContext";
 
 /**
  * function handleSaveAttendanceForEnter()
@@ -11,14 +15,10 @@ import { getFormattedDate } from "~/utils/getFormattedDate";
  * @param {string} i : TARGET STUDENT ID (studentsList student.id)
  */
 const useEnterRecorder = () => {
-  const {
-    appState,
-    attendanceState,
-    handleAppState,
-    setSeatsState,
-    setAttendanceState,
-    setModalState,
-  }: AppStateContext = useContext(AppStateContext);
+  const appState = useAppStateCtx();
+  const attendanceState = useAttendanceStateCtx();
+  const { handleAppState, setSeatsState, setAttendanceState, setModalState } =
+    useAppSetStateCtx();
 
   const handleStudentsAttendanceState = (i: string, enterDateTime: string) => {
     //関係者その他（i === "__OTHERS__"）ではないとき、

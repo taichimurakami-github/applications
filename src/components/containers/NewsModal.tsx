@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import { AppStateContext } from "~/AppContainer";
+import React from "react";
+import { useAppStateCtx } from "~/hooks/states/useAppContext";
 
 const NewsModal = (props: { onCloseModal: () => void }) => {
-  const { appState } = useContext(AppStateContext);
+  const appState = useAppStateCtx();
 
   return (
     <div className="news-modal-wrapper">

@@ -1,4 +1,4 @@
-import { createContext, useEffect } from "react";
+import { createContext } from "react";
 import App from "./App";
 import useAppState from "~/hooks/states/useAppState";
 import useAttendanceState from "~/hooks/states/useAttendanceState";
@@ -6,9 +6,40 @@ import useModalState from "~/hooks/states/useModalState";
 import useSeatsState from "~/hooks/states/useSeatsState";
 import useStudentsListState from "~/hooks/states/useStudentsListState";
 
-export const AppStateContext = createContext<any>(null);
+export type TAppSetStateContext = {
+  //useAppState dispatchers
+  setAppState: React.Dispatch<React.SetStateAction<TAppState>>;
+  resetAppState: (arg: { mode: "APPLOG" | "DEFAULT"; content?: any }) => void;
+  handleAppState: (d: { [index: string]: any }) => void;
 
-const AppContainer: React.VFC = (props) => {
+  //useAttendanceState dispatcher
+  setAttendanceState: React.Dispatch<React.SetStateAction<TAttendanceState>>;
+
+  //useSeatsState dispatcher
+  setSeatsState: React.Dispatch<React.SetStateAction<TSeatsState>>;
+
+  //useStudentsList dispatcher
+  setStudentsList: React.Dispatch<React.SetStateAction<TStudentsList>>;
+
+  //useModalState dispatchers
+  setModalState: React.Dispatch<React.SetStateAction<TModalState>>;
+  handleModalState: (t: TModalState) => void;
+};
+
+//@ts-ignore
+export const AppStateContext = createContext<TAppState>();
+//@ts-ignore
+export const AttendanceStateContext = createContext<TAttendanceState>();
+//@ts-ignore
+export const SeatsStateContext = createContext<TSeatsState>();
+//@ts-ignore
+export const ModalStateContext = createContext<TModalState>();
+//@ts-ignore
+export const StudentsListContext = createContext<TStudentsList>();
+//@ts-ignore
+export const AppSetStateContext = createContext<TAppSetStateContext>();
+
+const AppContainer = () => {
   /**
    * -------------------------------
    *    React Hooks declearation
@@ -32,25 +63,30 @@ const AppContainer: React.VFC = (props) => {
   const { modalState, setModalState, handleModalState } = useModalState();
 
   return (
-    <AppStateContext.Provider
+    <AppSetStateContext.Provider
       value={{
-        appState: appState,
         setAppState,
         resetAppState,
         handleAppState,
-        studentsList: studentsList,
-        setStudentsList,
-        attendanceState: attendanceState,
         setAttendanceState,
-        seatsState: seatsState,
         setSeatsState,
-        modalState: modalState,
+        setStudentsList,
         setModalState,
         handleModalState,
       }}
     >
-      <App></App>
-    </AppStateContext.Provider>
+      <AppStateContext.Provider value={appState}>
+        <AttendanceStateContext.Provider value={attendanceState}>
+          <SeatsStateContext.Provider value={seatsState}>
+            <StudentsListContext.Provider value={studentsList}>
+              <ModalStateContext.Provider value={modalState}>
+                <App></App>
+              </ModalStateContext.Provider>
+            </StudentsListContext.Provider>
+          </SeatsStateContext.Provider>
+        </AttendanceStateContext.Provider>
+      </AppStateContext.Provider>
+    </AppSetStateContext.Provider>
   );
 };
 

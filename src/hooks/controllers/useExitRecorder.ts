@@ -1,19 +1,18 @@
-import { useCallback, useContext } from "react";
+import { useCallback } from "react";
 import { appConfig } from "~/app.config";
-import { AppStateContext } from "~/AppContainer";
 import { calculateTimeDiff } from "~/utils/calculateTimeDiff";
 import { getFormattedDate } from "~/utils/getFormattedDate";
+import {
+  useAppSetStateCtx,
+  useAttendanceStateCtx,
+  useSeatsStateCtx,
+} from "../states/useAppContext";
 
 const useExitRecorder = () => {
-  const {
-    seatsState,
-    attendanceState,
-    // resetAppState,
-    handleAppState,
-    setSeatsState,
-    setAttendanceState,
-    setModalState,
-  }: AppStateContext = useContext(AppStateContext);
+  const attendanceState = useAttendanceStateCtx();
+  const seatsState = useSeatsStateCtx();
+  const { handleAppState, setSeatsState, setAttendanceState, setModalState } =
+    useAppSetStateCtx();
 
   const showExecuted = (i: string, enterTime: string, exitTime: string) => {
     //確認モーダルの表示

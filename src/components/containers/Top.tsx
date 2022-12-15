@@ -1,18 +1,21 @@
-import React, { useContext, useRef } from "react";
+import React, { useRef } from "react";
 import { appConfig } from "~/app.config";
-import { AppStateContext } from "~/AppContainer";
 import { SeatsTable } from "~/components/views/SeatsTable";
 import { TopMessage } from "~/components/views/TopMessage";
+import {
+  useAppSetStateCtx,
+  useAppStateCtx,
+  useSeatsStateCtx,
+  useStudentsListCtx,
+} from "~/hooks/states/useAppContext";
 
 export const Top = (props: {
   onHandleAppState: (d: { [index: string]: any }) => void;
 }) => {
-  const {
-    appState,
-    studentsList,
-    seatsState,
-    handleModalState,
-  }: AppStateContext = useContext(AppStateContext);
+  const { handleModalState } = useAppSetStateCtx();
+  const appState = useAppStateCtx();
+  const studentsList = useStudentsListCtx();
+  const seatsState = useSeatsStateCtx();
 
   const _fn = useRef(appState.localConfig.fn);
 

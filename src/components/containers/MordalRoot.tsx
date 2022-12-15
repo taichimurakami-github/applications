@@ -4,17 +4,19 @@ import { SeatsModal } from "./SeatsModal";
 import { ConfirmModal } from "./ConfirmModal";
 import { NewsModal } from "./NewsModal";
 import { appConfig } from "~/app.config";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 
 //import styles
 import "~styles/modal.scss";
-import { AppStateContext } from "~/AppContainer";
+import {
+  useAppSetStateCtx,
+  useModalStateCtx,
+} from "~/hooks/states/useAppContext";
 
 export const ModalRoot = () => {
+  const { handleModalState } = useAppSetStateCtx();
+  const modalState = useModalStateCtx();
   const [BackgroundClose, setBackgroundClose] = useState(true);
-
-  const { modalState, handleModalState }: AppStateContext =
-    useContext(AppStateContext);
 
   //モーダル消去用関数
   const closeModal = () =>

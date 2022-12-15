@@ -1,6 +1,10 @@
-import { useCallback, useContext } from "react";
+import { useCallback } from "react";
 import { appConfig } from "~/app.config";
-import { AppStateContext } from "~/AppContainer";
+import {
+  useAppSetStateCtx,
+  useAppStateCtx,
+  useAttendanceStateCtx,
+} from "../states/useAppContext";
 
 /**
  * function handleCancelOparation()
@@ -13,14 +17,10 @@ import { AppStateContext } from "~/AppContainer";
  */
 
 const useCancelController = () => {
-  const {
-    appState,
-    resetAppState,
-    attendanceState,
-    setSeatsState,
-    setModalState,
-    setAttendanceState,
-  }: AppStateContext = useContext(AppStateContext);
+  const appState = useAppStateCtx();
+  const attendanceState = useAttendanceStateCtx();
+  const { resetAppState, setSeatsState, setModalState, setAttendanceState } =
+    useAppSetStateCtx();
 
   const showExecuted = () => {
     //完了モーダルを表示

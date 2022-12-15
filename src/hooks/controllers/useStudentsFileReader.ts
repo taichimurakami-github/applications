@@ -1,10 +1,9 @@
-import { useCallback, useContext } from "react";
+import { useCallback } from "react";
 import { appConfig } from "~/app.config";
-import { AppStateContext } from "~/AppContainer";
+import { useAppSetStateCtx } from "../states/useAppContext";
 
 const useStudentsFileReader = () => {
-  const { setStudentsList, handleModalState }: AppStateContext =
-    useContext(AppStateContext);
+  const { setStudentsList, handleModalState } = useAppSetStateCtx();
 
   const studentsFileReader = useCallback(() => {
     const debugInput = document.createElement("input");
