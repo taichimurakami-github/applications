@@ -7,10 +7,11 @@ import StudentCategorySelector from "~/components/views/StudentCategorySelector"
 
 //style imports
 import "~styles/modules/StudentDataSelector.scss";
+import { ScrollAnimation } from "../views/ScrollAnimation";
 
 export const StudentDataSelector = () => {
   const categorySelectorContainer = useRef<HTMLDivElement>(null);
-  const navigation = useRef<HTMLDivElement>(null);
+  const navigationRef = useRef<HTMLDivElement>(null);
 
   const {
     appState,
@@ -45,8 +46,8 @@ export const StudentDataSelector = () => {
   };
 
   const handleScrollNavigation = () => {
-    navigation.current?.classList.remove("active");
-    navigation.current?.classList.add("active");
+    navigationRef.current?.classList.remove("active");
+    navigationRef.current?.classList.add("active");
   };
 
   const backToTop = () => resetAppState({ mode: "DEFAULT" });
@@ -69,6 +70,7 @@ export const StudentDataSelector = () => {
       const selectorButton = val as HTMLButtonElement;
       selectorButton.classList.remove("active");
     });
+
     //クリック対象にactiveを追加
     targetElem.classList.add("active");
 
@@ -117,6 +119,22 @@ export const StudentDataSelector = () => {
         });
   };
 
+  const getJapaneseSchoolName = (schoolName: string) => {
+    switch (schoolName) {
+      case "high":
+        return "高校";
+
+      case "middle":
+        return "中学校";
+
+      case "elementary":
+        return "小学校";
+
+      default:
+        throw new Error("E_INVALID_SCHOOLNAME: 学校IDが不正です");
+    }
+  };
+
   return (
     <>
       <div className="component-select-student-data-wrapper">
@@ -133,28 +151,15 @@ export const StudentDataSelector = () => {
             onHandleModalState={handleModalState}
             onHandleScrollNavigation={handleScrollNavigation}
             activateConfirmModal={activateConfirmModal}
-            school={state.school}
+            school={getJapaneseSchoolName(state.school)}
             grade={state.grade}
             seatID={appState.selectedSeat}
             studentsList={getStudentsList()}
             seatsState={seatsState}
           />
         ) : undefined}
-        <div ref={navigation} className="scroll-nav">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="100"
-            height="100"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#FFFFFF"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
-          </svg>
-        </div>
+
+        <ScrollAnimation ref={navigationRef}></ScrollAnimation>
       </div>
     </>
   );
