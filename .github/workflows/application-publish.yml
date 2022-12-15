@@ -1,0 +1,30 @@
+name: Attendance-management publication
+run-name: Github Actions for Attendance-Management app by ${{ github.actor }}
+on:
+  pull_request:
+    branches:
+      - "releases/**"
+  push:
+    branches:
+      - "releases/**"
+
+jobs:
+  do-application-test-and-publish:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+    steps:
+      - run: echo "This job was automatically triggered by a ${{ github.event_name }}"
+      - run: echo "This test is running on a ${{ runner.os }}."
+      - run: echo "Now testing ${{ github.repository }}/${{ github.ref }}"
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "yarn"
+      - name: Install dependencies
+        run: yarn
+      - name: Publish app
+        run: yarn run publish

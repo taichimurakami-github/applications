@@ -5,14 +5,13 @@ import { readFile as readXlsxFile, utils as xlsxUtils } from "xlsx";
 import { AppConfigState } from "./AppConfigState";
 
 export class StudentsListState extends StateManagerBase<TStudentsList> {
-  public readonly SOURCE_FILE_PATH: string;
-  public readonly SOURCE_FILE_TARGET_SHEET_ID: number; //生徒情報が格納されているxlsxデータ内のSheetのID（指定したSheetを読み込む）
+  private _appConfig: AppConfigState;
+  private _sourceFileTargetSheetId: number;
 
-  constructor(Config: AppConfigState) {
+  constructor(appConfig: AppConfigState) {
     super("StudentsListManager", "", true);
-
-    this.SOURCE_FILE_PATH = Config.getStudentsFilepath();
-    this.SOURCE_FILE_TARGET_SHEET_ID = 0;
+    this._appConfig = appConfig;
+    this._sourceFileTargetSheetId = 0;
   }
 
   public getFileName() {
@@ -20,7 +19,7 @@ export class StudentsListState extends StateManagerBase<TStudentsList> {
   }
 
   public getFilePath() {
-    return this.SOURCE_FILE_PATH;
+    return this._appConfig.getStudentsFilepath();
   }
 
   public override readData(): TStudentsList | undefined {
@@ -37,7 +36,7 @@ export class StudentsListState extends StateManagerBase<TStudentsList> {
     }
 
     const sheetData =
-      workbook.Sheets[workbook.SheetNames[this.SOURCE_FILE_TARGET_SHEET_ID]];
+      workbook.Sheets[workbook.SheetNames[this._sourceFileTargetSheetId]];
     const data_json = xlsxUtils.sheet_to_json(sheetData) as TStudentsList;
 
     return data_json;

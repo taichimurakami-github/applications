@@ -1,7 +1,7 @@
 import { useCallback, useContext } from "react";
-import { appConfig } from "../../app.config";
-import { AppStateContext } from "../../AppContainer";
-import { getFormattedDate } from "../../utils/getFormattedDate";
+import { appConfig } from "~/app.config";
+import { AppStateContext } from "~/AppContainer";
+import { getFormattedDate } from "~/utils/getFormattedDate";
 
 /**
  * function handleSaveAttendanceForEnter()
@@ -71,12 +71,12 @@ const useEnterRecorder = () => {
         ? {
             active: true,
             enterTime: nowDate.HMS,
-            studentID: "__OTHERS__",
+            studentId: "__OTHERS__",
           }
         : {
             active: true,
             enterTime: nowDate.HMS,
-            studentID: i,
+            studentId: i,
           };
 
     //seatsStateを更新
@@ -102,7 +102,7 @@ const useEnterRecorder = () => {
     handleAppState({
       now: "TOP",
       appLog: {
-        studentID: i,
+        studentId: i,
         enterTime: insertObjectForSeatsState[appState.selectedSeat].enterTime,
         seatID: appState.selectedSeat,
         operation: "enter",

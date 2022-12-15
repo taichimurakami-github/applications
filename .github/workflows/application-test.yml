@@ -1,0 +1,34 @@
+name: Attendance-management test
+run-name: Github Actions for Attendance-Management app by ${{ github.actor }}
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  do-application-test:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+    steps:
+      - run: echo "This job was automatically triggered by a ${{ github.event_name }}"
+      - run: echo "This test is running on a ${{ runner.os }}."
+      - run: echo "Now testing ${{ github.repository }}/${{ github.ref }}"
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "yarn"
+      - name: Install dependencies
+        run: yarn
+      - name: Execute test
+        run: yarn run test
+      - run: echo "Application test status is ${{ job.status }}."

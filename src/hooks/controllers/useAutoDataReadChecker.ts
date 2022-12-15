@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
-import { appConfig } from "../../app.config";
-import { AppStateContext } from "../../AppContainer";
+import { appConfig } from "~/app.config";
+import { AppStateContext } from "~/AppContainer";
 
 const useAutoDataReadChecker = (): void => {
   const { studentsList, modalState, setModalState }: AppStateContext =

@@ -31,7 +31,7 @@ export type TAttendanceState = {
 export type TStudentsList = {
   id: string;
   name: string;
-  school: "high" | "middle" | "elementary";
+  school: "high" | "middle" | "elementary" | "";
   grade: string;
   belongs: string;
 }[];
@@ -43,3 +43,11 @@ export interface IStateManager<TData> {
   readData: () => TData | undefined;
   updateData: (newData: TData) => boolean;
 }
+
+export type TAppAutoUpdateProcessStatus =
+  | "checking-for-update"
+  | "update-not-available"
+  | "update-available"
+  | "error"
+  | "download-progress"
+  | "update-downloaded";

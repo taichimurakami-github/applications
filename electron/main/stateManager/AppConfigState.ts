@@ -4,7 +4,7 @@ import { TAppLocalConfig } from "../../@types/main";
 import { StateManagerBase } from "./StateManagerBase";
 
 export class AppConfigState extends StateManagerBase<TAppLocalConfig> {
-  private defaultAppLocalConfig: TAppLocalConfig;
+  public readonly defaultAppLocalConfig: TAppLocalConfig;
 
   constructor(appConfigDirPath: string) {
     super("AppLocalConfigManager", appConfigDirPath);
@@ -82,6 +82,11 @@ export class AppConfigState extends StateManagerBase<TAppLocalConfig> {
   }
 
   public getStudentsFilepath() {
-    return this.getData().path.studentsList;
+    const data = this.getData();
+    if (!data) {
+      return "";
+    }
+
+    return data.path?.studentsList || "";
   }
 }

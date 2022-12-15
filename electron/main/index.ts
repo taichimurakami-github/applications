@@ -17,7 +17,13 @@ process.env.PUBLIC = app.isPackaged
 import { app, BrowserWindow } from "electron";
 import { release } from "os";
 import { join, resolve as resolvePath } from "path";
-import { receiveIpcMainEvents } from "./ipcMainEventsReceiver";
+import * as logger from "electron-log";
+import { listenIpcMainEvents } from "./ipcMainEventsListener";
+import { listenAppAutoUpdateEvent } from "./appUpdateEventsListener";
+
+console.log = logger.log;
+console.error = logger.error;
+console.info = logger.info;
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith("6.1")) app.disableHardwareAcceleration();
@@ -32,18 +38,22 @@ if (!app.requestSingleInstanceLock()) {
 
 let win: BrowserWindow | null = null;
 
-async function createWindow() {
+function createWindow() {
   const preload = join(__dirname, "../preload/index.js");
   const url = process.env.VITE_DEV_SERVER_URL;
-  const indexHtml = join(process.env.DIST, "index.html");
+  const indexHtml = process.env.DIST
+    ? join(process.env.DIST, "index.html")
+    : "";
 
   win = new BrowserWindow({
     title: "Attendance-management(win-x64)",
-    icon: join(process.env.PUBLIC, "favicon.svg"),
-    show: false,
+    width: 1920,
+    height: 1080,
+    icon: process.env.PUBLIC ? join(process.env.PUBLIC, "favicon.svg") : "",
+    // show: true,
     webPreferences: {
       preload,
-      // nodeIntegration: true,
+      nodeIntegration: true,
       contextIsolation: true,
     },
   });
@@ -54,13 +64,25 @@ async function createWindow() {
   win.focus();
 
   if (process.env.VITE_DEV_SERVER_URL) {
+    console.log("\n\n\n");
+    console.log(process.env.VITE_DEV_SERVER_URL);
+    console.log("\n\n\n");
     // electron-vite-vue#298
-    win.loadURL(url);
-    // Open devTool if the app is not packaged
-    win.webContents.openDevTools();
+    win.loadURL(url as string);
   } else {
     win.loadFile(indexHtml);
   }
+
+  // ・ipcMain -> ipcRenderer方向の通信
+  // ・BrowserWindow上でのdevToolsの起動
+  // に関しては、Renderer側の読み込みが終わっていないとmessageを送れないためここで定義
+  win.webContents.on("did-finish-load", () => {
+    if (process.env.VITE_DEV_SERVER_URL) {
+      // Open devTool if the app is not packaged
+      win?.webContents.openDevTools();
+    }
+    listenAppAutoUpdateEvent(win);
+  });
 }
 
 app.on("window-all-closed", () => {
@@ -75,7 +97,7 @@ app.whenReady().then(() => {
     "./appLocalData"
   );
 
-  receiveIpcMainEvents(APP_CONFIG_DIR_PATH);
+  listenIpcMainEvents(APP_CONFIG_DIR_PATH);
 
   //appのwindowを作成
   createWindow();

@@ -1,10 +1,10 @@
-import { createContext } from "react";
+import { createContext, useEffect } from "react";
 import App from "./App";
-import useAppState from "./hooks/states/useAppState";
-import useAttendanceState from "./hooks/states/useAttendanceState";
-import useModalState from "./hooks/states/useModalState";
-import useSeatsState from "./hooks/states/useSeatsState";
-import useStudentsListState from "./hooks/states/useStudentsListState";
+import useAppState from "~/hooks/states/useAppState";
+import useAttendanceState from "~/hooks/states/useAttendanceState";
+import useModalState from "~/hooks/states/useModalState";
+import useSeatsState from "~/hooks/states/useSeatsState";
+import useStudentsListState from "~/hooks/states/useStudentsListState";
 
 export const AppStateContext = createContext<any>(null);
 

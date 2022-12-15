@@ -2,7 +2,7 @@
  * @see https://www.electron.build/configuration/configuration
  */
 {
-  appId: "com.TaichiMurakami.Attendance-Management",
+  appId: "com.taichimurakami.personal.attendancemanagement",
   productName: "Attendance-Management",
   copyright: "Copyright © 2022 ${author}",
   asar: true,

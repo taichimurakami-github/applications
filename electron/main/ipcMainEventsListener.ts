@@ -3,14 +3,17 @@ import { SeatsState } from "./stateManager/SeatsState";
 import { AttendanceState } from "./stateManager/AttendanceState";
 import { StudentsListState } from "./stateManager/StudentsList";
 import { AppConfigState } from "./stateManager/AppConfigState";
+import { autoUpdater } from "electron-updater";
+import * as logger from "electron-log";
+import { TAppLocalConfig } from "../@types/main";
 
-export const receiveIpcMainEvents = (appConfigDirPath: string) => {
+export const listenIpcMainEvents = (appConfigDirPath: string) => {
   /**
    * Create state manager instance
    */
   const Config = new AppConfigState(appConfigDirPath);
-  const Seats = new SeatsState(Config);
-  const Attendance = new AttendanceState(Config);
+  const Seats = new SeatsState(Config.getSeatsDir());
+  const Attendance = new AttendanceState(Config.getAttendanceDir());
   const StudentsList = new StudentsListState(Config);
 
   /**
@@ -43,21 +46,17 @@ export const receiveIpcMainEvents = (appConfigDirPath: string) => {
   });
 
   ipcMain.handle("read_appLocalConfig", async (event, arg) => {
-    const configData = Config.readData();
-
-    // rendererで必要な項目のみ抽出してreturnする
-    return {
-      fn: configData.appConfig.fn,
-      msg: configData.appConfig.msg,
-    };
+    return Config.readData();
   });
 
   ipcMain.handle(
     "update_appLocalConfig_studentsListPath",
     async (event, arg) => {
       const newData = {
-        ...Config.getData(),
+        //Config.getData()からは必ずTAppLocalConfigが帰ってくる
+        ...(Config.getData() as TAppLocalConfig),
       };
+
       newData.path.studentsList = arg.path;
       console.log("\n\n\npath:", arg.path, "\n\n\n");
 
@@ -67,7 +66,8 @@ export const receiveIpcMainEvents = (appConfigDirPath: string) => {
 
   ipcMain.handle("update_appLocalConfig_topMessage", async (event, arg) => {
     const newData = {
-      ...Config.getData(),
+      //Config.getData()からは必ずTAppLocalConfigが帰ってくる
+      ...(Config.getData() as TAppLocalConfig),
     };
     newData.appConfig.msg = arg.message;
 
@@ -76,7 +76,8 @@ export const receiveIpcMainEvents = (appConfigDirPath: string) => {
 
   ipcMain.handle("update_appLocalConfig_fnConfig", async (event, arg) => {
     const newData = {
-      ...Config.getData(),
+      //Config.getData()からは必ずTAppLocalConfigが帰ってくる
+      ...(Config.getData() as TAppLocalConfig),
     };
 
     switch (arg.fn_id) {
@@ -93,5 +94,10 @@ export const receiveIpcMainEvents = (appConfigDirPath: string) => {
     }
 
     return Config.updateData(newData);
+  });
+
+  ipcMain.handle("check_autoUpdater_progress", (event, arg) => {
+    autoUpdater.logger = logger;
+    return autoUpdater.checkForUpdatesAndNotify();
   });
 };

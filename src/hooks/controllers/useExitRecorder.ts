@@ -1,8 +1,8 @@
 import { useCallback, useContext } from "react";
-import { appConfig } from "../../app.config";
-import { AppStateContext } from "../../AppContainer";
-import { calculateTimeDiff } from "../../utils/calculateTimeDiff";
-import { getFormattedDate } from "../../utils/getFormattedDate";
+import { appConfig } from "~/app.config";
+import { AppStateContext } from "~/AppContainer";
+import { calculateTimeDiff } from "~/utils/calculateTimeDiff";
+import { getFormattedDate } from "~/utils/getFormattedDate";
 
 const useExitRecorder = () => {
   const {
@@ -31,7 +31,7 @@ const useExitRecorder = () => {
   };
 
   const recordAppLog = (content: {
-    studentID: string;
+    studentId: string;
     enterTime: string;
     seatID: string;
     operation: "exit";
@@ -46,7 +46,7 @@ const useExitRecorder = () => {
     nowDate: { YMD: string; HMS: string }
   ) => {
     //id: 対象生徒のid(objのindexになる)
-    const id = seatsState[i].studentID;
+    const id = seatsState[i].studentId;
     const attendance_exitData = {
       exit: nowDate.HMS,
     };
@@ -94,11 +94,11 @@ const useExitRecorder = () => {
       insertObjectForSeatsState[i] = {
         active: false,
         enterTime: "",
-        studentID: "",
+        studentId: "",
       };
       const nowDate = getFormattedDate();
 
-      if (seatsState[i].studentID !== "__OTHERS__") {
+      if (seatsState[i].studentId !== "__OTHERS__") {
         //"関係者その他"でなければ、attendanceStateを更新
         recordAttendanceState(i, nowDate);
       }
@@ -118,7 +118,7 @@ const useExitRecorder = () => {
       if (appLogRecorderEnabled) {
         //appStateにログ保存
         recordAppLog({
-          studentID: seatsState[i].studentID,
+          studentId: seatsState[i].studentId,
           enterTime: seatsState[i].enterTime,
           seatID: i,
           operation: "exit",

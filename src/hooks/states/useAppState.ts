@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import { appConfig } from "../../app.config";
-import { useIpcEventsSender } from "../controllers/useIpcEventsSender";
+import { appConfig } from "~/app.config";
 
-const appState_initialValue: appState = {
+const appState_initialValue: TAppState = {
   selectedElement: null,
   selectedSeat: "",
   now: "TOP",
@@ -11,8 +10,7 @@ const appState_initialValue: appState = {
 };
 
 const useAppState = () => {
-  const { readAppLocalConfig } = useIpcEventsSender();
-  const [appState, setAppState] = useState<appState>(appState_initialValue);
+  const [appState, setAppState] = useState<TAppState>(appState_initialValue);
 
   /**
    * function resetAppState()
@@ -64,13 +62,14 @@ const useAppState = () => {
   useEffect(() => {
     (async () => {
       //アプリのローカルファイルからアプリデータを取得
-      const appLocalConfigData = await readAppLocalConfig();
+      const appLocalConfigData = await window.electron.readAppLocalConfig();
+      console.log(appLocalConfigData);
 
       if (appLocalConfigData) {
         setAppState((beforeAppState) => {
           return {
             ...beforeAppState,
-            localConfig: appLocalConfigData,
+            localConfig: appLocalConfigData.appConfig,
           };
         });
       }

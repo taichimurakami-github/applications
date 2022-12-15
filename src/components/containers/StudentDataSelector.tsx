@@ -1,21 +1,14 @@
 import React, { useState, useRef, useContext } from "react";
-import { StudentsList } from "../views/StudentsList";
-import { appConfig } from "../../app.config";
-import { AppStateContext } from "../../AppContainer";
-import useEnterRecorder from "../../hooks/controllers/useEnterRecorder";
-import StudentCategorySelector from "../views/StudentCategorySelector";
+import { StudentsList } from "~/components/views/StudentsList";
+import { appConfig } from "~/app.config";
+import { AppStateContext } from "~/AppContainer";
+import useEnterRecorder from "~/hooks/controllers/useEnterRecorder";
+import StudentCategorySelector from "~/components/views/StudentCategorySelector";
 
 //style imports
-import "@styles/modules/StudentDataSelector.scss";
+import "~styles/modules/StudentDataSelector.scss";
 
-interface StudentDataSelectorStates {
-  seat: string;
-  school: string;
-  grade: string;
-  nav: boolean;
-}
-
-export const StudentDataSelector: React.VFC = (props) => {
+export const StudentDataSelector = () => {
   const categorySelectorContainer = useRef<HTMLDivElement>(null);
   const navigation = useRef<HTMLDivElement>(null);
 
@@ -29,7 +22,7 @@ export const StudentDataSelector: React.VFC = (props) => {
 
   const enterRecorder = useEnterRecorder();
 
-  const [state, setState] = useState<StudentDataSelectorStates>({
+  const [state, setState] = useState({
     seat: appState.selectedSeat,
     school: "",
     grade: "",
@@ -94,7 +87,7 @@ export const StudentDataSelector: React.VFC = (props) => {
     //選ばれた生徒は既に着席しているか？（退席していないか？）
     let isAlreadySeated = false;
     for (let key of Object.keys(seatsState)) {
-      seatsState[key].studentID === selected_student_data.id &&
+      seatsState[key].studentId === selected_student_data.id &&
         !isAlreadySeated &&
         (isAlreadySeated = true);
     }

@@ -1,4 +1,4 @@
-import { getFormattedDate } from "../../utils/getFormattedDate";
+import { getFormattedDate } from "../getFormattedDate";
 
 describe("getFormattedDate", (): void => {
   test("関数の実行結果はYMD,HMSプロパティを含むオブジェクトでなければならない", (): void => {

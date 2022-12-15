@@ -1,18 +1,16 @@
 import { useContext } from "react";
-import { appConfig } from "../../app.config";
-import { AppStateContext } from "../../AppContainer";
-import useAppDataEracer from "../../hooks/controllers/useAppDataEracer";
-import useCancelController from "../../hooks/controllers/useCancelController";
-import useEnterRecorder from "../../hooks/controllers/useEnterRecorder";
-import useExitRecorder from "../../hooks/controllers/useExitRecorder";
+import { appConfig } from "~/app.config";
+import { AppStateContext } from "~/AppContainer";
+import useAppDataEracer from "~/hooks/controllers/useAppDataEracer";
+import useCancelController from "~/hooks/controllers/useCancelController";
+import useEnterRecorder from "~/hooks/controllers/useEnterRecorder";
+import useExitRecorder from "~/hooks/controllers/useExitRecorder";
 
-interface ConfirmModalProps {
-  content: modalStateContents;
+const ConfirmModal = (props: {
+  content: TModalStateContents;
   onCloseModal: () => void;
   onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
+}) => {
   const { seatsState, studentsList, resetAppState }: AppStateContext =
     useContext(AppStateContext);
   const enterRecorder = useEnterRecorder();
@@ -21,15 +19,15 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
   const closeModal = () => props.onCloseModal();
   const appDataEracer = useAppDataEracer();
 
-  const getStudentInfoFromStudentID = (studentID: string) => {
-    return studentID !== "__OTHERS__"
+  const getStudentInfoFromStudentID = (studentId: string) => {
+    return studentId !== "__OTHERS__"
       ? studentsList.filter((val: { [index: string]: string }) => {
-          return val.id == studentID;
+          return val.id == studentId;
         })[0]
       : { id: "__OTHERS__", name: "(関係者その他)" };
   };
 
-  const handleComponent = () => {
+  const getComponent = () => {
     switch (props.content.confirmCode) {
       //入室処理を実行
       case appConfig.confirmCodeList["1001"]:
@@ -64,7 +62,7 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
           throw new Error("invalid props.content.targetID value: undefined");
 
         const targetInfo = getStudentInfoFromStudentID(
-          seatsState[props.content.targetID].studentID
+          seatsState[props.content.targetID].studentId
         );
 
         //確認モーダルの中身
@@ -252,13 +250,13 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
         );
 
       case appConfig.confirmCodeList["2008"]:
-        if (props.content.studentID === undefined)
-          throw new Error("invalid props.content.studentID value: undefined");
+        if (props.content.studentId === undefined)
+          throw new Error("invalid props.content.studentId value: undefined");
         if (props.content.nextSeatID === undefined)
           throw new Error("invalid props.nextSeatID value: undefined");
 
         const studentName = getStudentInfoFromStudentID(
-          props.content.studentID
+          props.content.studentId
         ).name;
 
         return (
@@ -311,7 +309,7 @@ const ConfirmModal: React.VFC<ConfirmModalProps> = (props) => {
     }
   };
 
-  return <div className="confirm-modal-wrapper">{handleComponent()}</div>;
+  return <div className="confirm-modal-wrapper">{getComponent()}</div>;
 };
 
 export { ConfirmModal };

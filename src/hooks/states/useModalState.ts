@@ -1,13 +1,13 @@
 import { useState, useCallback } from "react";
 
-export const modalState_initialValue: modalState = {
+export const modalState_initialValue: TModalState = {
   active: false,
   name: "",
   content: {},
 };
 
 const useModalState = () => {
-  const [modalState, setModalState] = useState<modalState>(
+  const [modalState, setModalState] = useState<TModalState>(
     modalState_initialValue
   );
 
@@ -20,7 +20,7 @@ const useModalState = () => {
    * @param {object} t
    * @returns {void}
    */
-  const handleModalState = useCallback((t: modalState) => {
+  const handleModalState = useCallback((t: TModalState) => {
     //t.active = falseだった場合：modalStateをリセットする
     if (!t.active) {
       setModalState(modalState_initialValue);

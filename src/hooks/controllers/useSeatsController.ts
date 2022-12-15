@@ -1,6 +1,6 @@
 import { useCallback, useContext } from "react";
-import { appConfig } from "../../app.config";
-import { AppStateContext } from "../../AppContainer";
+import { appConfig } from "~/app.config";
+import { AppStateContext } from "~/AppContainer";
 import { seatsState_initialValue } from "../states/useSeatsState";
 
 const useSeatsController = () => {
@@ -25,7 +25,7 @@ const useSeatsController = () => {
     if (arg.mode === appConfig.seatOperationCodeList["1001"]) {
       const nowSeatID: string = arg.content.nowSeatID;
       const nextSeatID: string = arg.content.nextSeatID;
-      const targetID: string = seatsState[arg.content.nowSeatID].studentID;
+      const targetID: string = seatsState[arg.content.nowSeatID].studentId;
 
       //AttendanceState書き換え
       if (targetID !== "__OTHERS__") {
@@ -74,7 +74,7 @@ const useSeatsController = () => {
         name: appConfig.modalCodeList["1001"],
         content: {
           confirmCode: appConfig.confirmCodeList["2008"],
-          studentID: targetID,
+          studentId: targetID,
           nextSeatID: nextSeatID,
         },
       });

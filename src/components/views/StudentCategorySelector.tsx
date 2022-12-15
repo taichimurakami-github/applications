@@ -1,13 +1,14 @@
 import React from "react";
 
-interface StudentCategorySelector {
-  backToTop: () => void;
-  onSelect: (e: React.MouseEvent) => void;
-  onSelectOthers: () => void;
-}
-
 const StudentCategorySelector = React.forwardRef(
-  (props: StudentCategorySelector, ref: React.ForwardedRef<HTMLDivElement>) => {
+  (
+    props: {
+      backToTop: () => void;
+      onSelect: (e: React.MouseEvent) => void;
+      onSelectOthers: () => void;
+    },
+    ref: React.ForwardedRef<HTMLDivElement>
+  ) => {
     return (
       <div>
         <h1>あなたの学年と名前を選んでください</h1>

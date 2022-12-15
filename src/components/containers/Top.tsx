@@ -1,14 +1,12 @@
 import React, { useContext, useRef } from "react";
-import { appConfig } from "../../app.config";
-import { AppStateContext } from "../../AppContainer";
-import { SeatsTable } from "../views/SeatsTable";
-import { TopMessage } from "../views/TopMessage";
+import { appConfig } from "~/app.config";
+import { AppStateContext } from "~/AppContainer";
+import { SeatsTable } from "~/components/views/SeatsTable";
+import { TopMessage } from "~/components/views/TopMessage";
 
-interface TopComponentProps {
+export const Top = (props: {
   onHandleAppState: (d: { [index: string]: any }) => void;
-}
-
-export const Top: React.VFC<TopComponentProps> = (props) => {
+}) => {
   const {
     appState,
     studentsList,
@@ -53,12 +51,12 @@ export const Top: React.VFC<TopComponentProps> = (props) => {
 
   const showCancelOperationModal = () => {
     const name =
-      appState.appLog.studentID === "__OTHERS__"
+      appState.appLog.studentId === "__OTHERS__"
         ? "関係者その他"
         : studentsList &&
           studentsList.filter(
             (val: { [index: string]: string }) =>
-              val.id == appState.appLog.studentID
+              val.id == appState.appLog.studentId
           )[0].name;
     const operation = appState.appLog.operation === "enter" ? "入室" : "退室";
 
