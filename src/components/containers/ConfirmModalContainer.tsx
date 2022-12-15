@@ -9,7 +9,7 @@ import {
   useStudentsListCtx,
 } from "~/hooks/states/useAppContext";
 
-const ConfirmModal = (props: {
+export const ConfirmModalContainer = (props: {
   content: TModalStateContents;
   onCloseModal: () => void;
   onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>;
@@ -315,5 +315,3 @@ const ConfirmModal = (props: {
 
   return <div className="confirm-modal-wrapper">{getComponent()}</div>;
 };
-
-export { ConfirmModal };

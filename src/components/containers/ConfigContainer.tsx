@@ -14,7 +14,7 @@ import {
   useSeatsStateCtx,
 } from "~/hooks/states/useAppContext";
 
-const Config = (props: {
+export const ConfigContainer = (props: {
   onHandleAppState: (d: { [index: string]: any }) => void;
   onHandleChangeAppLocalConfig: (arg: {
     fn_id?:
@@ -184,8 +184,6 @@ const Config = (props: {
     />
   );
 };
-
-export { Config };
 
 //デバッグ用関数
 // useEffect(() => { console.log(topMessage) }, [topMessage]);

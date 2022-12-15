@@ -1,7 +1,7 @@
 import { appConfig } from "~/app.config";
 import { useAppSetStateCtx } from "~/hooks/states/useAppContext";
 
-const ErrorModal = (props: {
+export const ErrorModalContainer = (props: {
   onCloseModal: () => void;
   onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>;
   content: TModalStateContents;
@@ -78,5 +78,3 @@ const ErrorModal = (props: {
     </>
   );
 };
-
-export { ErrorModal };

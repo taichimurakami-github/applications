@@ -1,8 +1,8 @@
 //modal module import
-import { ErrorModal } from "./ErrorModal";
-import { SeatsModal } from "./SeatsModal";
-import { ConfirmModal } from "./ConfirmModal";
-import { NewsModal } from "./NewsModal";
+import { ErrorModalContainer } from "./ErrorModalContainer";
+import { SeatsModalContainer } from "./SeatsModalContainer";
+import { ConfirmModalContainer } from "./ConfirmModalContainer";
+import { NewsModalContainer } from "./NewsModalContainer";
 import { appConfig } from "~/app.config";
 import React, { useState } from "react";
 
@@ -13,7 +13,7 @@ import {
   useModalStateCtx,
 } from "~/hooks/states/useAppContext";
 
-export const ModalRoot = () => {
+export const ModalRootContainer = () => {
   const { handleModalState } = useAppSetStateCtx();
   const modalState = useModalStateCtx();
   const [BackgroundClose, setBackgroundClose] = useState(true);
@@ -37,7 +37,7 @@ export const ModalRoot = () => {
       switch (modalState.name) {
         case appConfig.modalCodeList["1001"]:
           return (
-            <ConfirmModal
+            <ConfirmModalContainer
               content={modalState.content}
               onCloseModal={closeModal}
               onHandleBgClose={setBackgroundClose}
@@ -46,7 +46,7 @@ export const ModalRoot = () => {
 
         case appConfig.modalCodeList["1002"]:
           return (
-            <ErrorModal
+            <ErrorModalContainer
               onCloseModal={closeModal}
               onHandleBgClose={setBackgroundClose}
               content={modalState.content}
@@ -55,14 +55,14 @@ export const ModalRoot = () => {
 
         case appConfig.modalCodeList["1003"]:
           return (
-            <SeatsModal
+            <SeatsModalContainer
               onCloseModal={closeModal}
               onHandleBgClose={setBackgroundClose}
             />
           );
 
         case appConfig.modalCodeList["1004"]:
-          return <NewsModal onCloseModal={closeModal} />;
+          return <NewsModalContainer onCloseModal={closeModal} />;
 
         default:
           console.log("invalid modalCode has been passed");

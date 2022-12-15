@@ -22,7 +22,7 @@ const seatsModalState_initialValue: {
   },
 };
 
-const SeatsModal = (props: {
+export const SeatsModalContainer = (props: {
   onCloseModal: () => void;
   onHandleBgClose: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
@@ -189,5 +189,3 @@ const SeatsModal = (props: {
     </div>
   );
 };
-
-export { SeatsModal };

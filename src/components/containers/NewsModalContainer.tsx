@@ -1,7 +1,7 @@
 import React from "react";
 import { useAppStateCtx } from "~/hooks/states/useAppContext";
 
-const NewsModal = (props: { onCloseModal: () => void }) => {
+export const NewsModalContainer = (props: { onCloseModal: () => void }) => {
   const appState = useAppStateCtx();
 
   return (
@@ -14,5 +14,3 @@ const NewsModal = (props: { onCloseModal: () => void }) => {
     </div>
   );
 };
-
-export { NewsModal };

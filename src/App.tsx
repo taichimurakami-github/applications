@@ -6,10 +6,10 @@ import {
   useAppStateCtx,
 } from "~/hooks/states/useAppContext";
 
-import { Top } from "~/components/containers/Top";
-import { StudentDataSelector } from "~/components/containers/StudentDataSelector";
-import { ModalRoot } from "~/components/containers/MordalRoot";
-import { Config } from "~/components/containers/Config";
+import { TopContainer } from "~/components/containers/TopContainer";
+import { StudentDataSelectorContainer } from "~/components/containers/StudentDataSelectorContainer";
+import { ModalRootContainer } from "~/components/containers/MordalRootContainer";
+import { ConfigContainer } from "~/components/containers/ConfigContainer";
 
 import "~styles/modules/Top.scss";
 import "~styles/app.common.scss";
@@ -59,17 +59,17 @@ const App = () => {
    *
    * @returns {void}
    */
-  const getComponent = () => {
+  const getPages = () => {
     switch (appState.now) {
       case "TOP":
-        return <Top onHandleAppState={handleAppState} />;
+        return <TopContainer onHandleAppState={handleAppState} />;
 
       case "STUDENT":
-        return <StudentDataSelector />;
+        return <StudentDataSelectorContainer />;
 
       case "CONFIG":
         return (
-          <Config
+          <ConfigContainer
             onHandleAppState={handleAppState}
             onHandleChangeAppLocalConfig={handleChangeAppLocalConfig}
           />
@@ -90,8 +90,8 @@ const App = () => {
 
   return (
     <div className="App">
-      {getComponent()}
-      <ModalRoot />
+      {getPages()}
+      <ModalRootContainer />
     </div>
   );
 };

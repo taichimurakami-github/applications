@@ -9,7 +9,7 @@ import {
   useStudentsListCtx,
 } from "~/hooks/states/useAppContext";
 
-export const Top = (props: {
+export const TopContainer = (props: {
   onHandleAppState: (d: { [index: string]: any }) => void;
 }) => {
   const { handleModalState } = useAppSetStateCtx();

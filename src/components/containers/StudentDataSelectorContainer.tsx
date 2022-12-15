@@ -14,7 +14,7 @@ import {
   useStudentsListCtx,
 } from "~/hooks/states/useAppContext";
 
-export const StudentDataSelector = () => {
+export const StudentDataSelectorContainer = () => {
   const appState = useAppStateCtx();
   const seatsState = useSeatsStateCtx();
   const studentsList = useStudentsListCtx();
